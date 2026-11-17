@@ -291,6 +291,14 @@
           <span>Jogar</span>
         </button>
 
+        <button id="btnContinueGame" class="hidden btn-secondary w-full font-display text-emerald-200 text-base sm:text-lg font-bold py-3 px-4 rounded-2xl cursor-pointer">
+          ✨ Continuar aventura
+        </button>
+
+        <button id="btnOpenStageSelect" class="btn-secondary w-full font-display text-sky-200 text-base sm:text-lg font-bold py-3 px-4 rounded-2xl cursor-pointer">
+          🗺️ Seleção de fases
+        </button>
+
         <div class="grid grid-cols-2 gap-3">
           <button id="btnOpenStory" class="btn-secondary font-display text-amber-200 text-base sm:text-lg font-bold py-3 px-4 rounded-2xl flex items-center justify-center gap-2 cursor-pointer">
             <span>📖</span>
@@ -304,6 +312,19 @@
         </div>
 
       </div>
+    </div>
+  </section>
+
+  <section id="stageSelectModal" class="fixed inset-0 z-40 hidden items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
+    <div class="glass-card rounded-3xl max-w-lg w-full p-6 sm:p-7 animate-modal max-h-[92vh] overflow-y-auto custom-scroll">
+      <div class="flex items-center justify-between border-b border-white/15 pb-3 mb-4">
+        <div>
+          <span class="text-[11px] font-extrabold uppercase tracking-widest text-amber-300">Aventura</span>
+          <h2 class="font-display text-2xl text-white font-bold">Escolha uma fase</h2>
+        </div>
+        <button id="btnCloseStageSelect" class="w-9 h-9 rounded-full bg-white/10 hover:bg-rose-700 text-white font-bold text-xl cursor-pointer" aria-label="Fechar">&times;</button>
+      </div>
+      <div id="stageSelectList" class="grid gap-2"></div>
     </div>
   </section>
 
@@ -327,16 +348,16 @@
       <div class="flex flex-col sm:flex-row items-center gap-4 bg-amber-900/10 border border-amber-900/20 rounded-2xl p-3.5 mb-4">
         <canvas id="storyPortraitCanvas" width="88" height="88" class="rounded-2xl bg-gradient-to-b from-slate-800 to-rose-950 border-2 border-amber-600 shrink-0 shadow"></canvas>
         <p class="text-xs sm:text-sm text-stone-800 leading-relaxed font-semibold text-center sm:text-left">
-          Na véspera de Natal, o <strong class="text-sky-900">Rei Gelado</strong> roubou a Estrela do Norte. Sem o brilho dela, as luzes da Vila Nevada se apagaram e o inverno começou a cobrir todo o reino.
+          Na véspera de Natal, uma estrela brilhou diferente no céu. Por um instante, até a neve pareceu escutar — e uma luz distante desenhou um caminho à janela.
         </p>
       </div>
 
       <div class="space-y-3 text-sm sm:text-base text-stone-800 leading-relaxed">
         <p>
-          Com seu gorrinho vermelho, seus cachos cheios de energia e seus óculos brilhantes, <strong id="storyHeroName" class="text-rose-800">nossa heroína</strong> atravessou a <strong>Vila Nevada</strong>, a <strong>Floresta dos Pinheiros</strong> e o <strong>Castelo Congelado</strong>. Depois de derrotar o Rei Gelado, encontrou um presente dourado com uma cartinha assinada por Vitor.
+          Com o gorrinho vermelho, cachos cheios de energia e olhos atentos por trás dos óculos, <strong id="storyHeroName" class="text-rose-800">nossa heroína</strong> segue o fio luminoso para além das ruas conhecidas. A cada passo, a noite oferece uma nova pista — e guarda para si o significado de cada uma.
         </p>
         <p class="bg-rose-700/10 border-l-4 border-rose-700 p-3 rounded-r-xl text-rose-950 text-xs sm:text-sm font-semibold">
-          💌 A carta marca o encontro de Paloma e Vitor. Juntos, eles exploram as Cavernas do Eco e a Montanha das Auroras, até descobrirem que o Coração da Estrela está preso na fortaleza do Lobo da Geada. Agora, os dois precisam recuperá-lo e devolver o Natal ao reino.
+          ✨ Há segredos adormecidos sob a neve, vozes escondidas no vento e uma centelha à espera de quem tenha coragem para procurá-la. Algumas histórias só revelam seu brilho a quem aceita dar o primeiro passo.
         </p>
       </div>
 
@@ -526,6 +547,20 @@
     </div>
   </section>
 
+  <section id="powerUpModal" class="fixed inset-0 z-40 hidden items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md">
+    <div class="glass-card max-w-md w-full rounded-3xl p-7 text-center animate-modal border border-amber-200/30">
+      <div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-amber-300/15 text-4xl shadow-[0_0_30px_rgba(253,230,138,0.22)]">✨</div>
+      <p class="text-amber-200 text-xs font-extrabold uppercase tracking-[0.3em]">Uma nova força desperta</p>
+      <h2 class="font-display text-3xl font-bold text-white mt-3">Magia ampliada!</h2>
+      <p class="text-sky-100 leading-relaxed mt-4">
+        A protagonista cresceu um pouco e sua magia ficou mais poderosa. Agora ela pode guardar até cinco cargas e lançar bolas de neve mais fortes.
+      </p>
+      <button id="btnContinueAfterUpgrade" class="btn-primary w-full mt-6 rounded-2xl px-5 py-3 font-display text-xl font-bold text-white cursor-pointer">
+        Seguir para a Fase 7 ▶
+      </button>
+    </div>
+  </section>
+
   <!-- ======================================================================
        9. TELA FINAL: CARTINHA ROMÂNTICA DE NATAL
        ====================================================================== -->
@@ -542,7 +577,7 @@
           Para: <span id="finalTo">Paloma</span> ❤️
         </p>
         <h2 id="finalTitle" class="font-script text-4xl sm:text-5xl font-bold text-rose-800 leading-tight">
-          Para Paloma, com amor 🎄❤️
+           Paloma, com amor 🎄❤️
         </h2>
       </div>
 
@@ -584,7 +619,7 @@
       <p class="text-amber-200 text-xs font-extrabold uppercase tracking-[0.3em]">Aventura concluída</p>
       <h2 class="font-display text-3xl sm:text-4xl font-bold text-white mt-3">Feliz Natal!</h2>
       <p class="text-sky-100 leading-relaxed mt-4">
-        A Estrela do Norte voltou a brilhar, e as luzes de Natal retornaram ao reino. Paloma e Vitor, obrigado por enfrentarem juntos o Lobo da Geada e todos os desafios. Este final também é de vocês. Feliz Natal!
+        Depois dessa jornada, a Estrela do Norte voltou a brilhar e a noite se encheu de luz. Paloma e Vitor, vocês salvaram o Natal — com coragem, magia e companheirismo até o último passo. Feliz Natal!
       </p>
       <div class="inline-block mt-5 bg-slate-950/50 border border-amber-300/30 text-amber-200 font-bold px-4 py-2 rounded-2xl">
         ⭐ Pontuação final: <span id="completionScore">0</span>
@@ -614,13 +649,14 @@
   </div>
 
   <!-- ======================================================================
-       11. MOTOR COMPLETO DO JOGO (RENDERIZAÇÃO ILUSTRADA, 6 FASES E CHEFES)
+       11. MOTOR COMPLETO DO JOGO (RENDERIZAÇÃO ILUSTRADA, 9 FASES E CHEFES)
        ====================================================================== -->
   <script>
     (() => {
       "use strict";
 
       const $ = (id) => document.getElementById(id);
+      const STAGE_COUNT = 9;
 
       /* --------------------------------------------------------------------
          A. DADOS DA CARTINHA & CONFIGURAÇÕES (EM MEMÓRIA + SUPORTE A LINK)
@@ -655,6 +691,23 @@
       }
 
       let vitorUnlocked = loadVitorUnlock();
+
+      function loadProgress() {
+        try {
+          const stored = JSON.parse(window.localStorage.getItem("salveNatal.progress") || "{}");
+          return {
+            unlockedStage: Number.isInteger(stored.unlockedStage) ? Math.max(0, Math.min(STAGE_COUNT - 1, stored.unlockedStage)) : 0,
+            score: Number.isFinite(stored.score) ? Math.max(0, stored.score) : 0,
+            heroUpgraded: Boolean(stored.heroUpgraded)
+          };
+        } catch (err) {
+          console.warn("Não foi possível carregar o progresso:", err);
+          return { unlockedStage: 0, score: 0, heroUpgraded: false };
+        }
+      }
+
+      let savedProgress = loadProgress();
+      let heroUpgraded = savedProgress.heroUpgraded || savedProgress.unlockedStage >= 6;
 
       function loadUrlParams() {
         try {
@@ -722,6 +775,7 @@
           this.ctx = null;
           this.bgmInterval = null;
           this.step = 0;
+          this.bgmTheme = null;
         }
 
         unlock() {
@@ -795,6 +849,20 @@
             this.tone(f, "triangle", 0.18, 0.13, i * 0.09);
           });
         }
+        musicBox() {
+          this.stopBgm();
+          const chords = [
+            [523.25, 659.25, 783.99],
+            [493.88, 587.33, 739.99],
+            [440, 523.25, 659.25],
+            [392, 493.88, 587.33]
+          ];
+          chords.forEach((chord, chordIndex) => {
+            chord.forEach((freq, noteIndex) => {
+              this.tone(freq, "sine", 1.7, 0.035, chordIndex * 0.9 + noteIndex * 0.12, null, true);
+            });
+          });
+        }
         victoryFanfare() {
           this.stopBgm();
           const notes = [
@@ -811,7 +879,7 @@
 
         startBgm() {
           if (!config.bgm || this.bgmInterval) return;
-          const seq = [
+          const happyTheme = [
             523.25, 659.25, 783.99, 659.25,
             587.33, 698.46, 880, 698.46,
             523.25, 587.33, 659.25, 783.99,
@@ -821,11 +889,72 @@
             523.25, 659.25, 783.99, 880,
             783.99, 659.25, 523.25, 0
           ];
+          const minorTheme = [
+            523.25, 622.25, 783.99, 622.25,
+            587.33, 698.46, 932.33, 698.46,
+            523.25, 622.25, 783.99, 932.33,
+            830.61, 783.99, 622.25, 0,
+            392, 523.25, 622.25, 523.25,
+            466.16, 587.33, 698.46, 587.33,
+            523.25, 622.25, 783.99, 830.61,
+            783.99, 698.46, 523.25, 0
+          ];
+          const lanternTheme = [
+            587.33, 783.99, 880, 783.99, 659.25, 783.99, 880, 0,
+            698.46, 880, 987.77, 880, 783.99, 698.46, 659.25, 0,
+            587.33, 659.25, 783.99, 880, 987.77, 880, 783.99, 0,
+            698.46, 783.99, 880, 987.77, 880, 783.99, 659.25, 0
+          ];
+          const forestTheme = [
+            392, 523.25, 587.33, 783.99, 698.46, 587.33, 523.25, 0,
+            440, 523.25, 659.25, 783.99, 659.25, 587.33, 523.25, 0,
+            392, 523.25, 659.25, 587.33, 523.25, 440, 392, 0,
+            523.25, 587.33, 783.99, 880, 783.99, 659.25, 523.25, 0
+          ];
+          const starTheme = [
+            392, 523.25, 659.25, 783.99, 880, 783.99, 659.25, 0,
+            440, 587.33, 698.46, 880, 987.77, 880, 698.46, 0,
+            392, 523.25, 659.25, 783.99, 1046.5, 987.77, 880, 783.99,
+            698.46, 783.99, 880, 987.77, 1046.5, 880, 783.99, 0
+          ];
+          const happyBass = [130.81, 146.83, 130.81, 110];
+          const minorBass = [130.81, 103.83, 87.31, 98];
+          const lanternBass = [146.83, 110, 130.81, 98];
+          const forestBass = [98, 130.81, 116.54, 87.31];
+          const starBass = [98, 110, 130.81, 87.31];
+          const themes = {
+            happy: { melody: happyTheme, bass: happyBass, melodyType: "sine" },
+            minor: { melody: minorTheme, bass: minorBass, melodyType: "triangle" },
+            lantern: { melody: lanternTheme, bass: lanternBass, melodyType: "sine" },
+            forest: { melody: forestTheme, bass: forestBass, melodyType: "triangle" },
+            star: { melody: starTheme, bass: starBass, melodyType: "sine" }
+          };
           this.step = 0;
           this.bgmInterval = setInterval(() => {
             if (!config.bgm || gameState !== "PLAYING") return;
-            const f = seq[this.step % seq.length];
-            if (f > 0) this.tone(f, "sine", 0.15, 0.032, 0, null, true);
+            const stageBoss = STAGES[currentStageIdx] && STAGES[currentStageIdx].hasBoss ? boss : null;
+            const atFinalBoss = stageBoss && stageBoss.alive && player && player.x >= stageBoss.minX - 200;
+            const theme = atFinalBoss
+              ? "minor"
+              : currentStageIdx === 6
+                ? "lantern"
+                : currentStageIdx === 7
+                  ? "forest"
+                  : currentStageIdx === 8
+                    ? "star"
+                    : "happy";
+            if (theme !== this.bgmTheme) {
+              this.bgmTheme = theme;
+              this.step = 0;
+            }
+            const { melody, bass, melodyType } = themes[theme];
+            const f = melody[this.step % melody.length];
+            if (f > 0) this.tone(f, melodyType, 0.19, 0.032, 0, null, true);
+            if (this.step % 4 === 0) {
+              const root = bass[Math.floor(this.step / 8) % bass.length];
+              this.tone(root, "triangle", 0.58, 0.045, 0, null, true);
+              this.tone(root * 1.5, "sine", 0.42, 0.018, 0.04, null, true);
+            }
             this.step++;
           }, 225);
         }
@@ -835,6 +964,7 @@
             clearInterval(this.bgmInterval);
             this.bgmInterval = null;
           }
+          this.bgmTheme = null;
         }
       }
 
@@ -876,6 +1006,7 @@
       function drawCurlyHeroine(c, x, y, w, h, opts = {}) {
         const {
           facing = 1,
+          scale = 1,
           runTime = 0,
           isMoving = false,
           onGround = true,
@@ -885,7 +1016,7 @@
 
         c.save();
         c.translate(x + w / 2, y + h / 2);
-        c.scale(facing, 1);
+        c.scale(facing * scale, scale);
 
         const bounce = isMoving && onGround ? Math.abs(Math.sin(runTime * 14)) * -2.8 : 0;
         const curlSwing = isMoving ? Math.sin(runTime * 14) * 2.4 : Math.sin(performance.now() * 0.003) * 0.8;
@@ -1274,7 +1405,7 @@
       }
 
       /* --------------------------------------------------------------------
-         E. DEFINIÇÃO DAS 6 FASES DA AVENTURA
+         E. DEFINIÇÃO DAS 9 FASES DA AVENTURA
          -------------------------------------------------------------------- */
       const STAGES = [
         {
@@ -1360,8 +1491,8 @@
         {
           index: 5,
           code: "FASE 6 · CORAÇÃO DA ESTRELA",
-          title: "O Coração da Estrela Foi Restaurado!",
-          nextText: "",
+          title: "Um novo brilho desperta!",
+          nextText: "A estrela respondeu à coragem da heroína. Uma nova força pulsa em sua magia — e, para além do coração do Norte, outras luzes aguardam.",
           skyTop: "#100b2e",
           skyMid: "#25205c",
           skyBot: "#493b82",
@@ -1372,16 +1503,65 @@
           groundSoil: "#29245b",
           length: 3600,
           hasBoss: true
+        },
+        {
+          index: 6,
+          code: "FASE 7 · VALE DAS LANTERNAS",
+          title: "O Vale das Lanternas",
+          nextText: "As lanternas voltaram a flutuar no vale, mas seus sinos ainda guardam um chamado. Sigam o vento até descobrir de onde ele vem.",
+          skyTop: "#27132b",
+          skyMid: "#74374f",
+          skyBot: "#e59862",
+          aurora: ["rgba(251, 191, 36, 0.22)", "rgba(251, 113, 133, 0.18)"],
+          hillFar: "#552d47",
+          hillNear: "#854458",
+          snowTop: "#fff1d6",
+          groundSoil: "#60404c",
+          length: 3880,
+          hasBoss: false
+        },
+        {
+          index: 7,
+          code: "FASE 8 · BOSQUE DOS SINOS",
+          title: "O Bosque dos Sinos",
+          nextText: "O último sino ecoa para além das copas. No horizonte, uma sombra cobre o caminho até a estrela.",
+          skyTop: "#082c35",
+          skyMid: "#17625d",
+          skyBot: "#83a77a",
+          aurora: ["rgba(167, 243, 208, 0.22)", "rgba(250, 204, 21, 0.18)"],
+          hillFar: "#17483d",
+          hillNear: "#28634d",
+          snowTop: "#e8f5d3",
+          groundSoil: "#344c3c",
+          length: 4080,
+          hasBoss: false
+        },
+        {
+          index: 8,
+          code: "FASE 9 · CIDADELA DA ESTRELA",
+          title: "O Natal Voltou a Brilhar!",
+          nextText: "",
+          skyTop: "#090e2b",
+          skyMid: "#283a70",
+          skyBot: "#a16d78",
+          aurora: ["rgba(253, 230, 138, 0.28)", "rgba(196, 181, 253, 0.24)"],
+          hillFar: "#20294e",
+          hillNear: "#394873",
+          snowTop: "#fff7e2",
+          groundSoil: "#34385e",
+          length: 4200,
+          hasBoss: true
         }
       ];
 
       /* --------------------------------------------------------------------
          F. ESTADO DO MUNDO E ENTIDADES
          -------------------------------------------------------------------- */
-      // Estados: "TITLE", "PLAYING", "PAUSED", "STAGE_CLEAR", "CELEBRATING", "FINALE"
+      // Estados: "TITLE", "PLAYING", "PAUSED", "STAGE_CLEAR", "POWERING_UP", "POWER_UP", "CELEBRATING", "FINALE"
       let gameState = "TITLE";
       let currentStageIdx = 0;
-      let score = 0;
+      let score = savedProgress.score;
+      let unlockedStageIdx = savedProgress.unlockedStage;
       let cameraX = 0;
       let screenShake = 0;
       let animClock = 0;
@@ -1421,12 +1601,13 @@
         phase: Math.random() * Math.PI * 2
       }));
 
-      function createPlayer(x, y) {
+      function createPlayer(x, y, isProtagonist = true) {
+        const upgraded = isProtagonist && heroUpgraded;
         return {
           x,
           y,
-          w: 32,
-          h: 46,
+          w: upgraded ? 36 : 32,
+          h: upgraded ? 50 : 46,
           vx: 0,
           vy: 0,
           facing: 1,
@@ -1436,7 +1617,9 @@
           runTime: 0,
           hp: config.maxLives,
           invuln: 0,
-          magic: 3,
+          magic: upgraded ? 5 : 3,
+          magicCapacity: upgraded ? 5 : 3,
+          powerLevel: upgraded ? 2 : 1,
           magicCooldown: 0
         };
       }
@@ -1468,7 +1651,7 @@
         const prevVitorHp = vitor && idx > 0 ? Math.max(vitor.hp, Math.min(config.maxLives, vitor.hp + 1)) : config.maxLives;
         player = createPlayer(respawnCoords.x, respawnCoords.y);
         player.hp = prevHp;
-        vitor = vitorUnlocked ? createPlayer(respawnCoords.x + 42, respawnCoords.y) : null;
+        vitor = vitorUnlocked ? createPlayer(respawnCoords.x + 42, respawnCoords.y, false) : null;
         if (vitor) {
           vitor.hp = prevVitorHp;
           vitor.magic = 0;
@@ -1779,7 +1962,7 @@
             ],
             gate: { x: 3500, y: GROUND_Y - 290, w: 56, h: 290 }
           };
-        } else {
+        } else if (idx === 5) {
           // FASE 6: CORAÇÃO DA ESTRELA
           groundSegments = [
             { x: 0, w: 760 },
@@ -1845,11 +2028,166 @@
             minX: 2070,
             maxX: 3160
           };
+        } else {
+          buildExpansionStage(idx);
         }
 
         updateHudUI();
         if (idx === 3) showToast("🔷 Descubram a sequência das runas para abrir a passagem.");
         if (idx === 4) showToast("🌌 Quatro cristais, seis ativações. Descubram o padrão para abrir a passagem.");
+      }
+
+      function buildExpansionStage(idx) {
+        const layouts = [
+          {
+            ground: [{ x: 0, w: 780 }, { x: 910, w: 870 }, { x: 1910, w: 930 }, { x: 2980, w: 900 }],
+            pipes: [[390, 68], [1190, 82], [2510, 74], [3420, 88]],
+            platforms: [
+              { x: 235, y: 335, w: 130, h: 20 }, { x: 570, y: 310, w: 140, h: 20 },
+              { x: 790, y: 360, w: 110, h: 18, moving: true, baseX: 790, rangeX: 24, speed: 1.8, phase: 0.3 },
+              { x: 1080, y: 325, w: 140, h: 20 }, { x: 1460, y: 295, w: 150, h: 20 },
+              { x: 1790, y: 355, w: 110, h: 18 }, { x: 2110, y: 320, w: 140, h: 20 },
+              { x: 2480, y: 285, w: 150, h: 20 }, { x: 2850, y: 355, w: 120, h: 18 },
+              { x: 3190, y: 315, w: 150, h: 20 }
+            ],
+            blocks: [[270, 230, "star"], [620, 205, "heart"], [1510, 190, "candy"], [2560, 180, "heart"], [3240, 195, "star"]],
+            items: [[250, 300, "candy"], [300, 300, "star"], [600, 275, "star"], [650, 275, "candy"], [840, 320, "star"], [1110, 290, "star"], [1160, 290, "candy"], [1490, 260, "star"], [1540, 260, "star"], [1835, 315, "star"], [2140, 285, "candy"], [2190, 285, "star"], [2510, 250, "star"], [2570, 250, "candy"], [2890, 315, "star"], [3220, 275, "star"], [3270, 275, "candy"], [3500, 400, "star"]],
+            secret: [1960, 245],
+            enemies: [[510, "grinch", 440, 720, 110], [1120, "bat", 1010, 1240, 140], [1570, "snowman", 1390, 1730, 96], [2210, "ice-spirit", 2040, 2390, 122], [2630, "grinch", 2450, 2800, 112], [3290, "bat", 3110, 3470, 148]],
+            checkpoint: 2040
+          },
+          {
+            ground: [{ x: 0, w: 820 }, { x: 960, w: 830 }, { x: 1940, w: 970 }, { x: 3060, w: 1020 }],
+            pipes: [[430, 74], [1260, 86], [2330, 78], [3440, 92]],
+            platforms: [
+              { x: 230, y: 340, w: 130, h: 20 }, { x: 590, y: 310, w: 140, h: 20 },
+              { x: 830, y: 360, w: 115, h: 18, moving: true, baseX: 830, rangeX: 25, speed: 1.9, phase: 1.1 },
+              { x: 1090, y: 325, w: 140, h: 20 }, { x: 1480, y: 295, w: 145, h: 20 },
+              { x: 1800, y: 355, w: 120, h: 18 }, { x: 2100, y: 320, w: 140, h: 20 },
+              { x: 2510, y: 285, w: 150, h: 20 }, { x: 2920, y: 350, w: 120, h: 18, moving: true, baseX: 2920, rangeX: 28, speed: 1.7, phase: 2 },
+              { x: 3220, y: 315, w: 155, h: 20 }, { x: 3660, y: 285, w: 145, h: 20 }
+            ],
+            blocks: [[280, 230, "star"], [640, 200, "heart"], [1530, 185, "candy"], [2550, 175, "heart"], [3300, 195, "star"], [3690, 165, "candy"]],
+            items: [[250, 300, "star"], [300, 300, "candy"], [620, 270, "star"], [670, 270, "star"], [870, 320, "candy"], [1120, 290, "star"], [1170, 290, "candy"], [1510, 260, "star"], [1560, 260, "star"], [1840, 315, "candy"], [2130, 285, "star"], [2180, 285, "candy"], [2540, 250, "star"], [2590, 250, "star"], [2960, 310, "candy"], [3250, 275, "star"], [3300, 275, "candy"], [3700, 245, "star"]],
+            secret: [1990, 245],
+            enemies: [[520, "snowman", 450, 740, 102], [1160, "grinch", 1000, 1240, 114], [1600, "bat", 1450, 1730, 148], [2180, "gingerbread", 2010, 2330, 126], [2650, "ice-spirit", 2460, 2850, 130], [3310, "grinch", 3130, 3480, 120], [3710, "bat", 3540, 3900, 152]],
+            checkpoint: 2050
+          },
+          {
+            ground: [{ x: 0, w: 850 }, { x: 1000, w: 880 }, { x: 2040, w: 900 }, { x: 3100, w: 1100 }],
+            pipes: [[420, 78], [1320, 90], [2370, 82], [3500, 96]],
+            platforms: [
+              { x: 235, y: 335, w: 135, h: 20 }, { x: 610, y: 305, w: 145, h: 20 },
+              { x: 860, y: 355, w: 125, h: 18, moving: true, baseX: 860, rangeX: 26, speed: 2, phase: 0.6 },
+              { x: 1120, y: 325, w: 140, h: 20 }, { x: 1540, y: 290, w: 150, h: 20 },
+              { x: 1890, y: 350, w: 130, h: 18 }, { x: 2190, y: 320, w: 145, h: 20 },
+              { x: 2630, y: 280, w: 155, h: 20 }, { x: 2970, y: 350, w: 120, h: 18 },
+              { x: 3230, y: 315, w: 155, h: 20 }, { x: 3440, y: 330, w: 160, h: 18 },
+              { x: 3680, y: 285, w: 150, h: 20 }, { x: 3790, y: 340, w: 150, h: 18 }
+            ],
+            blocks: [[275, 225, "star"], [660, 195, "heart"], [1580, 180, "candy"], [2680, 165, "heart"], [3290, 190, "star"], [3730, 160, "heart"]],
+            items: [[250, 295, "candy"], [300, 295, "star"], [640, 265, "star"], [690, 265, "candy"], [900, 315, "star"], [1150, 285, "star"], [1200, 285, "candy"], [1570, 250, "star"], [1620, 250, "star"], [1930, 310, "candy"], [2220, 280, "star"], [2270, 280, "candy"], [2670, 240, "star"], [2720, 240, "star"], [3010, 310, "candy"], [3260, 275, "star"], [3310, 275, "candy"], [3730, 245, "star"], [3780, 245, "star"]],
+            secret: [2090, 240],
+            enemies: [[540, "ice-spirit", 450, 760, 124], [1190, "grinch", 1030, 1280, 124], [1640, "bat", 1490, 1790, 158], [2280, "gingerbread", 2090, 2400, 136], [2740, "ice-spirit", 2550, 2900, 140], [3310, "snowman", 3150, 3460, 116], [3770, "grinch", 3580, 3950, 132]],
+            checkpoint: 2140,
+            boss: {
+              name: "SENHOR DO ECLIPSE",
+              x: 3580,
+              minX: 3330,
+              maxX: 3970,
+              hp: 18,
+              speed: 132
+            }
+          }
+        ];
+        const layout = layouts[idx - 6];
+        if (!layout) throw new RangeError(`Não há configuração para a fase ${idx + 1}.`);
+
+        groundSegments = layout.ground;
+        layout.pipes.forEach(([x, h]) => pipes.push({ x, w: 54, h }));
+        layout.platforms.forEach((platform) => platforms.push({ ...platform, moving: Boolean(platform.moving) }));
+        layout.blocks.forEach(([x, y, reward]) => mysteryBlocks.push({ x, y, w: 34, h: 34, used: false, reward, bumpY: 0 }));
+        layout.items.forEach(([x, y, type], index) => {
+          collectibles.push({ x, y, type, taken: false, phase: index * 0.57 });
+        });
+        collectibles.push({ x: layout.secret[0], y: layout.secret[1], type: "secret", taken: false, phase: 1.3 });
+        layout.enemies.forEach(([x, kind, minX, maxX, speed]) => {
+          enemies.push(makeEnemy(x, kind, minX, maxX, speed));
+        });
+        checkpointFlag = { x: layout.checkpoint, y: GROUND_Y, reached: false };
+
+        if (layout.boss) {
+          boss = {
+            name: layout.boss.name,
+            kind: "eclipse",
+            x: layout.boss.x,
+            y: GROUND_Y - 96,
+            w: 78,
+            h: 96,
+            vx: -layout.boss.speed,
+            vy: 0,
+            hp: layout.boss.hp,
+            maxHp: layout.boss.hp,
+            alive: true,
+            hitFlash: 0,
+            attackTimer: 2.2,
+            jumpTimer: 3.5,
+            attackIndex: 0,
+            dashTimer: 0,
+            patrolSpeed: layout.boss.speed,
+            phase: 1,
+            minX: layout.boss.minX,
+            maxX: layout.boss.maxX
+          };
+        }
+      }
+
+      function saveProgress() {
+        savedProgress = {
+          unlockedStage: unlockedStageIdx,
+          score: Math.max(score, savedProgress.score),
+          heroUpgraded
+        };
+        try {
+          window.localStorage.setItem("salveNatal.progress", JSON.stringify(savedProgress));
+        } catch (err) {
+          console.warn("Não foi possível salvar o progresso:", err);
+        }
+        updateProgressButtons();
+      }
+
+      function updateProgressButtons() {
+        $("btnContinueGame").classList.toggle("hidden", unlockedStageIdx === 0);
+      }
+
+      function renderStageSelection() {
+        const list = $("stageSelectList");
+        list.innerHTML = "";
+        STAGES.forEach((stage, index) => {
+          const button = document.createElement("button");
+          const unlocked = index <= unlockedStageIdx;
+          button.type = "button";
+          button.disabled = !unlocked;
+          button.className = `w-full rounded-xl border px-4 py-3 text-left font-bold transition ${
+            unlocked
+              ? "border-amber-300/40 bg-slate-900/70 text-white hover:bg-emerald-800/70 cursor-pointer"
+              : "border-white/10 bg-slate-950/50 text-slate-500 cursor-not-allowed"
+          }`;
+          button.textContent = `${unlocked ? "▶" : "🔒"} ${stage.code}`;
+          if (unlocked) {
+            button.addEventListener("click", () => startSelectedStage(index, index === unlockedStageIdx));
+          }
+          list.appendChild(button);
+        });
+      }
+
+      function startSelectedStage(idx, continueProgress = false) {
+        score = continueProgress ? savedProgress.score : 0;
+        buildStage(idx);
+        gameState = "PLAYING";
+        setScreenOverlay(null);
+        sfx.unlock();
+        sfx.startBgm();
       }
 
       function makeEnemy(x, kind, minX, maxX, speed) {
@@ -1863,6 +2201,10 @@
           kind,
           minX,
           maxX,
+          baseSpeed: speed,
+          aggroRange: kind === "grinch" || kind === "gingerbread" ? 280 : 210,
+          behaviorTimer: 0.8 + Math.random() * 1.6,
+          aggro: false,
           alive: true,
           squash: 0,
           anim: Math.random() * 6
@@ -2000,6 +2342,7 @@
             if (gameState === "TITLE" || gameState === "STORY") startNewAdventure();
             else if (gameState === "CINEMATIC") advanceCinematic();
             else if (gameState === "PAUSED") resumeGame();
+            else if (gameState === "POWER_UP") continueAfterPowerUp();
             else if (gameState === "STAGE_CLEAR" && currentStageIdx < STAGES.length - 1) {
               buildStage(currentStageIdx + 1);
               gameState = "PLAYING";
@@ -2039,7 +2382,9 @@
         snowballs.push({
           x: character.facing > 0 ? character.x + character.w : character.x - 12,
           y: character.y + 19,
-          vx: character.facing * 430,
+          vx: character.facing * (character.powerLevel > 1 ? 520 : 430),
+          damage: character.powerLevel,
+          radius: character.powerLevel > 1 ? 10 : 7,
           life: 1.15
         });
         sfx.tone(740, "triangle", 0.12, 0.09, 0, 980);
@@ -2278,16 +2623,16 @@
           : auroraPuzzle
             ? ` · 🌌 Harmonia: ${auroraPuzzle.completed ? "6/6" : `${auroraPuzzle.progress}/6`}`
             : "";
-        const questText = `🍬 Doces: ${status} · ✨ Segredos: ${stageSecrets} · ❄ Magia: ${player ? player.magic : 0}${puzzleText}`;
+        const questText = `🍬 Doces: ${status} · ✨ Segredos: ${stageSecrets} · ❄ Magia: ${player ? `${player.magic}/${player.magicCapacity}` : 0}${puzzleText}`;
         if (hudCache.questText !== questText) {
           $("hudQuest").textContent = questText;
           hudCache.questText = questText;
         }
       }
 
-      function damageBoss() {
+      function damageBoss(damage = 1) {
         if (!boss || !boss.alive || boss.hitFlash > 0) return;
-        boss.hp--;
+        boss.hp = Math.max(0, boss.hp - damage);
         boss.hitFlash = 0.55;
         boss.vx *= 1.08;
         boss.phase = boss.hp > 6 ? 1 : boss.hp > 3 ? 2 : 3;
@@ -2304,12 +2649,21 @@
           spawnParticles(boss.x + boss.w / 2, boss.y + 45, ["#ffd166", "#ff5964", "#34d399", "#ffffff"], 55, 290);
           const finalStage = currentStageIdx === STAGES.length - 1;
           if (!finalStage) {
-            giftCrate = { x: STAGES[currentStageIdx].length - 230, y: GROUND_Y - 46, w: 44, h: 46, bob: 0 };
+            giftCrate = {
+              x: STAGES[currentStageIdx].length - 230,
+              y: GROUND_Y - 46,
+              w: 44,
+              h: 46,
+              bob: 0,
+              label: currentStageIdx === 5 ? "MAGIA!" : "CARTINHA!"
+            };
           }
-          const bossIcon = boss.kind === "ice-wolf" ? "🐺" : "👑";
+          const bossIcon = boss.kind === "ice-wolf" ? "🐺" : currentStageIdx === STAGES.length - 1 ? "🌑" : "👑";
           showToast(finalStage
             ? `${bossIcon} ${boss.name} foi derrotado! A Estrela do Norte está livre. Sigam até a árvore!`
-            : `${bossIcon} ${boss.name} foi derrotado! Pegue o Presente Dourado!`);
+            : currentStageIdx === 5
+              ? `${bossIcon} ${boss.name} foi derrotado! Uma nova magia aguarda no presente!`
+              : `${bossIcon} ${boss.name} foi derrotado! Pegue o Presente Dourado!`);
         }
         updateHudUI();
       }
@@ -2378,7 +2732,7 @@
           setTimeout(() => {
             if (gameState === "PLAYING" && vitor === downedVitor) {
               const respawn = getCoopRespawnPosition(downedVitor);
-              vitor = createPlayer(respawn.x, respawn.y);
+              vitor = createPlayer(respawn.x, respawn.y, false);
               vitor.hp = config.maxLives;
               vitor.magic = 0;
               vitor.invuln = 1.5;
@@ -2457,7 +2811,7 @@
           const shot = snowballs[i];
           shot.x += shot.vx * dt;
           shot.life -= dt;
-          const hitbox = { x: shot.x - 7, y: shot.y - 7, w: 14, h: 14 };
+          const hitbox = { x: shot.x - shot.radius, y: shot.y - shot.radius, w: shot.radius * 2, h: shot.radius * 2 };
           let consumed = shot.life <= 0 || shot.x < cameraX - 40 || shot.x > cameraX + virtualW + 80;
           for (const en of enemies) {
             if (!consumed && en.alive && overlap(hitbox, en)) {
@@ -2471,7 +2825,7 @@
             }
           }
           if (!consumed && boss && boss.alive && overlap(hitbox, boss) && boss.hitFlash <= 0) {
-            damageBoss();
+            damageBoss(shot.damage || 1);
             consumed = true;
           }
           if (consumed) snowballs.splice(i, 1);
@@ -2491,7 +2845,7 @@
 
         // Movimento horizontal da heroína
         const moveDir = (input.right ? 1 : 0) - (input.left ? 1 : 0);
-        const maxSpeed = 265;
+        const maxSpeed = player.powerLevel > 1 ? 285 : 265;
         if (moveDir !== 0) {
           player.vx += moveDir * 1950 * dt;
           if (Math.abs(player.vx) > maxSpeed) player.vx = moveDir * maxSpeed;
@@ -2677,7 +3031,7 @@
             score += pts;
             if (c.type === "candy") {
               missionCandy++;
-              player.magic = Math.min(3, player.magic + 1);
+              player.magic = Math.min(player.magicCapacity, player.magic + 1);
               if (missionCandy >= 3 && !missionComplete) {
                 missionComplete = true;
                 score += 250;
@@ -2689,7 +3043,7 @@
               stageSecrets++;
               adventureSecrets++;
               score += 300;
-              player.magic = Math.min(3, player.magic + 1);
+              player.magic = Math.min(player.magicCapacity, player.magic + 1);
               spawnLabel(c.x, c.y - 24, "SEGREDO! +300 ✨", "#c4b5fd");
               if (adventureSecrets >= 3 && !secretMasteryAwarded) {
                 secretMasteryAwarded = true;
@@ -2750,8 +3104,31 @@
             continue;
           }
           en.anim += dt * 6;
+          en.behaviorTimer -= dt;
+          const targets = vitor ? [player, vitor] : [player];
+          let target = targets[0];
+          for (const candidate of targets) {
+            if (Math.abs(candidate.x - (en.x + en.w / 2)) < Math.abs(target.x - (en.x + en.w / 2))) {
+              target = candidate;
+            }
+          }
+          if (en.behaviorTimer <= 0) {
+            en.behaviorTimer = 0.7 + Math.random() * 1.3;
+            en.aggro = Math.abs(target.x - en.x) < en.aggroRange;
+            if (en.kind === "grinch" || en.kind === "gingerbread") {
+              const direction = en.aggro ? Math.sign(target.x - en.x) : Math.sign(en.vx || 1);
+              en.vx = direction * en.baseSpeed * (en.aggro ? 1.15 + Math.random() * 0.3 : 0.82 + Math.random() * 0.36);
+            } else if (en.kind === "snowman" && en.aggro) {
+              en.vx = Math.sign(target.x - en.x || en.vx) * en.baseSpeed * (1.25 + Math.random() * 0.25);
+            } else if (!en.aggro) {
+              en.vx = Math.sign(en.vx || 1) * en.baseSpeed;
+            }
+          }
           en.x += en.vx * dt;
-          if (en.kind === "bat" || en.kind === "ice-spirit") en.y = en.baseY + Math.sin(en.anim * 0.8) * 28;
+          if (en.kind === "bat" || en.kind === "ice-spirit") {
+            const targetOffset = en.aggro ? Math.max(-48, Math.min(48, target.y - en.baseY - 28)) : 0;
+            en.y += ((en.baseY + targetOffset + Math.sin(en.anim * 0.8) * 28) - en.y) * Math.min(1, dt * 2.4);
+          }
           if (en.x <= en.minX) {
             en.x = en.minX;
             en.vx = Math.abs(en.vx);
@@ -2790,12 +3167,16 @@
           }
         }
 
-        // Chefes das fases 3 e 6
+        // Chefes das fases 3, 6 e 9
         if (boss && boss.alive) {
           boss.hitFlash = Math.max(0, boss.hitFlash - dt);
           if (boss.kind === "ice-wolf" && boss.lungeTimer > 0) {
             boss.lungeTimer = Math.max(0, boss.lungeTimer - dt);
             if (boss.lungeTimer === 0) boss.vx = Math.sign(boss.vx || 1) * boss.patrolSpeed;
+          }
+          if (boss.kind === "eclipse" && boss.dashTimer > 0) {
+            boss.dashTimer = Math.max(0, boss.dashTimer - dt);
+            if (boss.dashTimer === 0) boss.vx = Math.sign(boss.vx || 1) * boss.patrolSpeed;
           }
           boss.x += boss.vx * dt;
           if (boss.x <= boss.minX) {
@@ -2853,6 +3234,51 @@
                   });
                 }
               }
+            } else if (boss.kind === "eclipse") {
+              const target = vitor && Math.abs(vitor.x - bx) < Math.abs(player.x - bx) ? vitor : player;
+              boss.attackIndex++;
+              boss.attackTimer = boss.phase === 1 ? 2 : boss.phase === 2 ? 1.55 : 1.2;
+
+              if (boss.attackIndex % 3 === 2) {
+                const dir = target.x + target.w / 2 < bx ? -1 : 1;
+                boss.vx = dir * (boss.phase === 3 ? 480 : 410);
+                boss.dashTimer = 0.42;
+                spawnParticles(bx, GROUND_Y - 10, ["#c084fc", "#f0abfc", "#ffffff"], 14, 110);
+              } else if (boss.attackIndex % 3 === 0) {
+                for (let i = -1; i <= 1; i++) {
+                  if (particles.length >= MAX_PARTICLES) break;
+                  particles.push({
+                    x: target.x + target.w / 2 + i * 72,
+                    y: -16,
+                    vx: i * 28,
+                    vy: 205 + boss.phase * 30,
+                    life: 1.7,
+                    maxLife: 1.7,
+                    size: 10,
+                    color: "#c084fc",
+                    isProjectile: true
+                  });
+                }
+              } else {
+                const dx = target.x + target.w / 2 - bx;
+                const dy = target.y + target.h / 2 - (boss.y + 42);
+                const length = Math.max(1, Math.hypot(dx, dy));
+                const speed = 260 + boss.phase * 35;
+                for (let i = -1; i <= 1; i++) {
+                  if (particles.length >= MAX_PARTICLES) break;
+                  particles.push({
+                    x: bx,
+                    y: boss.y + 42,
+                    vx: (dx / length + i * 0.2) * speed,
+                    vy: (dy / length + i * 0.16) * speed,
+                    life: 2,
+                    maxLife: 2,
+                    size: 8,
+                    color: "#e879f9",
+                    isProjectile: true
+                  });
+                }
+              }
             } else {
               boss.attackTimer = boss.phase === 1 ? 2.15 : boss.phase === 2 ? 1.65 : 1.2;
               const by = boss.y + 42;
@@ -2878,7 +3304,7 @@
           // Colisões dos jogadores com o chefe
           if (overlap(player, boss)) {
             if (player.vy > 50 && prevBottom <= boss.y + 38 && boss.hitFlash <= 0) {
-              damageBoss();
+              damageBoss(player.powerLevel);
               player.vy = -475;
             } else if (boss.hitFlash <= 0) {
               damagePlayer();
@@ -2898,6 +3324,17 @@
         const followedX = vitor ? (player.x + vitor.x) / 2 : player.x;
         const targetCam = Math.max(0, Math.min(st.length - virtualW, followedX - virtualW * 0.36));
         cameraX += (targetCam - cameraX) * Math.min(1, dt * 7.5);
+        if (vitor) {
+          const leftEdge = cameraX + 12;
+          const rightEdge = cameraX + virtualW - 12;
+          [player, vitor].forEach((character) => {
+            const boundedX = Math.max(leftEdge, Math.min(rightEdge - character.w, character.x));
+            if (boundedX !== character.x) {
+              character.x = boundedX;
+              character.vx = 0;
+            }
+          });
+        }
 
         // Chegada no Fim da Fase
         const goalX = st.length - 160;
@@ -2914,7 +3351,9 @@
           giftCrate.bob += dt * 4;
           if (overlap(player, giftCrate) || (vitor && overlap(vitor, giftCrate)) ||
             player.x + player.w >= st.length - 140 || (vitor && vitor.x + vitor.w >= st.length - 140)) {
-            if (currentStageIdx === STAGES.length - 1 || (currentStageIdx === 2 && !vitorUnlocked)) {
+            if (currentStageIdx === 5) {
+              triggerPowerUp();
+            } else if (currentStageIdx === STAGES.length - 1 || (currentStageIdx === 2 && !vitorUnlocked)) {
               triggerFinale();
             } else {
               completeStage();
@@ -3010,6 +3449,24 @@
           for (let tx = seg.x + 10; tx < seg.x + seg.w - 20; tx += 44) {
             ctx.fillRect(tx, GROUND_Y + 24, 24, 10);
             ctx.fillRect(tx + 16, GROUND_Y + 46, 24, 10);
+            if (st.index === 6) {
+              ctx.fillStyle = "rgba(251, 191, 36, 0.28)";
+              ctx.fillRect(tx + 29, GROUND_Y + 28, 3, 3);
+              ctx.fillRect(tx + 7, GROUND_Y + 51, 3, 3);
+              ctx.fillStyle = "rgba(255, 255, 255, 0.07)";
+            } else if (st.index === 7) {
+              ctx.fillStyle = "rgba(110, 231, 183, 0.18)";
+              ctx.beginPath();
+              ctx.arc(tx + 32, GROUND_Y + 51, 3, 0, Math.PI * 2);
+              ctx.fill();
+              ctx.fillStyle = "rgba(255, 255, 255, 0.07)";
+            } else if (st.index === 8) {
+              ctx.strokeStyle = "rgba(196, 181, 253, 0.22)";
+              ctx.strokeRect(tx + 2, GROUND_Y + 22, 38, 38);
+              ctx.fillStyle = "rgba(253, 230, 138, 0.32)";
+              ctx.fillRect(tx + 20, GROUND_Y + 40, 3, 3);
+              ctx.fillStyle = "rgba(255, 255, 255, 0.07)";
+            }
           }
 
           // Camada superior de neve fofa
@@ -3018,18 +3475,47 @@
           ctx.roundRect(seg.x - 2, GROUND_Y - 2, seg.w + 4, 16, 7);
           ctx.fill();
 
-          ctx.fillStyle = "#bae6fd";
+          ctx.fillStyle = st.index === 6 ? "rgba(251, 191, 36, 0.38)"
+            : st.index === 7 ? "rgba(110, 231, 183, 0.34)"
+              : st.index === 8 ? "rgba(196, 181, 253, 0.42)"
+                : "#bae6fd";
           ctx.fillRect(seg.x, GROUND_Y + 12, seg.w, 4);
+        }
+
+        if (boss && boss.alive && boss.kind === "eclipse") {
+          for (const x of [boss.minX, boss.maxX]) {
+            const pulse = 0.55 + Math.sin(animClock * 3) * 0.15;
+            ctx.save();
+            ctx.globalAlpha = pulse;
+            ctx.shadowColor = "#c084fc";
+            ctx.shadowBlur = 18;
+            ctx.fillStyle = "rgba(147, 51, 234, 0.24)";
+            ctx.fillRect(x - 10, GROUND_Y - 112, 20, 112);
+            ctx.strokeStyle = "#e9d5ff";
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(x, GROUND_Y - 112);
+            ctx.lineTo(x, GROUND_Y);
+            ctx.stroke();
+            ctx.restore();
+          }
         }
 
         // Plataformas Flutuantes de Gelo e Madeira Festiva
         for (const p of platforms) {
-          ctx.fillStyle = p.moving ? "#0284c7" : "#7c2d12";
+          ctx.fillStyle = st.index === 6 ? (p.moving ? "#a16207" : "#71394a")
+            : st.index === 7 ? (p.moving ? "#0f766e" : "#1f5946")
+              : st.index === 8 ? (p.moving ? "#6d4ac7" : "#35406f")
+                : p.moving ? "#0284c7" : "#7c2d12";
           ctx.beginPath();
           ctx.roundRect(p.x, p.y, p.w, p.h, 8);
           ctx.fill();
 
-          ctx.fillStyle = "#ffffff";
+          if (st.index >= 6) {
+            ctx.fillStyle = st.index === 6 ? "#fbbf24" : st.index === 7 ? "#86efac" : "#c4b5fd";
+            ctx.fillRect(p.x + 8, p.y + p.h - 5, p.w - 16, 3);
+          }
+          ctx.fillStyle = st.index === 6 ? "#fff7e2" : st.index === 7 ? "#ecfdf5" : st.index === 8 ? "#fff7e2" : "#ffffff";
           ctx.beginPath();
           ctx.roundRect(p.x - 1, p.y - 2, p.w + 2, 8, 6);
           ctx.fill();
@@ -3038,7 +3524,9 @@
         // Canos Listrados estilo Bengala Doce (Super Mario Natalino!)
         for (const pipe of pipes) {
           const py = GROUND_Y - pipe.h;
-          ctx.fillStyle = "#dc2626";
+          const pipeBody = st.index === 6 ? "#8f3856" : st.index === 7 ? "#17634c" : st.index === 8 ? "#414a88" : "#dc2626";
+          const pipeStripe = st.index === 6 ? "#fcd985" : st.index === 7 ? "#bbf7d0" : st.index === 8 ? "#d8ccff" : "#ffffff";
+          ctx.fillStyle = pipeBody;
           ctx.beginPath();
           ctx.roundRect(pipe.x + 4, py + 14, pipe.w - 8, pipe.h - 14, 4);
           ctx.fill();
@@ -3048,7 +3536,7 @@
           ctx.beginPath();
           ctx.rect(pipe.x + 4, py + 14, pipe.w - 8, pipe.h - 14);
           ctx.clip();
-          ctx.fillStyle = "#ffffff";
+          ctx.fillStyle = pipeStripe;
           for (let sy = py; sy < GROUND_Y + 30; sy += 22) {
             ctx.beginPath();
             ctx.moveTo(pipe.x, sy);
@@ -3061,8 +3549,8 @@
           ctx.restore();
 
           // Borda superior do cano
-          ctx.fillStyle = "#b91c1c";
-          ctx.strokeStyle = "#fde68a";
+          ctx.fillStyle = st.index === 6 ? "#6f2940" : st.index === 7 ? "#104936" : st.index === 8 ? "#303865" : "#b91c1c";
+          ctx.strokeStyle = pipeStripe;
           ctx.lineWidth = 2;
           ctx.beginPath();
           ctx.roundRect(pipe.x, py, pipe.w, 16, 5);
@@ -3073,8 +3561,12 @@
         // Blocos Surpresa "?"
         for (const mb of mysteryBlocks) {
           const by = mb.y + mb.bumpY;
-          ctx.fillStyle = mb.used ? "#64748b" : "#f59e0b";
-          ctx.strokeStyle = mb.used ? "#cbd5e1" : "#fef3c7";
+          ctx.fillStyle = mb.used ? "#64748b"
+            : st.index === 6 ? "#d18b32"
+              : st.index === 7 ? "#26866a"
+                : st.index === 8 ? "#6554ad"
+                  : "#f59e0b";
+          ctx.strokeStyle = mb.used ? "#cbd5e1" : st.index === 7 ? "#bbf7d0" : st.index === 8 ? "#ddd6fe" : "#fef3c7";
           ctx.lineWidth = 2.5;
           ctx.beginPath();
           ctx.roundRect(mb.x, by, mb.w, mb.h, 7);
@@ -3128,7 +3620,7 @@
           drawEnemySprite(ctx, en);
         }
 
-        // Chefes das fases 3 e 6
+        // Chefes das fases 3, 6 e 9
         if (boss && boss.alive) {
           if (boss.kind === "ice-wolf") drawFrostWolfBoss(ctx, boss);
           else drawIceKingBoss(ctx, boss);
@@ -3137,7 +3629,7 @@
         // Grande Árvore de Natal no Fim da Fase
         drawGreatChristmasTree(ctx, st.length - 115, GROUND_Y, treeLitProgress);
 
-        // Presente Dourado com a Cartinha de Natal (após derrotar o Rei Gelado)
+        // Recompensas após as batalhas contra chefes.
         if (giftCrate) {
           drawGoldenGift(ctx, giftCrate);
         }
@@ -3153,6 +3645,7 @@
               isMoving: Math.abs(player.vx) > 15,
               onGround: player.onGround,
               vy: player.vy,
+              scale: player.powerLevel > 1 ? 1.1 : 1,
               blink
             });
           }
@@ -3201,13 +3694,19 @@
         }
 
         for (const shot of snowballs) {
+          const powered = shot.damage > 1;
           ctx.save();
-          ctx.fillStyle = "#bae6fd";
-          ctx.shadowColor = "#7dd3fc";
-          ctx.shadowBlur = 12;
+          ctx.fillStyle = powered ? "#f5d0fe" : "#bae6fd";
+          ctx.shadowColor = powered ? "#d946ef" : "#7dd3fc";
+          ctx.shadowBlur = powered ? 20 : 12;
           ctx.beginPath();
-          ctx.arc(shot.x, shot.y, 7, 0, Math.PI * 2);
+          ctx.arc(shot.x, shot.y, shot.radius, 0, Math.PI * 2);
           ctx.fill();
+          if (powered) {
+            ctx.strokeStyle = "#fde68a";
+            ctx.lineWidth = 2;
+            ctx.stroke();
+          }
           ctx.restore();
         }
 
@@ -3336,7 +3835,36 @@
               ctx.fillStyle = "rgba(236, 254, 255, 0.78)";
               ctx.fillRect(px - 25, GROUND_Y - 43, 50, 4);
             }
-          } else {
+          } else if (st.index === 8) {
+            const towerHeight = 205 + (Math.abs(i) % 3) * 32;
+            const towerX = bx + 8;
+            ctx.fillStyle = "rgba(30, 41, 82, 0.88)";
+            ctx.fillRect(towerX, GROUND_Y - towerHeight, 92, towerHeight);
+            ctx.fillStyle = "rgba(196, 181, 253, 0.45)";
+            ctx.fillRect(towerX + 8, GROUND_Y - towerHeight + 20, 7, towerHeight - 20);
+            ctx.fillRect(towerX + 77, GROUND_Y - towerHeight + 20, 7, towerHeight - 20);
+            ctx.fillStyle = "rgba(226, 232, 255, 0.68)";
+            ctx.beginPath();
+            ctx.moveTo(towerX - 10, GROUND_Y - towerHeight);
+            ctx.lineTo(towerX + 46, GROUND_Y - towerHeight - 54);
+            ctx.lineTo(towerX + 102, GROUND_Y - towerHeight);
+            ctx.closePath();
+            ctx.fill();
+            ctx.fillStyle = "#fcd985";
+            for (let wy = GROUND_Y - towerHeight + 42; wy < GROUND_Y - 36; wy += 54) {
+              ctx.beginPath();
+              ctx.roundRect(towerX + 38, wy, 16, 25, [8, 8, 2, 2]);
+              ctx.fill();
+            }
+            ctx.strokeStyle = "rgba(253, 230, 138, 0.65)";
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(towerX - 18, GROUND_Y - 4);
+            ctx.lineTo(towerX - 18, GROUND_Y - 82);
+            ctx.lineTo(towerX + 110, GROUND_Y - 82);
+            ctx.lineTo(towerX + 110, GROUND_Y - 4);
+            ctx.stroke();
+          } else if (st.index === 5) {
             // Pilares estrelados da fortaleza no coração do Norte
             const towerHeight = 170 + (Math.abs(i) % 3) * 28;
             ctx.fillStyle = "rgba(167, 139, 250, 0.3)";
@@ -3348,6 +3876,93 @@
             ctx.lineTo(bx + 56, GROUND_Y - towerHeight);
             ctx.closePath();
             ctx.fill();
+          } else if (st.index === 6) {
+            const lanternY = GROUND_Y - 112 - (Math.abs(i) % 3) * 18;
+            ctx.strokeStyle = "rgba(92, 54, 68, 0.72)";
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.moveTo(bx - 6, lanternY - 15);
+            ctx.quadraticCurveTo(bx + 58, lanternY - 30, bx + 126, lanternY - 12);
+            ctx.stroke();
+            for (let lamp = 0; lamp < 3; lamp++) {
+              const lx = bx + 18 + lamp * 46;
+              const ly = lanternY + (lamp === 1 ? 0 : 7);
+              ctx.fillStyle = "rgba(251, 191, 36, 0.16)";
+              ctx.beginPath();
+              ctx.arc(lx + 8, ly + 14, 30, 0, Math.PI * 2);
+              ctx.fill();
+              ctx.fillStyle = "#704250";
+              ctx.fillRect(lx + 5, ly - 8, 6, 9);
+              ctx.fillStyle = "#fbbf24";
+              ctx.beginPath();
+              ctx.roundRect(lx, ly, 17, 23, 5);
+              ctx.fill();
+              ctx.fillStyle = "#fff4c2";
+              ctx.fillRect(lx + 5, ly + 5, 7, 11);
+              ctx.fillStyle = "#6b3546";
+              ctx.fillRect(lx + 2, ly + 21, 13, 3);
+            }
+            ctx.fillStyle = "rgba(255, 241, 214, 0.68)";
+            ctx.beginPath();
+            ctx.arc(bx + 124, lanternY - 24, 3, 0, Math.PI * 2);
+            ctx.arc(bx - 9, lanternY - 20, 2, 0, Math.PI * 2);
+            ctx.fill();
+          } else if (st.index === 7) {
+            for (let tree = 0; tree < 2; tree++) {
+              const tx = bx + 12 + tree * 88;
+              const height = 145 + ((Math.abs(i + tree) % 3) * 20);
+              ctx.fillStyle = "rgba(16, 56, 49, 0.92)";
+              ctx.fillRect(tx + 21, GROUND_Y - 48, 12, 48);
+              for (let tier = 0; tier < 4; tier++) {
+                const y = GROUND_Y - height + tier * 30;
+                const half = 17 + tier * 8;
+                ctx.fillStyle = tier % 2 === 0 ? "#145044" : "#1a5b4b";
+                ctx.beginPath();
+                ctx.moveTo(tx + 27 - half, y + 48);
+                ctx.lineTo(tx + 27, y);
+                ctx.lineTo(tx + 27 + half, y + 48);
+                ctx.closePath();
+                ctx.fill();
+                ctx.strokeStyle = "rgba(236, 254, 255, 0.72)";
+                ctx.lineWidth = 4;
+                ctx.beginPath();
+                ctx.moveTo(tx + 27 - half * 0.68, y + 35);
+                ctx.lineTo(tx + 27, y + 10);
+                ctx.lineTo(tx + 27 + half * 0.68, y + 35);
+                ctx.stroke();
+              }
+              for (let bell = 0; bell < 3; bell++) {
+                const bellX = tx + 8 + bell * 18;
+                const bellY = GROUND_Y - height + 48 + bell * 27;
+                ctx.fillStyle = bell % 2 ? "#fbbf24" : "#f0abfc";
+                ctx.beginPath();
+                ctx.arc(bellX, bellY, 5, Math.PI, 0);
+                ctx.lineTo(bellX + 6, bellY + 5);
+                ctx.lineTo(bellX - 6, bellY + 5);
+                ctx.closePath();
+                ctx.fill();
+                ctx.fillStyle = "#fff7d6";
+                ctx.beginPath();
+                ctx.arc(bellX, bellY + 5, 1.5, 0, Math.PI * 2);
+                ctx.fill();
+              }
+            }
+          } else {
+            const treeHeight = 115 + (Math.abs(i) % 3) * 24;
+            ctx.fillStyle = "#17483d";
+            for (let tier = 0; tier < 3; tier++) {
+              ctx.beginPath();
+              ctx.moveTo(bx - 30 + tier * 5, GROUND_Y - 12 - tier * 26);
+              ctx.lineTo(bx + 12, GROUND_Y - treeHeight + tier * 21);
+              ctx.lineTo(bx + 54 - tier * 5, GROUND_Y - 12 - tier * 26);
+              ctx.closePath();
+              ctx.fill();
+            }
+            ctx.strokeStyle = "rgba(253, 230, 138, 0.8)";
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.arc(bx + 12, GROUND_Y - treeHeight + 54, 18, 0.15, Math.PI - 0.15);
+            ctx.stroke();
           }
         }
 
@@ -3375,7 +3990,7 @@
           ctx.closePath();
           ctx.fill();
           ctx.restore();
-        } else if (st.index === 5) {
+        } else if (st.index === 5 || st.index === 8) {
           const starX = 2470 - cameraX * 0.55;
           ctx.save();
           ctx.globalAlpha = 0.38 + Math.sin(animClock * 2) * 0.06;
@@ -3565,6 +4180,7 @@
 
       function drawIceKingBoss(c, b) {
         c.save();
+        const eclipse = b.kind === "eclipse";
         const cx = b.x + b.w / 2;
         const cy = b.y + b.h / 2;
         c.translate(cx, cy);
@@ -3576,7 +4192,7 @@
         if (b.attackTimer < 0.8) {
           c.save();
           c.globalAlpha = 0.22 + Math.abs(Math.sin(animClock * 14)) * 0.25;
-          c.strokeStyle = b.phase === 3 ? "#fb7185" : "#7dd3fc";
+          c.strokeStyle = eclipse ? "#f0abfc" : b.phase === 3 ? "#fb7185" : "#7dd3fc";
           c.lineWidth = 4;
           c.beginPath();
           c.ellipse(0, 43, 54, 13, 0, 0, Math.PI * 2);
@@ -3585,7 +4201,7 @@
         }
 
         // Capa real congelada
-        const phaseColors = ["#1d4ed8", "#7c3aed", "#be123c"];
+        const phaseColors = eclipse ? ["#312e81", "#581c87", "#9d174d"] : ["#1d4ed8", "#7c3aed", "#be123c"];
         c.fillStyle = phaseColors[b.phase - 1];
         c.beginPath();
         c.moveTo(-26, -15);
@@ -3596,13 +4212,15 @@
         c.fill();
 
         // Armadura de gelo
-        c.fillStyle = b.phase === 3 ? "#fb7185" : b.phase === 2 ? "#c4b5fd" : "#38bdf8";
+        c.fillStyle = eclipse
+          ? b.phase === 3 ? "#f0abfc" : "#a78bfa"
+          : b.phase === 3 ? "#fb7185" : b.phase === 2 ? "#c4b5fd" : "#38bdf8";
         c.beginPath();
         c.roundRect(-24, -18, 48, 56, 14);
         c.fill();
 
         // Cabeça e barba nevada
-        c.fillStyle = "#bae6fd";
+        c.fillStyle = eclipse ? "#c4b5fd" : "#bae6fd";
         c.beginPath();
         c.arc(0, -28, 20, 0, Math.PI * 2);
         c.fill();
@@ -3616,15 +4234,15 @@
         c.fill();
 
         // Olhos brilhantes
-        c.fillStyle = "#fef08a";
+        c.fillStyle = eclipse ? "#f0abfc" : "#fef08a";
         c.beginPath();
         c.arc(-7, -30, 3.2, 0, Math.PI * 2);
         c.arc(7, -30, 3.2, 0, Math.PI * 2);
         c.fill();
 
         // Coroa de Cristal
-        c.fillStyle = "#e0f2fe";
-        c.strokeStyle = "#0284c7";
+        c.fillStyle = eclipse ? "#f5d0fe" : "#e0f2fe";
+        c.strokeStyle = eclipse ? "#701a75" : "#0284c7";
         c.lineWidth = 2;
         c.beginPath();
         c.moveTo(-18, -44);
@@ -3645,7 +4263,7 @@
         c.roundRect(-barW / 2, -82, barW, 10, 5);
         c.fill();
 
-        c.fillStyle = "#38bdf8";
+        c.fillStyle = eclipse ? "#e879f9" : "#38bdf8";
         c.beginPath();
         c.roundRect(-barW / 2 + 2, -80, (barW - 4) * (b.hp / b.maxHp), 6, 4);
         c.fill();
@@ -4075,7 +4693,7 @@
         c.fillStyle = "#ffffff";
         c.font = "bold 11px Fredoka, sans-serif";
         c.textAlign = "center";
-        c.fillText("CARTINHA!", cx, g.y + bob - 10);
+        c.fillText(g.label || "CARTINHA!", cx, g.y + bob - 10);
         c.restore();
       }
 
@@ -4086,12 +4704,14 @@
         if (activeId) releaseAllInputs();
         const overlays = [
           "titleScreen",
+          "stageSelectModal",
           "storyModal",
           "cinematicModal",
           "settingsModal",
           "letterEditorModal",
           "pauseModal",
           "stageClearModal",
+          "powerUpModal",
           "finaleLetterModal",
           "completionModal",
           "creditsModal"
@@ -4154,9 +4774,8 @@
         let progressText;
         let progressPercent;
         if (st.hasBoss && boss && boss.alive) {
-          stageLabel = boss.kind === "ice-wolf"
-            ? `🐺 LOBO DA GEADA · ${boss.phase}/3`
-            : `👑 REI GELADO · ETAPA ${boss.phase}/3`;
+          const bossIcon = boss.kind === "ice-wolf" ? "🐺" : currentStageIdx === STAGES.length - 1 ? "🌑" : "👑";
+          stageLabel = `${bossIcon} ${boss.name} · ETAPA ${boss.phase}/3`;
           progressPercent = Math.round((boss.hp / boss.maxHp) * 100);
           progressText = `${boss.hp}/${boss.maxHp} HP`;
         } else {
@@ -4205,6 +4824,8 @@
         $("btnUnlockVitor").classList.add("hidden");
         releaseAllInputs();
         buildStage(3);
+        unlockedStageIdx = Math.max(unlockedStageIdx, 3);
+        saveProgress();
         gameState = "PLAYING";
         setScreenOverlay(null);
         sfx.startBgm();
@@ -4215,16 +4836,16 @@
 
       const cinematicScenes = [
         {
-          title: "Quando a estrela caiu",
-          text: "Na véspera de Natal, o Rei Gelado roubou a Estrela do Norte. Em um instante, as luzes da Vila Nevada se apagaram."
+          title: "Uma luz na noite",
+          text: "Na véspera de Natal, uma estrela vacilou no céu. A neve prendeu a respiração, e uma luz distante pareceu chamar por alguém."
         },
         {
-          title: "Uma heroína se ergue",
-          text: "Guiada pela esperança e pela magia das festas, {hero} partiu para recuperar a estrela e devolver o calor ao reino."
+          title: "Pegadas na neve",
+          text: "Com coragem no peito e curiosidade nos olhos, {hero} seguiu um rastro de pequenos brilhos para além dos caminhos conhecidos."
         },
         {
-          title: "Uma jornada além do castelo",
-          text: "Atravesse a Vila Nevada, a Floresta dos Pinheiros e o Castelo Congelado para enfrentar o Rei Gelado. Depois da batalha, uma cartinha de Vitor marcará o início de uma jornada a dois."
+          title: "O começo de um mistério",
+          text: "Entre paisagens adormecidas e ecos que parecem responder, cada passo guarda uma surpresa. O que espera adiante? A próxima pegada é que contará."
         }
       ];
       let cinematicIndex = 0;
@@ -4269,6 +4890,8 @@
 
       function completeStage() {
         gameState = "STAGE_CLEAR";
+        unlockedStageIdx = Math.max(unlockedStageIdx, Math.min(STAGES.length - 1, currentStageIdx + 1));
+        saveProgress();
         sfx.stageClear();
         const st = STAGES[currentStageIdx];
         $("stageClearTitle").textContent = st.title;
@@ -4277,8 +4900,39 @@
         setScreenOverlay("stageClearModal");
       }
 
+      function triggerPowerUp() {
+        if (gameState !== "PLAYING" || currentStageIdx !== 5 || !player) return;
+        gameState = "POWERING_UP";
+        heroUpgraded = true;
+        unlockedStageIdx = Math.max(unlockedStageIdx, 6);
+        const feet = player.y + player.h;
+        player.w = 36;
+        player.h = 50;
+        player.y = feet - player.h;
+        player.powerLevel = 2;
+        player.magicCapacity = 5;
+        player.magic = player.magicCapacity;
+        saveProgress();
+        sfx.stageClear();
+        spawnParticles(player.x + player.w / 2, player.y + player.h / 2, ["#fde68a", "#c4b5fd", "#ffffff"], 55, 240);
+        showToast("✨ A magia da protagonista cresceu!");
+        setTimeout(() => {
+          if (gameState !== "POWERING_UP") return;
+          gameState = "POWER_UP";
+          setScreenOverlay("powerUpModal");
+        }, 1500);
+      }
+
+      function continueAfterPowerUp() {
+        if (gameState !== "POWER_UP") return;
+        buildStage(6);
+        gameState = "PLAYING";
+        setScreenOverlay(null);
+        sfx.startBgm();
+      }
+
       function triggerFinale() {
-        if (gameState === "CELEBRATING" || gameState === "FINALE") return;
+        if (gameState === "CELEBRATING" || gameState === "FINALE" || gameState === "POWERING_UP" || gameState === "POWER_UP") return;
         const unlockingVitor = currentStageIdx === 2 && !vitorUnlocked;
         const finalStage = currentStageIdx === STAGES.length - 1;
         gameState = "CELEBRATING";
@@ -4288,6 +4942,7 @@
           $("finalJourneyText").textContent = "A Estrela do Norte ainda está rachada. A cartinha marca o encontro com Vitor; juntos, Paloma e ele vão descobrir a origem da magia.";
           $("btnUnlockVitor").classList.remove("hidden");
         }
+        saveProgress();
         sfx.victoryFanfare();
         setScreenOverlay(null);
 
@@ -4301,6 +4956,7 @@
             $("finalScoreBadge").textContent = score;
             $("btnClosePreview").classList.add("hidden");
             setScreenOverlay("finaleLetterModal");
+            sfx.musicBox();
           }
         }, 2300);
       }
@@ -4310,6 +4966,12 @@
          -------------------------------------------------------------------- */
       $("btnStartGame").onclick = startNewAdventure;
       $("btnStoryPlay").onclick = startNewAdventure;
+      $("btnContinueGame").onclick = () => startSelectedStage(unlockedStageIdx, true);
+      $("btnOpenStageSelect").onclick = () => {
+        renderStageSelection();
+        setScreenOverlay("stageSelectModal");
+      };
+      $("btnCloseStageSelect").onclick = () => setScreenOverlay("titleScreen");
       $("btnUnlockVitor").onclick = unlockVitorAndContinue;
       $("btnNextCinematic").onclick = advanceCinematic;
       $("btnSkipCinematic").onclick = startGameplayFromCinematic;
@@ -4414,6 +5076,7 @@
         $("finalScoreBadge").textContent = score;
         $("btnClosePreview").classList.remove("hidden");
         setScreenOverlay("finaleLetterModal");
+        sfx.musicBox();
       };
 
       $("btnClosePreview").onclick = () => {
@@ -4473,8 +5136,10 @@
           buildStage(currentStageIdx + 1);
           gameState = "PLAYING";
           setScreenOverlay(null);
+          sfx.startBgm();
         }
       };
+      $("btnContinueAfterUpgrade").onclick = continueAfterPowerUp;
 
       $("btnReplayAll").onclick = startNewAdventure;
 
@@ -4508,6 +5173,7 @@
         loadUrlParams();
         syncSettingsButtons();
         $("vitorUnlockedNotice").classList.toggle("hidden", !vitorUnlocked);
+        updateProgressButtons();
         buildStage(0);
         gameState = "TITLE";
         setScreenOverlay("titleScreen");
