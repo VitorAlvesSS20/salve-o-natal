@@ -203,6 +203,7 @@
       user-select: text;
       -webkit-user-select: text;
     }
+
   </style>
 </head>
 <body>
@@ -238,6 +239,9 @@
         <svg class="w-4 h-4 sm:w-5 sm:h-5 fill-amber-300 shrink-0" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
         <span id="hudScore">0</span>
       </div>
+      <div id="hudCombo" class="hidden items-center rounded-2xl border-2 border-fuchsia-300/70 bg-fuchsia-950/85 px-3 py-1.5 font-display text-sm text-fuchsia-100 shadow-xl backdrop-blur-md">
+        <span id="hudComboText">COMBO x2</span>
+      </div>
     </div>
 
     <!-- Centro: Indicador da Fase & Barra de Progresso / Vida do Boss -->
@@ -253,13 +257,13 @@
 
     <!-- Direita: Controles Rápidos (Áudio, Reiniciar Fase, Pausa) -->
     <div class="flex items-center gap-1.5 sm:gap-2 pointer-events-auto">
-      <button id="btnHudAudio" class="bg-slate-950/85 hover:bg-slate-800 text-amber-300 border-2 border-amber-300/60 rounded-2xl p-2 sm:px-3 sm:py-1.5 text-sm font-bold shadow-lg active:scale-95 transition cursor-pointer" title="Alternar Som">
+      <button id="btnHudAudio" aria-label="Alternar som" class="bg-slate-950/85 hover:bg-slate-800 text-amber-300 border-2 border-amber-300/60 rounded-2xl p-2 sm:px-3 sm:py-1.5 text-sm font-bold shadow-lg active:scale-95 transition cursor-pointer" title="Alternar Som">
         🔊
       </button>
-      <button id="btnHudRestart" class="bg-slate-950/85 hover:bg-slate-800 text-sky-100 border-2 border-white/30 rounded-2xl p-2 sm:px-3 sm:py-1.5 text-xs sm:text-sm font-bold shadow-lg active:scale-95 transition cursor-pointer" title="Reiniciar Fase">
+      <button id="btnHudRestart" aria-label="Reiniciar fase" class="bg-slate-950/85 hover:bg-slate-800 text-sky-100 border-2 border-white/30 rounded-2xl p-2 sm:px-3 sm:py-1.5 text-xs sm:text-sm font-bold shadow-lg active:scale-95 transition cursor-pointer" title="Reiniciar Fase">
         🔄
       </button>
-      <button id="btnHudPause" class="bg-rose-700/90 hover:bg-rose-600 text-white border-2 border-amber-200/80 rounded-2xl px-3 py-1.5 text-xs sm:text-sm font-bold shadow-lg active:scale-95 transition cursor-pointer">
+      <button id="btnHudPause" aria-label="Pausar jogo" class="bg-rose-700/90 hover:bg-rose-600 text-white border-2 border-amber-200/80 rounded-2xl px-3 py-1.5 text-xs sm:text-sm font-bold shadow-lg active:scale-95 transition cursor-pointer">
         ⏸ Pausa
       </button>
     </div>
@@ -691,6 +695,23 @@
         sfx: true,
         bgm: true
       };
+
+      try {
+        const savedConfig = JSON.parse(window.localStorage.getItem("salveNatal.config") || "{}");
+        if (savedConfig.maxLives === 3 || savedConfig.maxLives === 5) config.maxLives = savedConfig.maxLives;
+        if (typeof savedConfig.sfx === "boolean") config.sfx = savedConfig.sfx;
+        if (typeof savedConfig.bgm === "boolean") config.bgm = savedConfig.bgm;
+      } catch (err) {
+        console.warn("Não foi possível carregar as configurações:", err);
+      }
+
+      function saveConfig() {
+        try {
+          window.localStorage.setItem("salveNatal.config", JSON.stringify(config));
+        } catch (err) {
+          console.warn("Não foi possível salvar as configurações:", err);
+        }
+      }
 
       function loadVitorUnlock() {
         try {
@@ -1734,6 +1755,8 @@
       let cameraX = 0;
       let screenShake = 0;
       let animClock = 0;
+      let comboCount = 0;
+      let comboTimer = 0;
 
       let player = null;
       let vitor = null;
@@ -1798,6 +1821,8 @@
         const st = STAGES[idx];
         cameraX = 0;
         screenShake = 0;
+        comboCount = 0;
+        comboTimer = 0;
         particles = [];
         floatingLabels = [];
         snowballs = [];
@@ -2357,6 +2382,7 @@
         setScreenOverlay(null);
         sfx.unlock();
         sfx.startBgm();
+        showToast(`🎯 ${STAGES[idx].code}`);
       }
 
       function makeEnemy(x, kind, minX, maxX, speed) {
@@ -2404,6 +2430,19 @@
 
       function spawnLabel(x, y, text, color = "#ffd166") {
         floatingLabels.push({ x, y, text, color, life: 1.0 });
+      }
+
+      function registerCombo(basePoints = 120) {
+        comboCount++;
+        comboTimer = 2.5;
+        const bonus = Math.min(300, (comboCount - 1) * 30);
+        const points = basePoints + bonus;
+        score += points;
+        if (comboCount >= 2) {
+          spawnLabel(player.x + player.w / 2, player.y - 18, `COMBO x${comboCount} +${bonus}`, "#f5d0fe");
+        }
+        updateHudUI();
+        return points;
       }
 
       /* --------------------------------------------------------------------
@@ -2803,6 +2842,7 @@
         if (!boss || !boss.alive || boss.hitFlash > 0) return;
         boss.hp = Math.max(0, boss.hp - damage);
         boss.hitFlash = 0.55;
+        registerCombo(75);
         boss.vx *= 1.08;
         boss.phase = boss.hp > 6 ? 1 : boss.hp > 3 ? 2 : 3;
         boss.attackTimer = Math.min(boss.attackTimer, boss.phase === 1 ? 1.8 : 1.2);
@@ -2918,6 +2958,10 @@
         }
         pollGamepads();
         animClock += dt;
+        if (comboTimer > 0) {
+          comboTimer = Math.max(0, comboTimer - dt);
+          if (comboTimer === 0) comboCount = 0;
+        }
 
         // Atualiza flocos de neve suaves em todos os estados
         for (const f of snowFlakes) {
@@ -2986,8 +3030,8 @@
             if (!consumed && en.alive && overlap(hitbox, en)) {
               en.alive = false;
               en.squash = 0.4;
-              score += 120;
-              spawnLabel(en.x + en.w / 2, en.y - 10, "+120 ❄", "#bae6fd");
+              const points = registerCombo(120);
+              spawnLabel(en.x + en.w / 2, en.y - 10, `+${points} ❄`, "#bae6fd");
               spawnParticles(en.x + en.w / 2, en.y + en.h / 2, ["#ffffff", "#7dd3fc"], 12, 150);
               consumed = true;
               updateHudUI();
@@ -3311,7 +3355,7 @@
               en.alive = false;
               en.squash = 0.4;
               player.vy = -420;
-              score += 120;
+               registerCombo(120);
               sfx.stomp();
               spawnLabel(en.x + 18, en.y - 10, "+120 ✨", "#bae6fd");
               spawnParticles(en.x + 18, en.y + 18, ["#ffffff", "#7dd3fc", "#ffd166"], 16, 180);
@@ -3325,7 +3369,7 @@
               en.alive = false;
               en.squash = 0.4;
               vitor.vy = -420;
-              score += 120;
+              registerCombo(120);
               sfx.stomp();
               spawnLabel(en.x + 18, en.y - 10, "+120 ✨", "#bae6fd");
               spawnParticles(en.x + 18, en.y + 18, ["#ffffff", "#7dd3fc", "#ffd166"], 16, 180);
@@ -4944,6 +4988,10 @@
           $("hudScore").textContent = score;
           hudCache.score = score;
         }
+        const comboVisible = comboCount >= 2 && comboTimer > 0;
+        $("hudCombo").classList.toggle("hidden", !comboVisible);
+        $("hudCombo").classList.toggle("flex", comboVisible);
+        $("hudComboText").textContent = `COMBO x${comboCount}`;
         const st = STAGES[currentStageIdx];
         let stageLabel;
         let progressText;
@@ -5039,6 +5087,7 @@
         gameState = "PLAYING";
         setScreenOverlay(null);
         sfx.startBgm();
+        showToast(`🎯 ${STAGES[currentStageIdx].code}`);
       }
 
       function advanceCinematic() {
@@ -5195,6 +5244,7 @@
       $("optDiffEasy").onclick = () => {
         config.maxLives = 5;
         if (player) player.hp = Math.min(5, player.hp);
+        saveConfig();
         syncSettingsButtons();
         updateHudUI();
         showToast("💖 Modo Carinhoso (5 vidas)");
@@ -5202,16 +5252,19 @@
       $("optDiffClassic").onclick = () => {
         config.maxLives = 3;
         if (player) player.hp = Math.min(3, player.hp);
+        saveConfig();
         syncSettingsButtons();
         updateHudUI();
         showToast("⭐ Modo Clássico (3 vidas)");
       };
       $("optSfxToggle").onclick = () => {
         config.sfx = !config.sfx;
+        saveConfig();
         syncSettingsButtons();
       };
       $("optBgmToggle").onclick = () => {
         config.bgm = !config.bgm;
+        saveConfig();
         if (!config.bgm) sfx.stopBgm();
         else if (gameState === "PLAYING") sfx.startBgm();
         syncSettingsButtons();
@@ -5283,6 +5336,7 @@
         const on = config.sfx || config.bgm;
         config.sfx = !on;
         config.bgm = !on;
+        saveConfig();
         if (!config.bgm) sfx.stopBgm();
         else if (gameState === "PLAYING") sfx.startBgm();
         syncSettingsButtons();
