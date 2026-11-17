@@ -1,0 +1,4520 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0b132b" />
+  <title>Salve o Natal — Uma Aventura Especial</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Fredoka:wght@500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    /* ========================================================================
+       ESTILOS VISUAIS, ANIMAÇÕES E TEMA NATALINO ARTESANAL
+       ======================================================================== */
+    :root {
+      --bg-night: #091124;
+      --crimson: #e63946;
+      --crimson-deep: #9b1c26;
+      --gold: #ffd166;
+      --gold-deep: #d97706;
+      --pine: #1b4332;
+      --cream: #fffaf0;
+    }
+
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: var(--bg-night);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      color: #ffffff;
+    }
+
+    .font-display {
+      font-family: 'Fredoka', cursive, sans-serif;
+    }
+
+    .font-script {
+      font-family: 'Dancing Script', cursive;
+    }
+
+    #gameCanvas {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      display: block;
+    }
+
+    #titleScreen {
+      background-color: var(--bg-night);
+      background-image:
+        linear-gradient(rgba(7, 13, 28, 0.3), rgba(7, 13, 28, 0.46)),
+        url("menu.webp");
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
+
+    /* Botão Primário Natalino 3D */
+    .btn-primary {
+      background: linear-gradient(180deg, #ff5964 0%, #d62839 100%);
+      border: 2.5px solid #ffe8a3;
+      box-shadow: 0 6px 0 #7f121d, 0 12px 24px rgba(0, 0, 0, 0.45);
+      transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.15s ease;
+    }
+
+    .btn-primary:hover {
+      filter: brightness(1.07);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 0 #7f121d, 0 16px 28px rgba(0, 0, 0, 0.5);
+    }
+
+    .btn-primary:active {
+      transform: translateY(4px);
+      box-shadow: 0 2px 0 #7f121d, 0 4px 10px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Botão Secundário Vidro Escuro */
+    .btn-secondary {
+      background: linear-gradient(180deg, rgba(30, 44, 74, 0.92) 0%, rgba(16, 25, 46, 0.96) 100%);
+      border: 2px solid rgba(255, 209, 102, 0.55);
+      box-shadow: 0 5px 0 #070d1a, 0 10px 20px rgba(0, 0, 0, 0.4);
+      transition: transform 0.12s ease, border-color 0.15s ease, box-shadow 0.12s ease;
+    }
+
+    .btn-secondary:hover {
+      border-color: #ffffff;
+      transform: translateY(-2px);
+      box-shadow: 0 7px 0 #070d1a, 0 14px 24px rgba(0, 0, 0, 0.45);
+    }
+
+    .btn-secondary:active {
+      transform: translateY(3px);
+      box-shadow: 0 2px 0 #070d1a;
+    }
+
+    /* Botão Dourado */
+    .btn-gold {
+      background: linear-gradient(180deg, #ffe082 0%, #f59e0b 100%);
+      border: 2.5px solid #ffffff;
+      color: #451a03;
+      box-shadow: 0 5px 0 #92400e, 0 10px 20px rgba(0, 0, 0, 0.35);
+      transition: transform 0.12s ease, box-shadow 0.12s ease;
+    }
+
+    .btn-gold:hover {
+      filter: brightness(1.05);
+      transform: translateY(-1px);
+    }
+
+    .btn-gold:active {
+      transform: translateY(3px);
+      box-shadow: 0 2px 0 #92400e;
+    }
+
+    /* Cartão de Vidro do Menu */
+    .glass-card {
+      background: linear-gradient(165deg, rgba(19, 31, 56, 0.88) 0%, rgba(10, 17, 34, 0.93) 100%);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 2px solid rgba(255, 209, 102, 0.45);
+      box-shadow: 0 25px 70px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    }
+
+    /* Livro de História */
+    .storybook-panel {
+      background: radial-gradient(circle at top, #fffdf9 0%, #f8ebd2 100%);
+      border: 4px solid #b45309;
+      box-shadow: 0 0 0 5px #9b1c26, 0 25px 70px rgba(0, 0, 0, 0.8);
+      color: #291d18;
+    }
+
+    /* Pergaminho da Cartinha Final */
+    .parchment-letter {
+      background:
+        radial-gradient(circle at 15% 15%, rgba(255, 255, 255, 0.9) 0%, transparent 45%),
+        radial-gradient(circle at bottom right, #f3dec0 0%, #fbf0de 55%, #fffcf6 100%);
+      border: 4px solid #c68b53;
+      box-shadow:
+        0 0 0 6px #9b1c26,
+        0 0 0 10px #ffd166,
+        0 30px 90px rgba(0, 0, 0, 0.85);
+      color: #3b261d;
+    }
+
+    .custom-scroll::-webkit-scrollbar {
+      width: 6px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: rgba(180, 130, 80, 0.15);
+      border-radius: 999px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #b93847;
+      border-radius: 999px;
+    }
+
+    @keyframes floatBob {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-7px); }
+    }
+
+    @keyframes modalEnter {
+      0% { opacity: 0; transform: scale(0.9) translateY(18px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .animate-bob {
+      animation: floatBob 3.2s ease-in-out infinite;
+    }
+
+    .animate-modal {
+      animation: modalEnter 0.42s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    .title-shadow {
+      text-shadow: 0 5px 0 #801322, 0 10px 25px rgba(0, 0, 0, 0.65), 0 0 28px rgba(255, 209, 102, 0.45);
+    }
+
+    input, textarea {
+      user-select: text;
+      -webkit-user-select: text;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ======================================================================
+       1. CANVAS PRINCIPAL DO JOGO (CENÁRIO VIVO + FASES + PERSONAGENS)
+       ====================================================================== -->
+  <canvas id="gameCanvas" aria-label="Jogo Salve o Natal"></canvas>
+  <section id="desktopOnlyNotice" class="hidden fixed inset-0 z-[60] flex items-center justify-center bg-slate-950 p-6 text-center">
+    <div class="glass-card max-w-lg rounded-3xl p-8">
+      <div class="text-5xl">🖥️</div>
+      <h2 class="mt-4 font-display text-3xl font-bold text-amber-200">Aventura para computador</h2>
+      <p class="mt-3 text-sky-100 leading-relaxed">Este jogo foi feito para notebooks e PCs. Aumente a janela para pelo menos 900 × 600 pixels para continuar.</p>
+    </div>
+  </section>
+
+  <!-- ======================================================================
+       2. HUD DE JOGO (RETRATO DA HEROÍNA, CORAÇÕES, ESTRELAS, PROGRESSO)
+       ====================================================================== -->
+  <header id="hudLayer" class="fixed top-0 left-0 right-0 z-20 p-2.5 sm:p-4 flex items-center justify-between gap-2 pointer-events-none hidden">
+    <!-- Esquerda: Avatar + Vidas + Pontuação -->
+    <div class="flex items-center gap-2 sm:gap-3 pointer-events-auto">
+      <div class="flex items-center gap-2 bg-slate-950/80 border-2 border-amber-300/70 rounded-2xl px-2.5 py-1 shadow-xl backdrop-blur-md">
+        <canvas id="hudAvatarCanvas" width="38" height="38" class="rounded-full bg-gradient-to-b from-rose-700 to-slate-900 border-2 border-amber-300 shrink-0"></canvas>
+        <div id="hudHearts" class="flex items-center gap-0.5 pr-1"></div>
+      </div>
+      <div id="hudVitorStatus" title="Jogador 2: setas movem, ↑ pula; no segundo controle, analógico/direcional e A" class="hidden flex items-center gap-1.5 bg-emerald-950/85 border-2 border-emerald-300/70 rounded-2xl px-2.5 py-2 text-[10px] sm:text-xs font-bold text-emerald-100 shadow-xl backdrop-blur-md">
+        <span>Vitor P2</span>
+        <span id="hudVitorHearts" class="flex items-center gap-0.5"></span>
+      </div>
+
+      <div class="flex items-center gap-1.5 bg-slate-950/80 border-2 border-amber-300/70 rounded-2xl px-3 py-1.5 text-amber-300 font-display text-sm sm:text-base shadow-xl backdrop-blur-md">
+        <svg class="w-4 h-4 sm:w-5 sm:h-5 fill-amber-300 shrink-0" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <span id="hudScore">0</span>
+      </div>
+    </div>
+
+    <!-- Centro: Indicador da Fase & Barra de Progresso / Vida do Boss -->
+    <div class="hidden sm:flex flex-col bg-slate-950/80 border-2 border-white/25 rounded-2xl px-4 py-1.5 min-w-[230px] shadow-xl backdrop-blur-md">
+      <div class="flex items-center justify-between text-[11px] font-bold tracking-wide text-sky-100 mb-1">
+        <span id="hudStageLabel">FASE 1 · VILA NEVADA</span>
+        <span id="hudProgressLabel" class="text-amber-300">0%</span>
+      </div>
+      <div class="w-full h-2.5 bg-slate-800 rounded-full overflow-hidden p-0.5">
+        <div id="hudProgressFill" class="h-full rounded-full bg-gradient-to-r from-rose-500 via-amber-400 to-emerald-400 transition-all duration-150" style="width: 0%;"></div>
+      </div>
+    </div>
+
+    <!-- Direita: Controles Rápidos (Áudio, Reiniciar Fase, Pausa) -->
+    <div class="flex items-center gap-1.5 sm:gap-2 pointer-events-auto">
+      <button id="btnHudAudio" class="bg-slate-950/85 hover:bg-slate-800 text-amber-300 border-2 border-amber-300/60 rounded-2xl p-2 sm:px-3 sm:py-1.5 text-sm font-bold shadow-lg active:scale-95 transition cursor-pointer" title="Alternar Som">
+        🔊
+      </button>
+      <button id="btnHudRestart" class="bg-slate-950/85 hover:bg-slate-800 text-sky-100 border-2 border-white/30 rounded-2xl p-2 sm:px-3 sm:py-1.5 text-xs sm:text-sm font-bold shadow-lg active:scale-95 transition cursor-pointer" title="Reiniciar Fase">
+        🔄
+      </button>
+      <button id="btnHudPause" class="bg-rose-700/90 hover:bg-rose-600 text-white border-2 border-amber-200/80 rounded-2xl px-3 py-1.5 text-xs sm:text-sm font-bold shadow-lg active:scale-95 transition cursor-pointer">
+        ⏸ Pausa
+      </button>
+    </div>
+  </header>
+
+  <!-- ======================================================================
+       3. TELA INICIAL (MENU PRINCIPAL COM JOGAR, HISTÓRIA E CONFIGURAÇÕES)
+       ====================================================================== -->
+  <section id="titleScreen" class="fixed inset-0 z-30 flex items-center justify-center p-4 bg-gradient-to-b from-slate-950/45 via-slate-900/30 to-slate-950/75 overflow-y-auto">
+    <div class="glass-card rounded-3xl max-w-md w-full p-6 sm:p-8 text-center animate-modal my-auto relative">
+      <!-- Faixa superior -->
+      <div class="inline-flex items-center gap-2 bg-rose-600/90 border border-amber-200/80 text-amber-100 text-xs font-extrabold uppercase tracking-widest px-4 py-1 rounded-full shadow-md mb-4">
+        <span>Edição Especial de Natal</span>
+        <span>♥</span>
+      </div>
+
+      <!-- Medalhão com Retrato Animado da Heroína (Morena, Cabelos Cacheados, Óculos) -->
+      <div class="relative w-28 h-28 sm:w-32 sm:h-32 mx-auto mb-3 animate-bob">
+        <div class="w-full h-full rounded-full bg-gradient-to-b from-rose-600 via-rose-800 to-slate-950 border-4 border-amber-300 shadow-[0_0_35px_rgba(255,209,102,0.5)] overflow-hidden flex items-center justify-center">
+          <canvas id="titlePortraitCanvas" width="128" height="128" class="w-full h-full"></canvas>
+        </div>
+      </div>
+
+      <h1 class="font-display text-4xl sm:text-5xl font-bold text-white tracking-wide title-shadow leading-none mb-2">
+        SALVE O NATAL!
+      </h1>
+
+      <p class="text-sky-100/90 text-sm sm:text-base leading-relaxed mb-4">
+        Uma jornada mágica criada com carinho para <span id="heroNameBadge" class="text-amber-300 font-extrabold underline decoration-rose-400 underline-offset-4">Você</span>!
+      </p>
+
+      <p id="vitorUnlockedNotice" class="hidden mb-4 rounded-xl border border-emerald-300/50 bg-emerald-900/40 px-3 py-2 text-xs font-bold text-emerald-100">
+        ✨ Vitor desbloqueado! 
+      </p>
+
+      <!-- Botões Principais -->
+      <div class="space-y-3">
+        <button id="btnStartGame" class="btn-primary w-full font-display text-white text-xl sm:text-2xl font-bold py-3.5 px-6 rounded-2xl flex items-center justify-center gap-3 cursor-pointer">
+          <span>▶</span>
+          <span>Jogar</span>
+        </button>
+
+        <div class="grid grid-cols-2 gap-3">
+          <button id="btnOpenStory" class="btn-secondary font-display text-amber-200 text-base sm:text-lg font-bold py-3 px-4 rounded-2xl flex items-center justify-center gap-2 cursor-pointer">
+            <span>📖</span>
+            <span>História</span>
+          </button>
+
+          <button id="btnOpenSettings" class="btn-secondary font-display text-sky-200 text-base sm:text-lg font-bold py-3 px-4 rounded-2xl flex items-center justify-center gap-2 cursor-pointer">
+            <span>⚙️</span>
+            <span>Configurações</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <div id="hudQuest" class="fixed top-[4.5rem] left-1/2 -translate-x-1/2 z-20 hidden pointer-events-none rounded-full border border-amber-200/50 bg-slate-950/80 px-3 py-1 text-center text-[10px] sm:text-xs font-bold text-amber-100 shadow-lg backdrop-blur-md">
+    🍬 Doces: 0/3 · ✨ Segredos: 0
+  </div>
+
+  <!-- ======================================================================
+       4. MODAL: HISTÓRIA DO JOGO
+       ====================================================================== -->
+  <section id="storyModal" class="fixed inset-0 z-40 hidden items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
+    <div class="storybook-panel rounded-3xl max-w-lg w-full p-6 sm:p-7 animate-modal max-h-[92vh] overflow-y-auto custom-scroll">
+      <div class="flex items-center justify-between border-b-2 border-amber-900/15 pb-3 mb-4">
+        <div>
+          <span class="text-[11px] font-extrabold uppercase tracking-widest text-rose-700">Prólogo Encantado</span>
+          <h2 class="font-display text-2xl sm:text-3xl text-rose-900 font-bold">A Estrela do Norte</h2>
+        </div>
+        <button id="btnCloseStory" class="w-9 h-9 rounded-full bg-amber-900/10 hover:bg-rose-700 hover:text-white text-amber-950 font-bold text-xl flex items-center justify-center transition cursor-pointer">&times;</button>
+      </div>
+
+      <div class="flex flex-col sm:flex-row items-center gap-4 bg-amber-900/10 border border-amber-900/20 rounded-2xl p-3.5 mb-4">
+        <canvas id="storyPortraitCanvas" width="88" height="88" class="rounded-2xl bg-gradient-to-b from-slate-800 to-rose-950 border-2 border-amber-600 shrink-0 shadow"></canvas>
+        <p class="text-xs sm:text-sm text-stone-800 leading-relaxed font-semibold text-center sm:text-left">
+          Na véspera de Natal, o <strong class="text-sky-900">Rei Gelado</strong> roubou a Estrela do Norte. Sem o brilho dela, as luzes da Vila Nevada se apagaram e o inverno começou a cobrir todo o reino.
+        </p>
+      </div>
+
+      <div class="space-y-3 text-sm sm:text-base text-stone-800 leading-relaxed">
+        <p>
+          Com seu gorrinho vermelho, seus cachos cheios de energia e seus óculos brilhantes, <strong id="storyHeroName" class="text-rose-800">nossa heroína</strong> atravessou a <strong>Vila Nevada</strong>, a <strong>Floresta dos Pinheiros</strong> e o <strong>Castelo Congelado</strong>. Depois de derrotar o Rei Gelado, encontrou um presente dourado com uma cartinha assinada por Vitor.
+        </p>
+        <p class="bg-rose-700/10 border-l-4 border-rose-700 p-3 rounded-r-xl text-rose-950 text-xs sm:text-sm font-semibold">
+          💌 A carta marca o encontro de Paloma e Vitor. Juntos, eles exploram as Cavernas do Eco e a Montanha das Auroras, até descobrirem que o Coração da Estrela está preso na fortaleza do Lobo da Geada. Agora, os dois precisam recuperá-lo e devolver o Natal ao reino.
+        </p>
+      </div>
+
+      <div class="mt-6 flex items-center justify-end gap-3">
+        <button id="btnStoryBack" class="px-4 py-2.5 rounded-2xl bg-stone-700 hover:bg-stone-600 text-white font-bold text-sm cursor-pointer">
+          Voltar
+        </button>
+        <button id="btnStoryPlay" class="btn-primary font-display text-white font-bold px-6 py-2.5 rounded-2xl text-base sm:text-lg cursor-pointer">
+          ▶ Começar Aventura
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <section id="cinematicModal" class="fixed inset-0 z-40 hidden items-center justify-center p-5 bg-slate-950/90 backdrop-blur-md">
+    <div class="glass-card max-w-lg w-full rounded-3xl p-7 text-center animate-modal">
+      <p class="text-amber-300 text-xs font-extrabold uppercase tracking-[0.3em]">Uma aventura de Natal</p>
+      <h2 id="cinematicTitle" class="font-display text-3xl sm:text-4xl font-bold text-white mt-3">Quando a estrela caiu</h2>
+      <p id="cinematicText" class="text-sky-100 leading-relaxed mt-4">Na noite mais brilhante do ano, uma sombra cobriu o céu...</p>
+      <div class="mt-6 flex justify-center gap-3">
+        <button id="btnSkipCinematic" class="btn-secondary rounded-2xl px-5 py-3 font-bold text-sky-100 cursor-pointer">Pular abertura</button>
+        <button id="btnNextCinematic" class="btn-primary rounded-2xl px-6 py-3 font-display text-lg font-bold text-white cursor-pointer">Continuar ▶</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================================
+       5. MODAL: CONFIGURAÇÕES
+       ====================================================================== -->
+  <section id="settingsModal" class="fixed inset-0 z-40 hidden items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
+    <div class="glass-card rounded-3xl max-w-md w-full p-6 text-white animate-modal max-h-[92vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-white/15 pb-3 mb-4">
+        <h2 class="font-display text-2xl text-amber-300 font-bold">⚙️ Configurações</h2>
+        <button id="btnCloseSettings" class="w-9 h-9 rounded-full bg-white/10 hover:bg-rose-600 text-white text-xl flex items-center justify-center transition cursor-pointer">&times;</button>
+      </div>
+
+      <div class="space-y-4 text-sm">
+        <!-- Dificuldade -->
+        <div class="bg-slate-950/60 border border-white/10 rounded-2xl p-3.5">
+          <p class="font-bold text-amber-200 mb-2">❤️ Modo de Jogo</p>
+          <div class="grid grid-cols-2 gap-2">
+            <button id="optDiffEasy" class="py-2.5 px-3 rounded-xl font-bold text-xs border-2 transition cursor-pointer">
+              💖 Carinhoso (5 Vidas)
+            </button>
+            <button id="optDiffClassic" class="py-2.5 px-3 rounded-xl font-bold text-xs border-2 transition cursor-pointer">
+              ⭐ Clássico (3 Vidas)
+            </button>
+          </div>
+        </div>
+
+        <!-- Efeitos Sonoros -->
+        <div class="flex items-center justify-between bg-slate-950/60 border border-white/10 rounded-2xl p-3.5">
+          <div>
+            <p class="font-bold text-white">🔊 Efeitos Sonoros 8-Bit</p>
+            <p class="text-xs text-slate-300">Pulos, estrelas, blocos e chefe</p>
+          </div>
+          <button id="optSfxToggle" class="px-4 py-1.5 rounded-xl font-bold text-xs bg-emerald-600 text-white cursor-pointer">
+            Ligado
+          </button>
+        </div>
+
+        <!-- Música Natalina -->
+        <div class="flex items-center justify-between bg-slate-950/60 border border-white/10 rounded-2xl p-3.5">
+          <div>
+            <p class="font-bold text-white">🎵 Música Natalina</p>
+            <p class="text-xs text-slate-300">Melodia festiva durante a jornada</p>
+          </div>
+          <button id="optBgmToggle" class="px-4 py-1.5 rounded-xl font-bold text-xs bg-emerald-600 text-white cursor-pointer">
+            Ligado
+          </button>
+        </div>
+
+      </div>
+
+      <p class="mt-3 rounded-xl bg-slate-950/60 p-3 text-[11px] leading-relaxed text-sky-100">
+        ⌨️ Teclado: A/D + Espaço + X; no 2º jogador, Setas + ↑ para pular (sem magia). 🎮 Controle: analógico/direcional move; A pula/inicia, X/B/Y lançam magia e Start pausa. O segundo controle joga como Vitor, sem magia.
+      </p>
+
+      <button id="btnSettingsLetter" class="mt-3 w-full rounded-xl border border-amber-300/40 bg-amber-400/10 px-4 py-2.5 text-sm font-bold text-amber-200 hover:bg-amber-400/20 cursor-pointer">
+        💌 Personalizar carta do presente
+      </button>
+
+      <div class="mt-6 flex justify-end">
+        <button id="btnSettingsDone" class="btn-primary font-display text-white font-bold px-6 py-2.5 rounded-2xl text-base cursor-pointer">
+          Concluir
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================================
+       6. MODAL: PERSONALIZAR CARTINHA FINAL
+       ====================================================================== -->
+  <section id="letterEditorModal" class="fixed inset-0 z-40 hidden items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
+    <div class="glass-card rounded-3xl max-w-lg w-full p-6 text-white animate-modal max-h-[92vh] overflow-y-auto custom-scroll">
+      <div class="flex items-center justify-between border-b border-white/15 pb-3 mb-3">
+        <h2 class="font-display text-xl sm:text-2xl text-amber-300 font-bold">💌 Personalizar Cartinha</h2>
+        <button id="btnCloseLetterEditor" class="w-9 h-9 rounded-full bg-white/10 hover:bg-rose-600 text-white text-xl flex items-center justify-center transition cursor-pointer">&times;</button>
+      </div>
+
+      <p class="text-xs sm:text-sm text-sky-100/85 mb-4">
+        Escreva sua mensagem abaixo. Ela ficará guardada no presente dourado após derrotar o Rei Gelado!
+      </p>
+
+      <div class="space-y-3 text-sm">
+        <div>
+          <label class="block text-amber-200 font-bold text-xs mb-1">Para (Nome ou apelido carinhoso):</label>
+          <input id="fieldTo" type="text" maxlength="45" class="w-full bg-slate-950/90 border border-white/20 focus:border-amber-300 rounded-xl px-3.5 py-2 text-white outline-none" />
+        </div>
+        <div>
+          <label class="block text-amber-200 font-bold text-xs mb-1">Título da Cartinha:</label>
+          <input id="fieldTitle" type="text" maxlength="65" class="w-full bg-slate-950/90 border border-white/20 focus:border-amber-300 rounded-xl px-3.5 py-2 text-white outline-none" />
+        </div>
+        <div>
+          <label class="block text-amber-200 font-bold text-xs mb-1">Mensagem Romântica:</label>
+          <textarea id="fieldBody" rows="5" maxlength="1600" class="w-full bg-slate-950/90 border border-white/20 focus:border-amber-300 rounded-xl px-3.5 py-2 text-white outline-none leading-relaxed"></textarea>
+        </div>
+        <div>
+          <label class="block text-amber-200 font-bold text-xs mb-1">Assinatura (De):</label>
+          <input id="fieldFrom" type="text" maxlength="55" class="w-full bg-slate-950/90 border border-white/20 focus:border-amber-300 rounded-xl px-3.5 py-2 text-white outline-none" />
+        </div>
+      </div>
+
+      <div class="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+        <button id="btnApplyLetter" class="btn-primary font-display text-white font-bold py-2.5 px-4 rounded-2xl text-base cursor-pointer">
+          ✓ Aplicar na Aventura
+        </button>
+        <button id="btnPreviewCard" class="btn-gold font-display font-bold py-2.5 px-4 rounded-2xl text-base cursor-pointer">
+          👁 Pré-visualizar Carta
+        </button>
+      </div>
+
+      <div class="mt-3 pt-3 border-t border-white/15 flex flex-col sm:flex-row items-center justify-between gap-2">
+        <span class="text-xs text-slate-300">Compartilhe esta aventura personalizada:</span>
+        <button id="btnCopyShareUrl" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs px-3.5 py-2 rounded-xl shadow transition cursor-pointer">
+          🔗 Copiar Link Personalizado
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================================
+       7. MODAL: PAUSA DURANTE O JOGO
+       ====================================================================== -->
+  <section id="pauseModal" class="fixed inset-0 z-40 hidden items-center justify-center p-4 bg-slate-950/75 backdrop-blur-sm">
+    <div class="glass-card rounded-3xl max-w-xs w-full p-6 text-center animate-modal">
+      <h2 class="font-display text-2xl sm:text-3xl text-amber-300 font-bold mb-1">⏸ Jogo Pausado</h2>
+      <p class="text-xs text-sky-100/80 mb-5">Prepare um chocolate quente e continue quando quiser!</p>
+
+      <div class="space-y-2.5">
+        <button id="btnResumePlay" class="btn-primary w-full font-display text-white font-bold py-2.5 px-4 rounded-2xl text-lg cursor-pointer">
+          ▶ Continuar
+        </button>
+        <button id="btnPauseRestart" class="btn-secondary w-full font-display text-sky-100 font-bold py-2.5 px-4 rounded-2xl text-base cursor-pointer">
+          🔄 Reiniciar Fase
+        </button>
+        <button id="btnPauseSettings" class="btn-secondary w-full font-display text-amber-200 font-bold py-2.5 px-4 rounded-2xl text-base cursor-pointer">
+          ⚙️ Configurações
+        </button>
+        <button id="btnBackToMenu" class="w-full bg-white/10 hover:bg-white/15 text-slate-200 font-bold py-2.5 px-4 rounded-2xl text-sm cursor-pointer">
+          🏠 Menu Principal
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================================
+       8. MODAL: TRANSIÇÃO ENTRE FASES
+       ====================================================================== -->
+  <section id="stageClearModal" class="fixed inset-0 z-40 hidden items-center justify-center p-4 bg-slate-950/75 backdrop-blur-sm">
+    <div class="glass-card rounded-3xl max-w-md w-full p-6 sm:p-7 text-center animate-modal">
+      <div class="inline-block bg-emerald-500/20 border border-emerald-400/60 text-emerald-300 text-xs font-extrabold uppercase tracking-widest px-3.5 py-1 rounded-full mb-3">
+        Fase Concluída!
+      </div>
+      <h2 id="stageClearTitle" class="font-display text-3xl sm:text-4xl text-white font-bold mb-2">
+        Vila Nevada Salva!
+      </h2>
+      <p id="stageClearDesc" class="text-sky-100/90 text-sm sm:text-base leading-relaxed mb-5">
+        As luzes da vila voltaram a brilhar! Agora a trilha segue para a Floresta dos Pinheiros.
+      </p>
+      <div class="bg-slate-950/60 border border-amber-300/30 rounded-2xl py-2.5 px-4 mb-5 text-amber-300 font-display text-base">
+        ⭐ Estrelas acumuladas: <span id="stageClearScore">0</span>
+      </div>
+      <button id="btnNextStage" class="btn-primary w-full font-display text-white text-xl font-bold py-3 px-6 rounded-2xl cursor-pointer">
+        Avançar para Próxima Fase ▶
+      </button>
+    </div>
+  </section>
+
+  <!-- ======================================================================
+       9. TELA FINAL: CARTINHA ROMÂNTICA DE NATAL
+       ====================================================================== -->
+  <section id="finaleLetterModal" class="fixed inset-0 z-40 hidden items-center justify-center p-4 sm:p-6 bg-slate-950/80 backdrop-blur-sm overflow-y-auto">
+    <div class="parchment-letter rounded-3xl max-w-xl w-full p-6 sm:p-8 animate-modal my-auto relative">
+      <div class="text-center mb-3">
+        <span id="finaleBadge" class="inline-block bg-rose-700 text-amber-100 font-display text-xs sm:text-sm px-4 py-1 rounded-full shadow">
+          🎄 Você Salvou o Natal! 🎄
+        </span>
+      </div>
+
+      <div class="text-center border-b-2 border-amber-800/20 pb-3 mb-4">
+        <p class="text-xs sm:text-sm font-extrabold uppercase tracking-widest text-rose-800 mb-1">
+          Para: <span id="finalTo">Paloma</span> ❤️
+        </p>
+        <h2 id="finalTitle" class="font-script text-4xl sm:text-5xl font-bold text-rose-800 leading-tight">
+          Para Paloma, com amor 🎄❤️
+        </h2>
+      </div>
+
+      <div id="finalBody" class="custom-scroll max-h-[42vh] overflow-y-auto pr-2 text-stone-800 text-base sm:text-lg leading-relaxed whitespace-pre-line font-medium"></div>
+
+      <div class="mt-4 rounded-2xl border border-emerald-700/25 bg-emerald-700/10 p-3 text-center">
+        <p id="finalJourneyText" class="text-sm font-bold text-emerald-950">A aventura continua! Depois de ler a cartinha, Vitor se junta à jornada como Jogador 2.</p>
+        <button id="btnUnlockVitor" class="btn-gold mt-3 rounded-xl px-4 py-2 font-display font-bold cursor-pointer">
+          ✨ Continuar ▶
+        </button>
+      </div>
+
+      <div class="mt-5 pt-3 border-t-2 border-amber-800/20 text-right">
+        <p id="finalFrom" class="font-script text-2xl sm:text-3xl font-bold text-rose-900">
+          Vitor ❤️
+        </p>
+      </div>
+
+      <div class="mt-6 flex flex-wrap items-center justify-between gap-3">
+        <div class="bg-amber-800/10 border border-amber-800/25 text-amber-950 font-bold text-xs sm:text-sm px-3.5 py-2 rounded-2xl">
+          ⭐ Pontuação Final: <span id="finalScoreBadge">0</span>
+        </div>
+
+        <div class="flex items-center gap-2 ml-auto">
+          <button id="btnClosePreview" class="hidden bg-stone-700 hover:bg-stone-600 text-white font-bold text-sm px-4 py-2.5 rounded-2xl cursor-pointer">
+            Voltar
+          </button>
+          <button id="btnReplayAll" class="btn-primary font-display text-white font-bold text-base sm:text-lg px-5 py-2.5 rounded-2xl cursor-pointer">
+            🔄 Jogar Novamente
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="completionModal" class="fixed inset-0 z-40 hidden items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md">
+    <div class="glass-card max-w-xl w-full rounded-3xl p-7 sm:p-9 text-center animate-modal border border-amber-200/30">
+      <div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-amber-300/15 text-4xl shadow-[0_0_30px_rgba(253,230,138,0.22)]">⭐</div>
+      <p class="text-amber-200 text-xs font-extrabold uppercase tracking-[0.3em]">Aventura concluída</p>
+      <h2 class="font-display text-3xl sm:text-4xl font-bold text-white mt-3">Feliz Natal!</h2>
+      <p class="text-sky-100 leading-relaxed mt-4">
+        A Estrela do Norte voltou a brilhar, e as luzes de Natal retornaram ao reino. Paloma e Vitor, obrigado por enfrentarem juntos o Lobo da Geada e todos os desafios. Este final também é de vocês. Feliz Natal!
+      </p>
+      <div class="inline-block mt-5 bg-slate-950/50 border border-amber-300/30 text-amber-200 font-bold px-4 py-2 rounded-2xl">
+        ⭐ Pontuação final: <span id="completionScore">0</span>
+      </div>
+      <div class="mt-7 flex flex-col sm:flex-row justify-center gap-3">
+        <button id="btnCompletionCredits" class="bg-slate-700 hover:bg-slate-600 text-white font-bold px-5 py-3 rounded-2xl cursor-pointer">🎬 Créditos</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="creditsModal" class="fixed inset-0 z-40 hidden items-center justify-center p-4 bg-slate-950/90 backdrop-blur-md">
+    <div class="glass-card max-w-md w-full rounded-3xl p-7 text-center animate-modal">
+      <p class="text-amber-300 text-xs font-extrabold uppercase tracking-[0.3em]">Os créditos</p>
+      <h2 class="font-display text-4xl font-bold text-white mt-2">O Natal voltou a brilhar!</h2>
+      <p class="text-sky-100 leading-relaxed mt-4">Paloma e Vitor, obrigado por jogarem juntos e ajudarem a espalhar a luz nesta noite especial.</p>
+      <p class="font-script text-3xl text-amber-200 mt-5">Fim... ou só o começo? ✨</p>
+      <button id="btnCreditsReplay" class="btn-primary w-full mt-6 rounded-2xl px-5 py-3 font-display text-xl font-bold text-white cursor-pointer">🔄 Jogar Novamente</button>
+      <button id="btnCreditsLetter" class="mt-3 text-sm font-bold text-sky-200 underline cursor-pointer">Voltar</button>
+    </div>
+  </section>
+
+  <!-- ======================================================================
+       10. TOAST DE NOTIFICAÇÃO SUAVE (SUBSTITUI ALERT)
+       ====================================================================== -->
+  <div id="toastEl" class="fixed top-16 left-1/2 -translate-x-1/2 z-50 pointer-events-none opacity-0 transition-all duration-300 bg-slate-950/95 text-amber-200 border-2 border-amber-300 px-5 py-2 rounded-full font-bold text-xs sm:text-sm shadow-2xl text-center max-w-[90vw]">
+    Notificação
+  </div>
+
+  <!-- ======================================================================
+       11. MOTOR COMPLETO DO JOGO (RENDERIZAÇÃO ILUSTRADA, 6 FASES E CHEFES)
+       ====================================================================== -->
+  <script>
+    (() => {
+      "use strict";
+
+      const $ = (id) => document.getElementById(id);
+
+      /* --------------------------------------------------------------------
+         A. DADOS DA CARTINHA & CONFIGURAÇÕES (EM MEMÓRIA + SUPORTE A LINK)
+         -------------------------------------------------------------------- */
+      const DEFAULT_LETTER = {
+        para: "Paloma (vulgo Momoza)",
+        titulo: "Para Paloma, com amor 🎄❤️",
+        mensagem:
+          "Boa! Você conseguiu salvar o Natal — mas a verdade é que quem ilumina e salva os meus dias o ano inteiro é você!\n\n" +
+          "Neste Natal, o meu maior presente não está embaixo da árvore, mas sim ao meu lado: é o seu sorriso lindo, os seus cachos encantadores, o seu olhar por trás desses óculos que eu amo e cada momento especial que vivemos juntos.\n\n" +
+          "Obrigado por ser minha melhor companhia, minha paz e a pessoa que faz meu coração bater mais feliz todos os dias. Que este Natal seja mágico e que venham infinitos outros ao seu lado.\n\n" +
+          "Eu te amo muito, Paloma! Feliz Natal! ✨🎁",
+        de: "Vitor ❤️"
+      };
+
+      let letterData = { ...DEFAULT_LETTER };
+      let previewingCard = false;
+
+      const config = {
+        maxLives: 5, // 5 = Carinhoso, 3 = Clássico
+        sfx: true,
+        bgm: true
+      };
+
+      function loadVitorUnlock() {
+        try {
+          return window.localStorage.getItem("salveNatal.vitorUnlocked") === "true";
+        } catch (err) {
+          console.warn("Não foi possível carregar o desbloqueio do Vitor:", err);
+          return false;
+        }
+      }
+
+      let vitorUnlocked = loadVitorUnlock();
+
+      function loadUrlParams() {
+        try {
+          const q = new URLSearchParams(window.location.search);
+          if (q.get("para")) letterData.para = q.get("para").trim();
+          if (q.get("titulo")) letterData.titulo = q.get("titulo").trim();
+          if (q.get("msg")) letterData.mensagem = q.get("msg").trim();
+          if (q.get("de")) letterData.de = q.get("de").trim();
+        } catch (err) {
+          console.warn("Parâmetros da URL ignorados:", err);
+        }
+        syncLetterUI();
+      }
+
+      function syncLetterUI() {
+        const name = letterData.para || "Você";
+        $("heroNameBadge").textContent = name;
+        $("storyHeroName").textContent = name !== "Meu Amor" ? name : "nossa heroína";
+
+        $("finalTo").textContent = letterData.para || DEFAULT_LETTER.para;
+        $("finalTitle").textContent = letterData.titulo || DEFAULT_LETTER.titulo;
+        $("finalBody").textContent = letterData.mensagem || DEFAULT_LETTER.mensagem;
+        $("finalFrom").textContent = letterData.de || DEFAULT_LETTER.de;
+      }
+
+      let toastTimer = null;
+      function showToast(msg) {
+        const el = $("toastEl");
+        el.textContent = msg;
+        el.classList.remove("opacity-0", "-translate-y-2");
+        el.classList.add("opacity-100", "translate-y-0");
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => {
+          el.classList.remove("opacity-100", "translate-y-0");
+          el.classList.add("opacity-0", "-translate-y-2");
+        }, 2600);
+      }
+
+      function copyCustomShareLink() {
+        try {
+          const url = new URL(window.location.href);
+          url.search = "";
+          url.searchParams.set("para", letterData.para);
+          url.searchParams.set("titulo", letterData.titulo);
+          url.searchParams.set("msg", letterData.mensagem);
+          url.searchParams.set("de", letterData.de);
+
+          const tempInput = document.createElement("textarea");
+          tempInput.value = url.toString();
+          document.body.appendChild(tempInput);
+          tempInput.select();
+          document.execCommand("copy");
+          document.body.removeChild(tempInput);
+          showToast("🔗 Link personalizado copiado!");
+        } catch (e) {
+          showToast("💌 Cartinha aplicada com sucesso neste jogo!");
+        }
+      }
+
+      /* --------------------------------------------------------------------
+         B. MOTOR DE ÁUDIO CHIPTUNE NATALINO (WEB AUDIO API)
+         -------------------------------------------------------------------- */
+      class ChristmasAudio {
+        constructor() {
+          this.ctx = null;
+          this.bgmInterval = null;
+          this.step = 0;
+        }
+
+        unlock() {
+          if (!this.ctx) {
+            const Ctx = window.AudioContext || window.webkitAudioContext;
+            if (Ctx) this.ctx = new Ctx();
+          }
+          if (this.ctx && this.ctx.state === "suspended") {
+            this.ctx.resume();
+          }
+        }
+
+        tone(freq, type, dur, vol = 0.1, delay = 0, endFreq = null, isBgm = false) {
+          if (isBgm && !config.bgm) return;
+          if (!isBgm && !config.sfx) return;
+          this.unlock();
+          if (!this.ctx) return;
+
+          const t0 = this.ctx.currentTime + delay;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = type;
+          osc.frequency.setValueAtTime(freq, t0);
+          if (endFreq) {
+            osc.frequency.exponentialRampToValueAtTime(endFreq, t0 + dur);
+          }
+
+          gain.gain.setValueAtTime(0.0001, t0);
+          gain.gain.linearRampToValueAtTime(vol, t0 + 0.015);
+          gain.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(t0);
+          osc.stop(t0 + dur + 0.02);
+        }
+
+        jump() { this.tone(270, "square", 0.17, 0.08, 0, 610); }
+        star() {
+          this.tone(987.77, "sine", 0.08, 0.11, 0);
+          this.tone(1318.51, "sine", 0.2, 0.11, 0.06);
+        }
+        heart() {
+          [523.25, 659.25, 783.99, 1046.5].forEach((f, i) => {
+            this.tone(f, "triangle", 0.14, 0.13, i * 0.07);
+          });
+        }
+        block() {
+          this.tone(190, "square", 0.08, 0.1, 0, 95);
+          this.tone(659.25, "triangle", 0.16, 0.11, 0.05, 987.77);
+        }
+        stomp() {
+          this.tone(240, "sawtooth", 0.11, 0.12, 0, 75);
+          this.tone(480, "square", 0.11, 0.08, 0.06, 720);
+        }
+        bossHit() {
+          this.tone(160, "sawtooth", 0.18, 0.15, 0, 65);
+          this.tone(523.25, "square", 0.15, 0.1, 0.08, 783.99);
+        }
+        hurt() {
+          this.tone(330, "sawtooth", 0.15, 0.13, 0, 195);
+          this.tone(230, "sawtooth", 0.22, 0.13, 0.12, 120);
+        }
+        checkpoint() {
+          [523.25, 659.25, 783.99, 1046.5].forEach((f, i) => {
+            this.tone(f, "square", 0.12, 0.08, i * 0.08);
+          });
+        }
+        stageClear() {
+          [523.25, 659.25, 783.99, 1046.5, 1318.51].forEach((f, i) => {
+            this.tone(f, "triangle", 0.18, 0.13, i * 0.09);
+          });
+        }
+        victoryFanfare() {
+          this.stopBgm();
+          const notes = [
+            [392, 0.16, 0.00], [523.25, 0.16, 0.18], [659.25, 0.2, 0.36],
+            [783.99, 0.34, 0.58], [659.25, 0.16, 0.98], [783.99, 0.2, 1.16],
+            [880, 0.42, 1.4], [783.99, 0.16, 1.92], [659.25, 0.16, 2.1],
+            [523.25, 0.16, 2.28], [587.33, 0.2, 2.46], [783.99, 0.58, 2.68]
+          ];
+          notes.forEach(([f, d, t]) => {
+            this.tone(f, "triangle", d, 0.13, t);
+            this.tone(f * 0.5, "sine", d, 0.07, t);
+          });
+        }
+
+        startBgm() {
+          if (!config.bgm || this.bgmInterval) return;
+          const seq = [
+            523.25, 659.25, 783.99, 659.25,
+            587.33, 698.46, 880, 698.46,
+            523.25, 587.33, 659.25, 783.99,
+            698.46, 659.25, 587.33, 0,
+            440, 523.25, 659.25, 523.25,
+            493.88, 587.33, 698.46, 587.33,
+            523.25, 659.25, 783.99, 880,
+            783.99, 659.25, 523.25, 0
+          ];
+          this.step = 0;
+          this.bgmInterval = setInterval(() => {
+            if (!config.bgm || gameState !== "PLAYING") return;
+            const f = seq[this.step % seq.length];
+            if (f > 0) this.tone(f, "sine", 0.15, 0.032, 0, null, true);
+            this.step++;
+          }, 225);
+        }
+
+        stopBgm() {
+          if (this.bgmInterval) {
+            clearInterval(this.bgmInterval);
+            this.bgmInterval = null;
+          }
+        }
+      }
+
+      const sfx = new ChristmasAudio();
+
+      /* --------------------------------------------------------------------
+         C. CONFIGURAÇÃO DO CANVAS E COORDENADAS VIRTUAIS RESPONSIVAS
+         -------------------------------------------------------------------- */
+      const canvas = $("gameCanvas");
+      const ctx = canvas.getContext("2d");
+
+      const VIRTUAL_H = 540;
+      const GROUND_Y = 456;
+      const MIN_GAME_WIDTH = 900;
+      const MIN_GAME_HEIGHT = 600;
+      let virtualW = 960;
+      let scaleRatio = 1;
+      let isSupportedViewport = true;
+
+      function resizeCanvas() {
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        const w = window.innerWidth;
+        const h = window.innerHeight;
+        isSupportedViewport = w >= MIN_GAME_WIDTH && h >= MIN_GAME_HEIGHT;
+        $("desktopOnlyNotice").classList.toggle("hidden", isSupportedViewport);
+        canvas.width = w * dpr;
+        canvas.height = h * dpr;
+        scaleRatio = h / VIRTUAL_H;
+        virtualW = w / scaleRatio;
+        ctx.setTransform(dpr * scaleRatio, 0, 0, dpr * scaleRatio, 0, 0);
+      }
+
+      window.addEventListener("resize", resizeCanvas);
+      resizeCanvas();
+
+      /* --------------------------------------------------------------------
+         D. ILUSTRAÇÃO DA PROTAGONISTA (MORENA, CACHEADINHA E DE ÓCULOS)
+         -------------------------------------------------------------------- */
+      function drawCurlyHeroine(c, x, y, w, h, opts = {}) {
+        const {
+          facing = 1,
+          runTime = 0,
+          isMoving = false,
+          onGround = true,
+          vy = 0,
+          blink = false
+        } = opts;
+
+        c.save();
+        c.translate(x + w / 2, y + h / 2);
+        c.scale(facing, 1);
+
+        const bounce = isMoving && onGround ? Math.abs(Math.sin(runTime * 14)) * -2.8 : 0;
+        const curlSwing = isMoving ? Math.sin(runTime * 14) * 2.4 : Math.sin(performance.now() * 0.003) * 0.8;
+        c.translate(0, bounce);
+
+        // 1. Cabelos cacheados volumosos (camada traseira)
+        c.fillStyle = "#2b160c";
+        const backCurls = [
+          [-13, -12, 8], [-15, -3, 8.5], [-13, 6, 7.5],
+          [11, -11, 7], [13, -2, 7.5], [11, 6, 6.5],
+          [-6, -18, 8], [4, -18, 8]
+        ];
+        for (const [cx, cy, r] of backCurls) {
+          c.beginPath();
+          c.arc(cx - curlSwing * 0.6, cy + Math.abs(curlSwing) * 0.25, r, 0, Math.PI * 2);
+          c.fill();
+        }
+
+        // Reflexos quentes nos cachos
+        c.fillStyle = "#4a2716";
+        c.beginPath();
+        c.arc(-13 - curlSwing * 0.5, -5, 4.5, 0, Math.PI * 2);
+        c.arc(-11 - curlSwing * 0.5, 4, 4, 0, Math.PI * 2);
+        c.fill();
+
+        // 2. Pernas & Botinhas de Inverno
+        const legSwing = !onGround ? 5 : isMoving ? Math.sin(runTime * 14) * 6.5 : 0;
+
+        // Perna traseira
+        c.save();
+        c.translate(-3, 14);
+        c.rotate((-legSwing * Math.PI) / 180 * 4);
+        c.fillStyle = "#9c6644";
+        c.fillRect(-2.5, 0, 5, 8);
+        c.fillStyle = "#3d1e12";
+        c.beginPath();
+        c.roundRect(-3.5, 6, 8, 6, 2.5);
+        c.fill();
+        c.fillStyle = "#fff8f0";
+        c.fillRect(-3.5, 5, 7, 2.2);
+        c.restore();
+
+        // Perna dianteira
+        c.save();
+        c.translate(3, 14);
+        c.rotate((legSwing * Math.PI) / 180 * 4);
+        c.fillStyle = "#b0744f";
+        c.fillRect(-2.5, 0, 5, 8);
+        c.fillStyle = "#4f2616";
+        c.beginPath();
+        c.roundRect(-3.5, 6, 8.5, 6, 2.5);
+        c.fill();
+        c.fillStyle = "#ffffff";
+        c.fillRect(-3.5, 5, 7.5, 2.2);
+        c.restore();
+
+        // 3. Vestidinho / Casaco Natalino Vermelho com Cinto Dourado
+        c.fillStyle = "#d62839";
+        c.beginPath();
+        c.moveTo(-9, 2);
+        c.lineTo(9, 2);
+        c.lineTo(13, 16);
+        c.lineTo(-13, 16);
+        c.closePath();
+        c.fill();
+
+        // Barra branca fofinha do vestido
+        c.fillStyle = "#fffaf0";
+        c.beginPath();
+        c.roundRect(-13.5, 13.5, 27, 3.8, 2);
+        c.fill();
+
+        // Cinto escuro com fivela dourada
+        c.fillStyle = "#1e1b18";
+        c.fillRect(-10.5, 8.5, 21, 3);
+        c.strokeStyle = "#ffd166";
+        c.lineWidth = 1.6;
+        c.strokeRect(-2.5, 8, 5, 4);
+
+        // Gola branca
+        c.fillStyle = "#ffffff";
+        c.beginPath();
+        c.ellipse(0, 2.5, 7.5, 2.6, 0, 0, Math.PI * 2);
+        c.fill();
+
+        // 4. Rosto Morena Linda & Expressiva
+        c.fillStyle = "#b0744f";
+        c.beginPath();
+        c.arc(1, -8, 10.5, 0, Math.PI * 2);
+        c.fill();
+
+        // Bochechas rosadas
+        c.fillStyle = "rgba(244, 63, 94, 0.35)";
+        c.beginPath();
+        c.ellipse(6.5, -5.5, 2.8, 1.8, 0, 0, Math.PI * 2);
+        c.fill();
+
+        // Sorriso doce
+        c.strokeStyle = "#5c2b1c";
+        c.lineWidth = 1.5;
+        c.lineCap = "round";
+        c.beginPath();
+        c.arc(4.2, -5.2, 2.8, 0.15 * Math.PI, 0.85 * Math.PI);
+        c.stroke();
+
+        // Olhos expressivos
+        if (blink) {
+          c.strokeStyle = "#2b160c";
+          c.lineWidth = 1.6;
+          c.beginPath();
+          c.moveTo(0.5, -8.5);
+          c.lineTo(3.5, -8.5);
+          c.moveTo(6.2, -8.5);
+          c.lineTo(9.2, -8.5);
+          c.stroke();
+        } else {
+          c.fillStyle = "#1f1209";
+          c.beginPath();
+          c.arc(2, -8.5, 1.7, 0, Math.PI * 2);
+          c.arc(7.8, -8.5, 1.7, 0, Math.PI * 2);
+          c.fill();
+          // Brilho nos olhos
+          c.fillStyle = "#ffffff";
+          c.beginPath();
+          c.arc(2.5, -9, 0.65, 0, Math.PI * 2);
+          c.arc(8.3, -9, 0.65, 0, Math.PI * 2);
+          c.fill();
+        }
+
+        // 5. Óculos Estilosos com Lentes Brilhantes
+        c.strokeStyle = "#291810";
+        c.lineWidth = 1.5;
+        c.fillStyle = "rgba(224, 242, 254, 0.28)";
+        // Lente esquerda
+        c.beginPath();
+        c.roundRect(-1.2, -11.6, 6, 5.8, 2);
+        c.fill();
+        c.stroke();
+        // Lente direita
+        c.beginPath();
+        c.roundRect(5.2, -11.6, 5.8, 5.8, 2);
+        c.fill();
+        c.stroke();
+        // Ponte e haste
+        c.beginPath();
+        c.moveTo(4.8, -9);
+        c.lineTo(5.2, -9);
+        c.moveTo(-1.2, -9.2);
+        c.lineTo(-6.5, -10.2);
+        c.stroke();
+
+        // 6. Cachinhos na testa + Gorrinho de Natal Inclinado
+        c.fillStyle = "#2b160c";
+        for (const [fx, fy, fr] of [[-7, -14, 4.5], [-2, -16.5, 4.5], [4, -16.5, 4], [-9, -8, 4.2]]) {
+          c.beginPath();
+          c.arc(fx, fy, fr, 0, Math.PI * 2);
+          c.fill();
+        }
+
+        // Gorro de Natal no topo dos cachos
+        c.save();
+        c.translate(-1, -17.5);
+        c.rotate(-0.18);
+        c.fillStyle = "#e63946";
+        c.beginPath();
+        c.moveTo(-8, 1);
+        c.quadraticCurveTo(-2, -13, 8, -9);
+        c.lineTo(7, 1);
+        c.closePath();
+        c.fill();
+        // Pompom branco
+        c.fillStyle = "#ffffff";
+        c.beginPath();
+        c.arc(9, -8.5, 3.2, 0, Math.PI * 2);
+        c.fill();
+        // Barra branca do gorro
+        c.beginPath();
+        c.roundRect(-9, -1, 17, 3.5, 1.8);
+        c.fill();
+        c.restore();
+
+        // 7. Bracinho animado
+        c.save();
+        c.translate(0, 4.5);
+        const armAngle = !onGround ? -0.9 : isMoving ? -Math.sin(runTime * 14) * 0.55 : 0.15;
+        c.rotate(armAngle);
+        c.fillStyle = "#d62839";
+        c.beginPath();
+        c.roundRect(-2.5, 0, 5, 7, 2.5);
+        c.fill();
+        c.fillStyle = "#b0744f";
+        c.beginPath();
+        c.arc(0, 7.5, 2.5, 0, Math.PI * 2);
+        c.fill();
+        c.restore();
+
+        c.restore();
+      }
+
+      function drawVitor(c, x, y, w, h, opts = {}) {
+        const { facing = 1, runTime = 0, isMoving = false, onGround = true, blink = false } = opts;
+        c.save();
+        c.translate(x + w / 2, y + h / 2);
+        c.scale(facing, 1);
+        const bounce = isMoving && onGround ? Math.abs(Math.sin(runTime * 14)) * -2.5 : 0;
+        const legSwing = !onGround ? 5 : isMoving ? Math.sin(runTime * 14) * 5 : 0;
+        c.translate(0, bounce);
+
+        c.fillStyle = "#101010";
+        c.beginPath();
+        c.moveTo(-10, -12);
+        c.quadraticCurveTo(-13, -22, -2, -22);
+        c.quadraticCurveTo(10, -24, 11, -13);
+        c.lineTo(11, 6);
+        c.quadraticCurveTo(9, 9, 7, 5);
+        c.lineTo(7, -8);
+        c.lineTo(4, -11);
+        c.lineTo(1, -8);
+        c.lineTo(-2, -11);
+        c.lineTo(-6, -8);
+        c.lineTo(-7, 6);
+        c.quadraticCurveTo(-10, 9, -11, 5);
+        c.closePath();
+        c.fill();
+
+        for (const [lx, angle] of [[-4, -legSwing], [4, legSwing]]) {
+          c.save();
+          c.translate(lx, 13);
+          c.rotate(angle * Math.PI / 180 * 4);
+          c.fillStyle = "#8d5a3c";
+          c.fillRect(-2.5, 0, 5, 8);
+          c.fillStyle = "#3b241b";
+          c.beginPath();
+          c.roundRect(-4, 6, 8, 6, 2);
+          c.fill();
+          c.restore();
+        }
+
+        c.fillStyle = "#15803d";
+        c.beginPath();
+        c.moveTo(-9, 1);
+        c.lineTo(9, 1);
+        c.lineTo(13, 16);
+        c.lineTo(-13, 16);
+        c.closePath();
+        c.fill();
+        c.fillStyle = "#f0fdf4";
+        c.fillRect(-13, 13, 26, 3);
+        c.fillStyle = "#78350f";
+        c.fillRect(-10, 8, 20, 3);
+        c.fillStyle = "#facc15";
+        c.fillRect(-2, 7.5, 4, 4);
+
+        c.fillStyle = "#8d5a3c";
+        c.beginPath();
+        c.arc(1, -8, 10.5, 0, Math.PI * 2);
+        c.fill();
+        c.fillStyle = "#101010";
+        c.beginPath();
+        c.moveTo(-10, -11);
+        c.quadraticCurveTo(-9, -20, -1, -20);
+        c.quadraticCurveTo(8, -21, 10, -12);
+        c.lineTo(10, -9);
+        c.quadraticCurveTo(7, -9, 4, -11);
+        c.quadraticCurveTo(1, -8, -2, -10);
+        c.quadraticCurveTo(-6, -8, -9, -9);
+        c.closePath();
+        c.fill();
+
+        c.strokeStyle = "#4a4a4a";
+        c.lineWidth = 1;
+        c.beginPath();
+        c.moveTo(-5, -18);
+        c.quadraticCurveTo(-4, -14, -5, -11);
+        c.moveTo(1, -19);
+        c.quadraticCurveTo(2, -14, 1, -10);
+        c.moveTo(7, -17);
+        c.quadraticCurveTo(8, -14, 7, -11);
+        c.stroke();
+
+        c.strokeStyle = "#291810";
+        c.lineWidth = 1.5;
+        c.fillStyle = "rgba(224, 242, 254, 0.3)";
+        c.beginPath();
+        c.roundRect(-1.5, -11.5, 6, 5.5, 1.8);
+        c.roundRect(5, -11.5, 5.5, 5.5, 1.8);
+        c.fill();
+        c.stroke();
+        c.beginPath();
+        c.moveTo(4.5, -9);
+        c.lineTo(5, -9);
+        c.stroke();
+        if (blink) {
+          c.strokeStyle = "#24150f";
+          c.beginPath();
+          c.moveTo(1, -8);
+          c.lineTo(3.5, -8);
+          c.moveTo(7, -8);
+          c.lineTo(9, -8);
+          c.stroke();
+        } else {
+          c.fillStyle = "#1f1209";
+          c.beginPath();
+          c.arc(2.5, -8.5, 1.2, 0, Math.PI * 2);
+          c.arc(7.7, -8.5, 1.2, 0, Math.PI * 2);
+          c.fill();
+        }
+        c.strokeStyle = "#5c2b1c";
+        c.lineWidth = 1.2;
+        c.beginPath();
+        c.arc(4.5, -4.5, 2.2, 0.15 * Math.PI, 0.85 * Math.PI);
+        c.stroke();
+
+        c.fillStyle = "#166534";
+        c.beginPath();
+        c.moveTo(-10, -16);
+        c.lineTo(-4, -29);
+        c.lineTo(4, -18);
+        c.closePath();
+        c.fill();
+        c.fillStyle = "#f0fdf4";
+        c.beginPath();
+        c.roundRect(-10, -19, 15, 3.5, 1.8);
+        c.fill();
+        c.fillStyle = "#ffffff";
+        c.beginPath();
+        c.arc(-4, -29, 2.8, 0, Math.PI * 2);
+        c.fill();
+
+        c.save();
+        c.translate(0, 4.5);
+        c.rotate(!onGround ? -0.8 : isMoving ? -Math.sin(runTime * 14) * 0.5 : 0.1);
+        c.fillStyle = "#15803d";
+        c.beginPath();
+        c.roundRect(-2.5, 0, 5, 7, 2.5);
+        c.fill();
+        c.fillStyle = "#8d5a3c";
+        c.beginPath();
+        c.arc(0, 7.5, 2.5, 0, Math.PI * 2);
+        c.fill();
+        c.restore();
+        c.restore();
+      }
+
+      const PORTRAIT_TARGETS = [
+        ["titlePortraitCanvas", 128, 2.35, 6],
+        ["storyPortraitCanvas", 88, 1.65, 4],
+        ["hudAvatarCanvas", 38, 0.78, 3]
+      ];
+
+      // Desenha retratos nos canvases da UI (Tela Inicial, História, HUD)
+      function renderPortraitCanvases(t) {
+        const blink = Math.floor(t * 0.45) % 5 === 0 && (t * 0.45) % 1 < 0.12;
+        for (const [id, size, scale, offY] of PORTRAIT_TARGETS) {
+          const el = $(id);
+          if (!el) continue;
+          const c = el.getContext("2d");
+          c.clearRect(0, 0, size, size);
+
+          // Brilho estrelado suave atrás dela
+          const grad = c.createRadialGradient(
+            size / 2,
+            size / 2,
+            4,
+            size / 2,
+            size / 2,
+            size * 0.5
+          );
+          grad.addColorStop(0, "rgba(255, 209, 102, 0.35)");
+          grad.addColorStop(1, "rgba(255, 209, 102, 0)");
+          c.fillStyle = grad;
+          c.fillRect(0, 0, size, size);
+
+          c.save();
+          c.translate(size / 2, size / 2 + offY);
+          c.scale(scale, scale);
+          drawCurlyHeroine(c, -18, -24, 36, 48, {
+            facing: 1,
+            runTime: t,
+            isMoving: false,
+            onGround: true,
+            blink
+          });
+          c.restore();
+        }
+      }
+
+      /* --------------------------------------------------------------------
+         E. DEFINIÇÃO DAS 6 FASES DA AVENTURA
+         -------------------------------------------------------------------- */
+      const STAGES = [
+        {
+          index: 0,
+          code: "FASE 1 · VILA NEVADA",
+          title: "Vila Nevada Salva!",
+          nextText: "As luzinhas da vila voltaram a brilhar! Agora a trilha segue pela Floresta dos Pinheiros Encantados.",
+          skyTop: "#09152e",
+          skyMid: "#193763",
+          skyBot: "#3b6e9c",
+          aurora: ["rgba(52, 211, 153, 0.18)", "rgba(56, 189, 248, 0.15)"],
+          hillFar: "#162d52",
+          hillNear: "#234678",
+          snowTop: "#ffffff",
+          groundSoil: "#4a2c2a",
+          length: 3100,
+          hasBoss: false
+        },
+        {
+          index: 1,
+          code: "FASE 2 · FLORESTA DOS PINHEIROS",
+          title: "Floresta Iluminada!",
+          nextText: "A floresta nevada ficou para trás, e o Castelo Congelado está próximo. Prepare-se para enfrentar o Rei Gelado: salte sobre ele ou use bolas de neve com X. Observe seus ataques e continue em movimento!",
+          skyTop: "#071c24",
+          skyMid: "#113f47",
+          skyBot: "#2a756f",
+          aurora: ["rgba(167, 243, 208, 0.2)", "rgba(250, 204, 21, 0.13)"],
+          hillFar: "#0e3338",
+          hillNear: "#174f52",
+          snowTop: "#ecfdf5",
+          groundSoil: "#2d3a3a",
+          length: 3450,
+          hasBoss: false
+        },
+        {
+          index: 2,
+          code: "FASE 3 · CASTELO CONGELADO",
+          title: "O Rei Gelado Foi Derrotado!",
+          nextText: "O Rei Gelado caiu, mas a Estrela do Norte continua rachada. Sob o castelo, uma passagem secreta leva adiante; agora, é preciso descobrir de onde vem a magia que ainda ameaça o Natal.",
+          skyTop: "#120c2b",
+          skyMid: "#291d5c",
+          skyBot: "#53408f",
+          aurora: ["rgba(244, 114, 182, 0.2)", "rgba(129, 140, 248, 0.22)"],
+          hillFar: "#1e1645",
+          hillNear: "#312569",
+          snowTop: "#eef2ff",
+          groundSoil: "#312e81",
+          length: 3200,
+          hasBoss: true
+        },
+        {
+          index: 3,
+          code: "FASE 4 · CAVERNAS DO ECO",
+          title: "Os Cristais da Caverna",
+          nextText: "Nas profundezas do castelo, cristais guardam fragmentos da Estrela do Norte. Resolva o enigma das runas para abrir a passagem; a trilha depois sobe pela Montanha das Auroras.",
+          skyTop: "#061b2b",
+          skyMid: "#0d4355",
+          skyBot: "#267b83",
+          aurora: ["rgba(34, 211, 238, 0.22)", "rgba(45, 212, 191, 0.16)"],
+          hillFar: "#123d50",
+          hillNear: "#17606c",
+          snowTop: "#d9fbff",
+          groundSoil: "#164e63",
+          length: 3740,
+          hasBoss: false
+        },
+        {
+          index: 4,
+          code: "FASE 5 · MONTANHA DAS AURORAS",
+          title: "A Aurora Voltou a Brilhar",
+          nextText: "No alto da montanha, os dois reacenderam a aurora e descobriram a origem da rachadura: o Coração da Estrela está preso na fortaleza do Lobo da Geada.",
+          skyTop: "#081b33",
+          skyMid: "#123b5a",
+          skyBot: "#286b78",
+          aurora: ["rgba(74, 222, 128, 0.28)", "rgba(192, 132, 252, 0.2)"],
+          hillFar: "#173a5a",
+          hillNear: "#1d596b",
+          snowTop: "#e7fff5",
+          groundSoil: "#25445b",
+          length: 3920,
+          hasBoss: false
+        },
+        {
+          index: 5,
+          code: "FASE 6 · CORAÇÃO DA ESTRELA",
+          title: "O Coração da Estrela Foi Restaurado!",
+          nextText: "",
+          skyTop: "#100b2e",
+          skyMid: "#25205c",
+          skyBot: "#493b82",
+          aurora: ["rgba(196, 132, 252, 0.26)", "rgba(56, 189, 248, 0.2)"],
+          hillFar: "#201a50",
+          hillNear: "#33296d",
+          snowTop: "#f0eaff",
+          groundSoil: "#29245b",
+          length: 3600,
+          hasBoss: true
+        }
+      ];
+
+      /* --------------------------------------------------------------------
+         F. ESTADO DO MUNDO E ENTIDADES
+         -------------------------------------------------------------------- */
+      // Estados: "TITLE", "PLAYING", "PAUSED", "STAGE_CLEAR", "CELEBRATING", "FINALE"
+      let gameState = "TITLE";
+      let currentStageIdx = 0;
+      let score = 0;
+      let cameraX = 0;
+      let screenShake = 0;
+      let animClock = 0;
+
+      let player = null;
+      let vitor = null;
+      let groundSegments = [];
+      let platforms = [];
+      let pipes = [];
+      let mysteryBlocks = [];
+      let collectibles = [];
+      let crystalPuzzle = null;
+      let auroraPuzzle = null;
+      let enemies = [];
+      let checkpointFlag = null;
+      let respawnCoords = { x: 80, y: GROUND_Y - 52 };
+      let boss = null;
+      let giftCrate = null;
+      let treeLitProgress = 0;
+      let particles = [];
+      const MAX_PARTICLES = 420;
+      let floatingLabels = [];
+      let snowballs = [];
+      let missionCandy = 0;
+      let missionComplete = false;
+      let stageSecrets = 0;
+      let adventureSecrets = 0;
+      let secretMasteryAwarded = false;
+
+      // Flocos de neve ambientes permanentes
+      const snowFlakes = Array.from({ length: 64 }, () => ({
+        x: Math.random() * 1400,
+        y: Math.random() * VIRTUAL_H,
+        r: 1.4 + Math.random() * 2.6,
+        vy: 24 + Math.random() * 44,
+        vx: -12 + Math.random() * 24,
+        phase: Math.random() * Math.PI * 2
+      }));
+
+      function createPlayer(x, y) {
+        return {
+          x,
+          y,
+          w: 32,
+          h: 46,
+          vx: 0,
+          vy: 0,
+          facing: 1,
+          onGround: false,
+          coyoteTimer: 0,
+          jumpBuffer: 0,
+          runTime: 0,
+          hp: config.maxLives,
+          invuln: 0,
+          magic: 3,
+          magicCooldown: 0
+        };
+      }
+
+      function buildStage(idx) {
+        currentStageIdx = idx;
+        const st = STAGES[idx];
+        cameraX = 0;
+        screenShake = 0;
+        particles = [];
+        floatingLabels = [];
+        snowballs = [];
+        platforms = [];
+        pipes = [];
+        mysteryBlocks = [];
+        collectibles = [];
+        crystalPuzzle = null;
+        auroraPuzzle = null;
+        enemies = [];
+        boss = null;
+        giftCrate = null;
+        treeLitProgress = st.hasBoss ? 0 : 1;
+        missionCandy = 0;
+        missionComplete = false;
+        stageSecrets = 0;
+
+        respawnCoords = { x: 80, y: GROUND_Y - 52 };
+        const prevHp = player && idx > 0 ? Math.max(player.hp, Math.min(config.maxLives, player.hp + 1)) : config.maxLives;
+        const prevVitorHp = vitor && idx > 0 ? Math.max(vitor.hp, Math.min(config.maxLives, vitor.hp + 1)) : config.maxLives;
+        player = createPlayer(respawnCoords.x, respawnCoords.y);
+        player.hp = prevHp;
+        vitor = vitorUnlocked ? createPlayer(respawnCoords.x + 42, respawnCoords.y) : null;
+        if (vitor) {
+          vitor.hp = prevVitorHp;
+          vitor.magic = 0;
+        }
+
+        if (idx === 0) {
+          // FASE 1: VILA NEVADA
+          groundSegments = [
+            { x: 0, w: 880 },
+            { x: 990, w: 920 },
+            { x: 2030, w: 1150 }
+          ];
+
+          pipes.push({ x: 430, w: 54, h: 64 });
+          pipes.push({ x: 1320, w: 54, h: 82 });
+          pipes.push({ x: 2340, w: 54, h: 72 });
+
+          platforms.push({ x: 250, y: 345, w: 120, h: 20, moving: false });
+          platforms.push({ x: 640, y: 330, w: 140, h: 20, moving: false });
+          platforms.push({ x: 885, y: 375, w: 100, h: 18, moving: false }); // Ponte sobre o fosso 1
+          platforms.push({ x: 1120, y: 325, w: 130, h: 20, moving: false });
+          platforms.push({ x: 1520, y: 315, w: 150, h: 20, moving: false });
+          platforms.push({ x: 1925, y: 365, w: 100, h: 18, moving: false }); // Ponte sobre o fosso 2
+          platforms.push({ x: 2150, y: 320, w: 140, h: 20, moving: false });
+          platforms.push({ x: 2520, y: 300, w: 160, h: 20, moving: false });
+
+          mysteryBlocks.push({ x: 295, y: 245, w: 34, h: 34, used: false, reward: "star", bumpY: 0 });
+          mysteryBlocks.push({ x: 695, y: 225, w: 34, h: 34, used: false, reward: "heart", bumpY: 0 });
+          mysteryBlocks.push({ x: 1170, y: 220, w: 34, h: 34, used: false, reward: "candy", bumpY: 0 });
+          mysteryBlocks.push({ x: 1580, y: 210, w: 34, h: 34, used: false, reward: "star", bumpY: 0 });
+          mysteryBlocks.push({ x: 2585, y: 195, w: 34, h: 34, used: false, reward: "heart", bumpY: 0 });
+
+          // Estrelas e bengalas doces
+          [
+            [270, 310], [310, 310], [350, 310],
+            [520, 415], [565, 415],
+            [670, 295], [710, 295], [750, 295],
+            [935, 335],
+            [1145, 290], [1215, 290],
+            [1550, 280], [1600, 280], [1645, 280],
+            [1975, 325],
+            [2180, 285], [2230, 285],
+            [2550, 265], [2600, 265], [2650, 265]
+          ].forEach(([cx, cy], i) => {
+            collectibles.push({ x: cx, y: cy, type: i % 3 === 0 ? "candy" : "star", taken: false, phase: i * 0.7 });
+          });
+          collectibles.push({ x: 860, y: 278, type: "secret", taken: false, phase: 1.4 });
+
+          // Bonecos de Neve Rabugentos
+          enemies.push(makeEnemy(560, "snowman", 500, 740, 68));
+          enemies.push(makeEnemy(1220, "snowman", 1060, 1290, 74));
+          enemies.push(makeEnemy(1700, "snowman", 1480, 1840, 78));
+          enemies.push(makeEnemy(2220, "snowman", 2070, 2310, 82));
+          enemies.push(makeEnemy(2660, "snowman", 2460, 2820, 86));
+          enemies.push(makeEnemy(1040, "gingerbread", 1005, 1165, 105));
+
+          checkpointFlag = { x: 1440, y: GROUND_Y, reached: false };
+        } else if (idx === 1) {
+          // FASE 2: FLORESTA DOS PINHEIROS ENCANTADOS
+          groundSegments = [
+            { x: 0, w: 760 },
+            { x: 910, w: 820 },
+            { x: 1890, w: 780 },
+            { x: 2820, w: 720 }
+          ];
+
+          pipes.push({ x: 380, w: 54, h: 68 });
+          pipes.push({ x: 1240, w: 54, h: 84 });
+          pipes.push({ x: 2210, w: 54, h: 74 });
+
+          platforms.push({ x: 220, y: 340, w: 120, h: 20, moving: false });
+          platforms.push({ x: 560, y: 315, w: 130, h: 20, moving: false });
+          // Plataforma flutuante móvel sobre o abismo 1
+          platforms.push({ x: 780, y: 365, w: 110, h: 18, moving: true, baseX: 780, rangeX: 55, speed: 1.7, phase: 0 });
+          platforms.push({ x: 1040, y: 325, w: 130, h: 20, moving: false });
+          platforms.push({ x: 1410, y: 300, w: 145, h: 20, moving: false });
+          // Plataforma móvel sobre o abismo 2
+          platforms.push({ x: 1750, y: 355, w: 115, h: 18, moving: true, baseX: 1750, rangeX: 60, speed: 1.9, phase: 1.2 });
+          platforms.push({ x: 2030, y: 315, w: 135, h: 20, moving: false });
+          platforms.push({ x: 2380, y: 295, w: 145, h: 20, moving: false });
+          // Plataforma móvel sobre o abismo 3
+          platforms.push({ x: 2685, y: 350, w: 115, h: 18, moving: true, baseX: 2685, rangeX: 55, speed: 2.0, phase: 2.1 });
+          platforms.push({ x: 2940, y: 315, w: 150, h: 20, moving: false });
+
+          mysteryBlocks.push({ x: 265, y: 235, w: 34, h: 34, used: false, reward: "star", bumpY: 0 });
+          mysteryBlocks.push({ x: 610, y: 210, w: 34, h: 34, used: false, reward: "heart", bumpY: 0 });
+          mysteryBlocks.push({ x: 1465, y: 195, w: 34, h: 34, used: false, reward: "candy", bumpY: 0 });
+          mysteryBlocks.push({ x: 2435, y: 190, w: 34, h: 34, used: false, reward: "heart", bumpY: 0 });
+          mysteryBlocks.push({ x: 3000, y: 210, w: 34, h: 34, used: false, reward: "star", bumpY: 0 });
+
+          [
+            [245, 305], [295, 305],
+            [590, 280], [645, 280],
+            [835, 325],
+            [1070, 290], [1125, 290],
+            [1440, 265], [1495, 265],
+            [1805, 315],
+            [2060, 280], [2115, 280],
+            [2410, 260], [2475, 260],
+            [2740, 310],
+            [2970, 280], [3030, 280]
+          ].forEach(([cx, cy], i) => {
+            collectibles.push({ x: cx, y: cy, type: i % 2 === 0 ? "star" : "candy", taken: false, phase: i * 0.6 });
+          });
+          collectibles.push({ x: 1810, y: 278, type: "secret", taken: false, phase: 2.2 });
+
+          // Mini-Grinches Travessos + Bonecos de Neve
+          enemies.push(makeEnemy(500, "grinch", 450, 710, 88));
+          enemies.push(makeEnemy(1100, "snowman", 950, 1200, 80));
+          enemies.push(makeEnemy(1560, "grinch", 1340, 1680, 94));
+          enemies.push(makeEnemy(2080, "grinch", 1930, 2170, 96));
+          enemies.push(makeEnemy(2520, "snowman", 2300, 2620, 86));
+          enemies.push(makeEnemy(3050, "grinch", 2870, 3180, 98));
+          enemies.push(makeEnemy(790, "bat", 765, 890, 120));
+          enemies.push(makeEnemy(2730, "ice-spirit", 2680, 2810, 112));
+
+          checkpointFlag = { x: 1650, y: GROUND_Y, reached: false };
+        } else if (idx === 2) {
+          // FASE 3: CASTELO CONGELADO & ARENA DO REI GELADO
+          groundSegments = [
+            { x: 0, w: 720 },
+            { x: 860, w: 740 },
+            { x: 1740, w: 1550 } // Salão do Trono do Rei Gelado
+          ];
+
+          pipes.push({ x: 350, w: 54, h: 66 });
+          pipes.push({ x: 1180, w: 54, h: 78 });
+
+          platforms.push({ x: 210, y: 345, w: 115, h: 20, moving: false });
+          platforms.push({ x: 520, y: 315, w: 125, h: 20, moving: false });
+          platforms.push({ x: 745, y: 360, w: 105, h: 18, moving: false });
+          platforms.push({ x: 980, y: 325, w: 130, h: 20, moving: false });
+          platforms.push({ x: 1350, y: 305, w: 135, h: 20, moving: false });
+          platforms.push({ x: 1615, y: 355, w: 110, h: 18, moving: false });
+
+          // Plataformas táticas dentro da Arena do Rei Gelado
+          platforms.push({ x: 2030, y: 335, w: 120, h: 18, moving: false });
+          platforms.push({ x: 2540, y: 335, w: 120, h: 18, moving: false });
+          platforms.push({ x: 2285, y: 265, w: 120, h: 18, moving: false });
+
+          mysteryBlocks.push({ x: 250, y: 240, w: 34, h: 34, used: false, reward: "star", bumpY: 0 });
+          mysteryBlocks.push({ x: 565, y: 210, w: 34, h: 34, used: false, reward: "heart", bumpY: 0 });
+          mysteryBlocks.push({ x: 1400, y: 200, w: 34, h: 34, used: false, reward: "heart", bumpY: 0 });
+          mysteryBlocks.push({ x: 2328, y: 165, w: 34, h: 34, used: false, reward: "heart", bumpY: 0 });
+
+          [
+            [235, 310], [285, 310],
+            [545, 280], [600, 280],
+            [795, 320],
+            [1010, 290], [1065, 290],
+            [1380, 270], [1435, 270],
+            [1665, 315],
+            [2065, 300], [2115, 300],
+            [2575, 300], [2625, 300]
+          ].forEach(([cx, cy], i) => {
+            collectibles.push({ x: cx, y: cy, type: i % 2 === 0 ? "star" : "candy", taken: false, phase: i * 0.65 });
+          });
+          collectibles.push({ x: 2310, y: 210, type: "secret", taken: false, phase: 0.7 });
+
+          enemies.push(makeEnemy(490, "grinch", 430, 680, 95));
+          enemies.push(makeEnemy(1050, "snowman", 910, 1140, 88));
+          enemies.push(makeEnemy(1420, "grinch", 1270, 1550, 102));
+          enemies.push(makeEnemy(1960, "bat", 1910, 2180, 128));
+          enemies.push(makeEnemy(2770, "gingerbread", 2680, 2900, 112));
+
+          checkpointFlag = { x: 1840, y: GROUND_Y, reached: false };
+
+          // Chefe da fase: Rei Gelado
+          boss = {
+            name: "REI GELADO",
+            kind: "ice-king",
+            x: 2480,
+            y: GROUND_Y - 96,
+            w: 78,
+            h: 96,
+            vx: -115,
+            vy: 0,
+            hp: 9,
+            maxHp: 9,
+            alive: true,
+            hitFlash: 0,
+            attackTimer: 2.3,
+            jumpTimer: 3.6,
+            phase: 1,
+            minX: 1960,
+            maxX: 2740
+          };
+        } else if (idx === 3) {
+          // FASE 4: CAVERNAS DO ECO
+          groundSegments = [
+            { x: 0, w: 760 },
+            { x: 900, w: 800 },
+            { x: 1830, w: 820 },
+            { x: 2780, w: 960 }
+          ];
+
+          pipes.push({ x: 420, w: 54, h: 72 });
+          pipes.push({ x: 1260, w: 54, h: 86 });
+          pipes.push({ x: 2300, w: 54, h: 78 });
+          pipes.push({ x: 3200, w: 54, h: 88 });
+
+          platforms.push({ x: 230, y: 340, w: 125, h: 20, moving: false });
+          platforms.push({ x: 570, y: 315, w: 135, h: 20, moving: false });
+          platforms.push({ x: 775, y: 365, w: 125, h: 18, moving: true, baseX: 775, rangeX: 26, speed: 1.5, phase: 0.6 });
+          platforms.push({ x: 1080, y: 330, w: 130, h: 20, moving: false });
+          platforms.push({ x: 1450, y: 300, w: 145, h: 20, moving: false });
+          platforms.push({ x: 1705, y: 360, w: 125, h: 18, moving: true, baseX: 1705, rangeX: 25, speed: 1.7, phase: 1.4 });
+          platforms.push({ x: 2030, y: 325, w: 140, h: 20, moving: false });
+          platforms.push({ x: 2430, y: 300, w: 145, h: 20, moving: false });
+          platforms.push({ x: 2655, y: 360, w: 125, h: 18, moving: true, baseX: 2655, rangeX: 25, speed: 1.8, phase: 2.2 });
+          platforms.push({ x: 3000, y: 325, w: 145, h: 20, moving: false });
+
+          mysteryBlocks.push({ x: 270, y: 230, w: 34, h: 34, used: false, reward: "star", bumpY: 0 });
+          mysteryBlocks.push({ x: 620, y: 205, w: 34, h: 34, used: false, reward: "heart", bumpY: 0 });
+          mysteryBlocks.push({ x: 1480, y: 190, w: 34, h: 34, used: false, reward: "candy", bumpY: 0 });
+          mysteryBlocks.push({ x: 2450, y: 185, w: 34, h: 34, used: false, reward: "heart", bumpY: 0 });
+          mysteryBlocks.push({ x: 3110, y: 205, w: 34, h: 34, used: false, reward: "star", bumpY: 0 });
+
+          [
+            [250, 300], [300, 300], [600, 275], [650, 275],
+            [835, 325], [1110, 295], [1160, 295], [1480, 265],
+            [1530, 265], [1775, 320], [2060, 285], [2110, 285],
+            [2460, 260], [2510, 260], [2710, 320], [3030, 285],
+            [3080, 285], [3340, 400], [3390, 400]
+          ].forEach(([cx, cy], i) => {
+            collectibles.push({ x: cx, y: cy, type: i % 4 === 0 ? "candy" : "star", taken: false, phase: i * 0.55 });
+          });
+          collectibles.push({ x: 1870, y: 250, type: "secret", taken: false, phase: 1.1 });
+
+          enemies.push(makeEnemy(520, "ice-spirit", 455, 700, 105));
+          enemies.push(makeEnemy(1130, "grinch", 960, 1220, 98));
+          enemies.push(makeEnemy(1510, "bat", 1390, 1610, 132));
+          enemies.push(makeEnemy(2120, "snowman", 1930, 2250, 90));
+          enemies.push(makeEnemy(2500, "ice-spirit", 2350, 2610, 115));
+          enemies.push(makeEnemy(3070, "grinch", 2890, 3260, 102));
+
+          checkpointFlag = { x: 1880, y: GROUND_Y, reached: false };
+          crystalPuzzle = {
+            sequence: ["moon", "star", "snowflake"],
+            progress: 0,
+            completed: false,
+            runes: [
+              { id: "star", symbol: "⭐", x: 2150, y: GROUND_Y - 44, w: 40, h: 44, active: false, touching: false },
+              { id: "moon", symbol: "🌙", x: 2520, y: GROUND_Y - 44, w: 40, h: 44, active: false, touching: false },
+              { id: "snowflake", symbol: "❄", x: 2940, y: GROUND_Y - 44, w: 40, h: 44, active: false, touching: false }
+            ],
+            gate: { x: 3310, y: GROUND_Y - 290, w: 52, h: 290 }
+          };
+        } else if (idx === 4) {
+          // FASE 5: MONTANHA DAS AURORAS
+          groundSegments = [
+            { x: 0, w: 820 },
+            { x: 970, w: 900 },
+            { x: 2020, w: 850 },
+            { x: 3020, w: 900 }
+          ];
+
+          pipes.push({ x: 510, w: 54, h: 80 });
+          pipes.push({ x: 1340, w: 54, h: 92 });
+          pipes.push({ x: 2350, w: 54, h: 82 });
+          pipes.push({ x: 3370, w: 54, h: 96 });
+
+          platforms.push({ x: 230, y: 330, w: 130, h: 20, moving: false });
+          platforms.push({ x: 620, y: 305, w: 140, h: 20, moving: false });
+          platforms.push({ x: 830, y: 360, w: 125, h: 18, moving: true, baseX: 830, rangeX: 28, speed: 1.8, phase: 0.4 });
+          platforms.push({ x: 1080, y: 325, w: 135, h: 20, moving: false });
+          platforms.push({ x: 1510, y: 290, w: 145, h: 20, moving: false });
+          platforms.push({ x: 1875, y: 355, w: 145, h: 18, moving: true, baseX: 1875, rangeX: 24, speed: 1.9, phase: 1.1 });
+          platforms.push({ x: 2150, y: 320, w: 140, h: 20, moving: false });
+          platforms.push({ x: 2570, y: 285, w: 150, h: 20, moving: false });
+          platforms.push({ x: 2875, y: 355, w: 145, h: 18, moving: true, baseX: 2875, rangeX: 24, speed: 2.0, phase: 2.3 });
+          platforms.push({ x: 3170, y: 315, w: 155, h: 20, moving: false });
+
+          mysteryBlocks.push({ x: 275, y: 220, w: 34, h: 34, used: false, reward: "star", bumpY: 0 });
+          mysteryBlocks.push({ x: 665, y: 195, w: 34, h: 34, used: false, reward: "heart", bumpY: 0 });
+          mysteryBlocks.push({ x: 1540, y: 180, w: 34, h: 34, used: false, reward: "candy", bumpY: 0 });
+          mysteryBlocks.push({ x: 2610, y: 175, w: 34, h: 34, used: false, reward: "heart", bumpY: 0 });
+          mysteryBlocks.push({ x: 3240, y: 195, w: 34, h: 34, used: false, reward: "star", bumpY: 0 });
+
+          [
+            [250, 290], [300, 290], [650, 265], [700, 265],
+            [890, 320], [1110, 285], [1160, 285], [1540, 255],
+            [1590, 255], [1930, 315], [2180, 280], [2230, 280],
+            [2600, 250], [2650, 250], [2920, 315], [3200, 275],
+            [3250, 275], [3510, 400], [3560, 400]
+          ].forEach(([cx, cy], i) => {
+            collectibles.push({ x: cx, y: cy, type: i % 3 === 0 ? "candy" : "star", taken: false, phase: i * 0.6 });
+          });
+          collectibles.push({ x: 1940, y: 245, type: "secret", taken: false, phase: 1.8 });
+
+          enemies.push(makeEnemy(540, "grinch", 445, 760, 104));
+          enemies.push(makeEnemy(1150, "bat", 1030, 1250, 138));
+          enemies.push(makeEnemy(1600, "snowman", 1410, 1740, 94));
+          enemies.push(makeEnemy(2260, "ice-spirit", 2080, 2370, 122));
+          enemies.push(makeEnemy(2670, "grinch", 2470, 2810, 108));
+          enemies.push(makeEnemy(3280, "bat", 3100, 3470, 145));
+
+          checkpointFlag = { x: 2110, y: GROUND_Y, reached: false };
+          auroraPuzzle = {
+            sequence: ["star", "crystal", "moon", "sun", "star", "moon"],
+            progress: 0,
+            completed: false,
+            runes: [
+              { id: "star", symbol: "⭐", x: 2180, y: GROUND_Y - 44, w: 40, h: 44, active: false, touching: false },
+              { id: "moon", symbol: "🌙", x: 2430, y: GROUND_Y - 44, w: 40, h: 44, active: false, touching: false },
+              { id: "crystal", symbol: "💎", x: 2750, y: GROUND_Y - 44, w: 40, h: 44, active: false, touching: false },
+              { id: "sun", symbol: "☀️", x: 3130, y: GROUND_Y - 44, w: 40, h: 44, active: false, touching: false }
+            ],
+            gate: { x: 3500, y: GROUND_Y - 290, w: 56, h: 290 }
+          };
+        } else {
+          // FASE 6: CORAÇÃO DA ESTRELA
+          groundSegments = [
+            { x: 0, w: 760 },
+            { x: 910, w: 840 },
+            { x: 1900, w: 1700 }
+          ];
+
+          pipes.push({ x: 390, w: 54, h: 74 });
+          pipes.push({ x: 1240, w: 54, h: 88 });
+
+          platforms.push({ x: 225, y: 340, w: 125, h: 20, moving: false });
+          platforms.push({ x: 550, y: 310, w: 130, h: 20, moving: false });
+          platforms.push({ x: 770, y: 360, w: 140, h: 18, moving: true, baseX: 770, rangeX: 28, speed: 1.8, phase: 0.8 });
+          platforms.push({ x: 1080, y: 325, w: 140, h: 20, moving: false });
+          platforms.push({ x: 1450, y: 295, w: 150, h: 20, moving: false });
+          platforms.push({ x: 1825, y: 355, w: 115, h: 18, moving: false });
+          platforms.push({ x: 2190, y: 330, w: 130, h: 18, moving: false });
+          platforms.push({ x: 2510, y: 270, w: 130, h: 18, moving: false });
+          platforms.push({ x: 2840, y: 330, w: 130, h: 18, moving: false });
+
+          mysteryBlocks.push({ x: 275, y: 225, w: 34, h: 34, used: false, reward: "heart", bumpY: 0 });
+          mysteryBlocks.push({ x: 1160, y: 205, w: 34, h: 34, used: false, reward: "candy", bumpY: 0 });
+          mysteryBlocks.push({ x: 2540, y: 165, w: 34, h: 34, used: false, reward: "heart", bumpY: 0 });
+
+          [
+            [250, 300], [300, 300], [600, 270], [650, 270],
+            [1110, 285], [1160, 285], [1480, 260], [1530, 260],
+            [2250, 295], [2580, 230], [2910, 295], [3000, 400],
+            [3050, 400]
+          ].forEach(([cx, cy], i) => {
+            collectibles.push({ x: cx, y: cy, type: i % 3 === 0 ? "candy" : "star", taken: false, phase: i * 0.7 });
+          });
+          collectibles.push({ x: 2250, y: 230, type: "secret", taken: false, phase: 0.9 });
+
+          enemies.push(makeEnemy(520, "ice-spirit", 440, 700, 112));
+          enemies.push(makeEnemy(1120, "grinch", 970, 1300, 105));
+          enemies.push(makeEnemy(1600, "bat", 1420, 1710, 145));
+          enemies.push(makeEnemy(2100, "gingerbread", 1970, 2310, 118));
+          enemies.push(makeEnemy(3030, "ice-spirit", 2850, 3200, 126));
+
+          checkpointFlag = { x: 1980, y: GROUND_Y, reached: false };
+
+          // Lobo da Geada: guardião do Coração da Estrela.
+          boss = {
+            name: "LOBO DA GEADA",
+            kind: "ice-wolf",
+            x: 2710,
+            y: GROUND_Y - 100,
+            w: 124,
+            h: 100,
+            vx: -128,
+            vy: 0,
+            hp: 12,
+            maxHp: 12,
+            alive: true,
+            hitFlash: 0,
+            attackTimer: 2.1,
+            jumpTimer: 3.2,
+            attackIndex: 0,
+            lungeTimer: 0,
+            patrolSpeed: 128,
+            phase: 1,
+            minX: 2070,
+            maxX: 3160
+          };
+        }
+
+        updateHudUI();
+        if (idx === 3) showToast("🔷 Descubram a sequência das runas para abrir a passagem.");
+        if (idx === 4) showToast("🌌 Quatro cristais, seis ativações. Descubram o padrão para abrir a passagem.");
+      }
+
+      function makeEnemy(x, kind, minX, maxX, speed) {
+        return {
+          x,
+          y: (kind === "bat" || kind === "ice-spirit") ? GROUND_Y - 126 : GROUND_Y - 38,
+          baseY: (kind === "bat" || kind === "ice-spirit") ? GROUND_Y - 126 : GROUND_Y - 38,
+          w: kind === "bat" ? 42 : 36,
+          h: kind === "bat" ? 30 : 38,
+          vx: speed,
+          kind,
+          minX,
+          maxX,
+          alive: true,
+          squash: 0,
+          anim: Math.random() * 6
+        };
+      }
+
+      /* --------------------------------------------------------------------
+         G. PARTICULAS E TEXTOS FLUTUANTES
+         -------------------------------------------------------------------- */
+      function spawnParticles(x, y, colors, count = 14, maxSpd = 210, isProjectile = false) {
+        const particleCount = Math.min(count, MAX_PARTICLES - particles.length);
+        for (let i = 0; i < particleCount; i++) {
+          const ang = Math.random() * Math.PI * 2;
+          const spd = 45 + Math.random() * maxSpd;
+          particles.push({
+            x,
+            y,
+            vx: Math.cos(ang) * spd,
+            vy: Math.sin(ang) * spd - 45,
+            life: 0.45 + Math.random() * 0.45,
+            maxLife: 0.9,
+            size: 2.5 + Math.random() * 3.5,
+            color: colors[i % colors.length],
+            isProjectile: false
+          });
+        }
+      }
+
+      function spawnLabel(x, y, text, color = "#ffd166") {
+        floatingLabels.push({ x, y, text, color, life: 1.0 });
+      }
+
+      /* --------------------------------------------------------------------
+         H. CONTROLES DE TECLADO E GAMEPAD
+         -------------------------------------------------------------------- */
+      const input = { left: false, right: false, jump: false, attack: false };
+      const vitorInput = { left: false, right: false, jump: false, attack: false };
+      const keyboardInput = { left: false, right: false, jump: false, attack: false };
+      const keyboardVitorInput = { left: false, right: false, jump: false, attack: false };
+      const gamepadButtons = Array.from({ length: 2 }, () => ({ jump: false, attack: false, start: false, confirm: false }));
+
+      window.addEventListener("keydown", (e) => {
+        if (!isSupportedViewport) return;
+        if (["ArrowLeft", "ArrowRight", "ArrowUp", " ", "a", "d", "w", "A", "D", "W", "x", "X", "k", "K"].includes(e.key)) {
+          e.preventDefault();
+        }
+        if (e.key === "Escape" || e.key === "p" || e.key === "P") {
+          if (gameState === "PLAYING") pauseGame();
+          else if (gameState === "PAUSED") resumeGame();
+          else if (e.key === "Escape" && gameState === "FINALE" && $("creditsModal").classList.contains("flex")) {
+            setScreenOverlay(creditsReturnTarget);
+          }
+          return;
+        }
+        if (e.key === "ArrowLeft") {
+          if (vitor) keyboardVitorInput.left = true;
+          else keyboardInput.left = true;
+        } else if (e.key === "a" || e.key === "A") keyboardInput.left = true;
+        if (e.key === "ArrowRight") {
+          if (vitor) keyboardVitorInput.right = true;
+          else keyboardInput.right = true;
+        } else if (e.key === "d" || e.key === "D") keyboardInput.right = true;
+        if (e.key === "ArrowUp" && vitor) {
+          if (!keyboardVitorInput.jump && vitor) vitor.jumpBuffer = 0.14;
+          keyboardVitorInput.jump = true;
+        } else if (e.key === "ArrowUp" || e.key === "w" || e.key === "W" || e.key === " ") {
+          if (!keyboardInput.jump && player) player.jumpBuffer = 0.14;
+          keyboardInput.jump = true;
+        }
+        if ((e.key === "x" || e.key === "X" || e.key === "k" || e.key === "K") && !keyboardInput.attack) {
+          launchSnowball();
+          keyboardInput.attack = true;
+        }
+      });
+
+      window.addEventListener("keyup", (e) => {
+        if (e.key === "ArrowLeft" && vitor) keyboardVitorInput.left = false;
+        else if (e.key === "ArrowLeft") keyboardInput.left = false;
+        else if (e.key === "a" || e.key === "A") keyboardInput.left = false;
+        if (e.key === "ArrowRight" && vitor) keyboardVitorInput.right = false;
+        else if (e.key === "ArrowRight") keyboardInput.right = false;
+        else if (e.key === "d" || e.key === "D") keyboardInput.right = false;
+        if (e.key === "ArrowUp" && vitor) keyboardVitorInput.jump = false;
+        else if (e.key === "ArrowUp" || e.key === "w" || e.key === "W" || e.key === " ") keyboardInput.jump = false;
+        if (e.key === "x" || e.key === "X" || e.key === "k" || e.key === "K") keyboardInput.attack = false;
+      });
+
+      function releaseAllInputs() {
+        [keyboardInput, keyboardVitorInput, input, vitorInput].forEach((state) => {
+          Object.keys(state).forEach((key) => { state[key] = false; });
+        });
+      }
+
+      function pollGamepads() {
+        const pads = navigator.getGamepads ? navigator.getGamepads() : [];
+        const states = [input, vitorInput];
+        const keyboards = [keyboardInput, keyboardVitorInput];
+        const characters = [player, vitor];
+
+        for (let index = 0; index < states.length; index++) {
+          const pad = pads[index];
+          const state = states[index];
+          const keyboard = keyboards[index];
+          const character = characters[index];
+          const previous = gamepadButtons[index];
+          const buttonPressed = (buttonIndex) => Boolean(pad && pad.buttons[buttonIndex] && pad.buttons[buttonIndex].pressed);
+          const axisX = pad && pad.axes.length > 0 ? pad.axes[0] : 0;
+          const axisY = pad && pad.axes.length > 1 ? pad.axes[1] : 0;
+          const padLeft = Boolean(pad) && (axisX < -0.25 || buttonPressed(14));
+          const padRight = Boolean(pad) && (axisX > 0.25 || buttonPressed(15));
+          const padJump = Boolean(pad) && (buttonPressed(0) || buttonPressed(12) || axisY < -0.65);
+          const padAttack = index === 0 && Boolean(pad) && (buttonPressed(1) || buttonPressed(2) || buttonPressed(3));
+          const padStart = Boolean(pad) && buttonPressed(9);
+          const padConfirm = Boolean(pad) && buttonPressed(0);
+
+          state.left = keyboard.left || padLeft;
+          state.right = keyboard.right || padRight;
+          state.jump = keyboard.jump || padJump;
+          state.attack = keyboard.attack || padAttack;
+
+          if (gameState === "PLAYING" && padJump && !previous.jump && character) {
+            character.jumpBuffer = 0.14;
+          }
+          if (gameState === "PLAYING" && index === 0 && padAttack && !previous.attack && character) {
+            launchSnowball(character);
+          }
+          if (index === 0 && padStart && !previous.start) {
+            if (gameState === "PLAYING") pauseGame();
+            else if (gameState === "PAUSED") resumeGame();
+            else if (gameState === "FINALE" && $("creditsModal").classList.contains("flex")) {
+              setScreenOverlay(creditsReturnTarget);
+            }
+          }
+          if (index === 0 && padConfirm && !previous.confirm) {
+            if (gameState === "TITLE" || gameState === "STORY") startNewAdventure();
+            else if (gameState === "CINEMATIC") advanceCinematic();
+            else if (gameState === "PAUSED") resumeGame();
+            else if (gameState === "STAGE_CLEAR" && currentStageIdx < STAGES.length - 1) {
+              buildStage(currentStageIdx + 1);
+              gameState = "PLAYING";
+              setScreenOverlay(null);
+            } else if (gameState === "FINALE" && $("creditsModal").classList.contains("flex")) startNewAdventure();
+            else if (gameState === "FINALE" && currentStageIdx === 2 && !vitorUnlocked) unlockVitorAndContinue();
+            else if (gameState === "FINALE") startNewAdventure();
+          }
+
+          previous.jump = padJump;
+          previous.attack = padAttack;
+          previous.start = padStart;
+          previous.confirm = padConfirm;
+        }
+      }
+
+      window.addEventListener("blur", releaseAllInputs);
+      window.addEventListener("gamepadconnected", () => showToast("🎮 O botão A pula; apenas o Controle 1 usa X/B/Y para magia. Start pausa."));
+
+      /* --------------------------------------------------------------------
+         I. FÍSICA, COLISÕES, INIMIGOS E BATALHAS CONTRA OS CHEFES
+         -------------------------------------------------------------------- */
+      function overlap(a, b) {
+        return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
+      }
+
+      function getClosedPuzzleGate() {
+        if (crystalPuzzle && !crystalPuzzle.completed) return crystalPuzzle.gate;
+        if (auroraPuzzle && !auroraPuzzle.completed) return auroraPuzzle.gate;
+        return null;
+      }
+
+      function launchSnowball(character = player) {
+        if (gameState !== "PLAYING" || character !== player || character.magic <= 0 || character.magicCooldown > 0) return;
+        character.magic--;
+        character.magicCooldown = 0.36;
+        snowballs.push({
+          x: character.facing > 0 ? character.x + character.w : character.x - 12,
+          y: character.y + 19,
+          vx: character.facing * 430,
+          life: 1.15
+        });
+        sfx.tone(740, "triangle", 0.12, 0.09, 0, 980);
+        updateHudUI();
+      }
+
+      function updateVitor(dt, st) {
+        if (!vitor) return;
+
+        vitor.magicCooldown = Math.max(0, vitor.magicCooldown - dt);
+        const moveDir = (vitorInput.right ? 1 : 0) - (vitorInput.left ? 1 : 0);
+        if (moveDir !== 0) {
+          vitor.vx = Math.max(-265, Math.min(265, vitor.vx + moveDir * 1950 * dt));
+          vitor.facing = moveDir;
+          vitor.runTime += dt;
+        } else {
+          vitor.vx *= Math.pow(0.0008, dt);
+          if (Math.abs(vitor.vx) < 4) vitor.vx = 0;
+        }
+
+        if (vitor.onGround) vitor.coyoteTimer = 0.11;
+        else vitor.coyoteTimer = Math.max(0, vitor.coyoteTimer - dt);
+        if (vitor.jumpBuffer > 0) vitor.jumpBuffer = Math.max(0, vitor.jumpBuffer - dt);
+        if (vitor.jumpBuffer > 0 && vitor.coyoteTimer > 0) {
+          vitor.vy = -595;
+          vitor.onGround = false;
+          vitor.coyoteTimer = 0;
+          vitor.jumpBuffer = 0;
+          sfx.jump();
+        }
+        if (!vitorInput.jump && vitor.vy < -220) vitor.vy += 1200 * dt;
+        vitor.vy = Math.min(820, vitor.vy + 1520 * dt);
+        vitor.invuln = Math.max(0, vitor.invuln - dt);
+
+        vitor.x += vitor.vx * dt;
+        vitor.x = Math.max(12, Math.min(st.length - vitor.w - 12, vitor.x));
+        for (const pipe of pipes) {
+          if (vitor.x < pipe.x + pipe.w && vitor.x + vitor.w > pipe.x &&
+            vitor.y < GROUND_Y && vitor.y + vitor.h > GROUND_Y - pipe.h) {
+            if (vitor.vx > 0) vitor.x = pipe.x - vitor.w;
+            else if (vitor.vx < 0) vitor.x = pipe.x + pipe.w;
+            vitor.vx = 0;
+          }
+        }
+        for (const rect of mysteryBlocks) {
+          if (overlap(vitor, rect)) {
+            if (vitor.vx > 0) vitor.x = rect.x - vitor.w;
+            else if (vitor.vx < 0) vitor.x = rect.x + rect.w;
+            vitor.vx = 0;
+          }
+        }
+        const puzzleGate = getClosedPuzzleGate();
+        if (puzzleGate && overlap(vitor, puzzleGate)) {
+          if (vitor.vx > 0) vitor.x = puzzleGate.x - vitor.w;
+          else if (vitor.vx < 0) vitor.x = puzzleGate.x + puzzleGate.w;
+          vitor.vx = 0;
+        }
+
+        const prevBottom = vitor.y + vitor.h;
+        vitor.previousBottom = prevBottom;
+        vitor.y += vitor.vy * dt;
+        vitor.onGround = false;
+        if (vitor.vy >= 0) {
+          for (const seg of groundSegments) {
+            if (vitor.x + vitor.w - 4 > seg.x && vitor.x + 4 < seg.x + seg.w &&
+              prevBottom <= GROUND_Y + 12 && vitor.y + vitor.h >= GROUND_Y) {
+              vitor.y = GROUND_Y - vitor.h;
+              vitor.vy = 0;
+              vitor.onGround = true;
+            }
+          }
+          for (const platform of platforms) {
+            if (vitor.x + vitor.w - 4 > platform.x && vitor.x + 4 < platform.x + platform.w &&
+              prevBottom <= platform.y + 12 && vitor.y + vitor.h >= platform.y) {
+              vitor.y = platform.y - vitor.h;
+              vitor.vy = 0;
+              vitor.onGround = true;
+              if (platform.dx) vitor.x += platform.dx;
+            }
+          }
+          for (const pipe of pipes) {
+            const topY = GROUND_Y - pipe.h;
+            if (vitor.x + vitor.w - 4 > pipe.x && vitor.x + 4 < pipe.x + pipe.w &&
+              prevBottom <= topY + 12 && vitor.y + vitor.h >= topY) {
+              vitor.y = topY - vitor.h;
+              vitor.vy = 0;
+              vitor.onGround = true;
+            }
+          }
+        }
+
+        for (const block of mysteryBlocks) {
+          if (!overlap(vitor, block)) continue;
+          if (vitor.vy >= 0 && prevBottom <= block.y + 12) {
+            vitor.y = block.y - vitor.h;
+            vitor.vy = 0;
+            vitor.onGround = true;
+          } else if (vitor.vy < 0 && vitor.y >= block.y + block.h - 16) {
+            vitor.y = block.y + block.h;
+            vitor.vy = 110;
+            if (!block.used) {
+              block.used = true;
+              block.bumpY = -11;
+              sfx.block();
+              if (block.reward === "heart") {
+                vitor.hp = Math.min(config.maxLives, vitor.hp + 1);
+                sfx.heart();
+                spawnLabel(block.x + 17, block.y - 16, "+1 VIDA ❤️", "#ff758f");
+                spawnParticles(block.x + 17, block.y, ["#34d399", "#ffffff"], 18, 170);
+              } else if (block.reward === "candy") {
+                score += 150;
+                spawnLabel(block.x + 17, block.y - 16, "+150 🍬", "#ffd166");
+                spawnParticles(block.x + 17, block.y, ["#ff5964", "#ffffff", "#ffd166"], 16, 170);
+              } else {
+                score += 100;
+                spawnLabel(block.x + 17, block.y - 16, "+100 ⭐", "#ffd166");
+                spawnParticles(block.x + 17, block.y, ["#ffd166", "#ffffff"], 16, 170);
+              }
+              updateHudUI();
+            }
+          }
+        }
+
+        if (vitor.y > VIRTUAL_H + 55) {
+          damageVitor();
+          const respawn = getCoopRespawnPosition(vitor);
+          vitor.x = respawn.x;
+          vitor.y = respawn.y;
+          vitor.vx = 0;
+          vitor.vy = 0;
+          vitor.invuln = 1.5;
+        }
+
+        if (checkpointFlag && !checkpointFlag.reached && vitor.x + vitor.w >= checkpointFlag.x) {
+          checkpointFlag.reached = true;
+          respawnCoords = { x: checkpointFlag.x - 16, y: GROUND_Y - 52 };
+          sfx.checkpoint();
+          spawnLabel(checkpointFlag.x, GROUND_Y - 82, "CHECKPOINT! 🚩", "#6ee7b7");
+          spawnParticles(checkpointFlag.x, GROUND_Y - 45, ["#34d399", "#ffd166", "#ffffff"], 22, 180);
+          showToast("🚩 Ponto salvo!");
+        }
+      }
+
+      function activateCrystalRune(rune) {
+        const expected = crystalPuzzle.sequence[crystalPuzzle.progress];
+        if (rune.id !== expected) {
+          crystalPuzzle.progress = 0;
+          for (const item of crystalPuzzle.runes) item.active = false;
+          sfx.block();
+          showToast("🔷 Sequência incorreta! Tentem novamente.");
+          return;
+        }
+
+        rune.active = true;
+        crystalPuzzle.progress++;
+        score += 100;
+        sfx.star();
+        spawnLabel(rune.x + rune.w / 2, rune.y - 12, `RUNA ${crystalPuzzle.progress}/3`, "#67e8f9");
+        spawnParticles(rune.x + rune.w / 2, rune.y + rune.h / 2, ["#67e8f9", "#c4b5fd", "#ffffff"], 14, 150);
+
+        if (crystalPuzzle.progress === crystalPuzzle.sequence.length) {
+          crystalPuzzle.completed = true;
+          score += 400;
+          sfx.stageClear();
+          showToast("✨ Sequência completa! O portão da caverna foi aberto.");
+        }
+      }
+
+      function updateCrystalPuzzle() {
+        if (!crystalPuzzle || crystalPuzzle.completed) return;
+        let activatedThisFrame = false;
+        for (const rune of crystalPuzzle.runes) {
+          const touching = overlap(player, rune) || Boolean(vitor && overlap(vitor, rune));
+          if (touching && !rune.touching && !activatedThisFrame) {
+            activateCrystalRune(rune);
+            activatedThisFrame = true;
+          }
+          rune.touching = touching;
+        }
+      }
+
+      function activateAuroraRune(rune) {
+        const expected = auroraPuzzle.sequence[auroraPuzzle.progress];
+        if (rune.id !== expected) {
+          auroraPuzzle.progress = 0;
+          for (const item of auroraPuzzle.runes) item.active = false;
+          sfx.block();
+          showToast("🌌 A harmonia se perdeu. Tentem novamente.");
+          return;
+        }
+
+        rune.active = true;
+        auroraPuzzle.progress++;
+        score += 100;
+        sfx.star();
+        spawnLabel(rune.x + rune.w / 2, rune.y - 12, `AURORA ${auroraPuzzle.progress}/6`, "#c4b5fd");
+        spawnParticles(rune.x + rune.w / 2, rune.y + rune.h / 2, ["#c4b5fd", "#67e8f9", "#ffffff"], 16, 170);
+
+        if (auroraPuzzle.progress === auroraPuzzle.sequence.length) {
+          auroraPuzzle.completed = true;
+          score += 600;
+          sfx.stageClear();
+          showToast("✨ A harmonia foi restaurada! A passagem está aberta.");
+        }
+      }
+
+      function updateAuroraPuzzle() {
+        if (!auroraPuzzle || auroraPuzzle.completed) return;
+        let activatedThisFrame = false;
+        for (const rune of auroraPuzzle.runes) {
+          const touching = overlap(player, rune) || Boolean(vitor && overlap(vitor, rune));
+          if (touching && !rune.touching && !activatedThisFrame) {
+            activateAuroraRune(rune);
+            activatedThisFrame = true;
+          }
+          rune.touching = touching;
+        }
+      }
+
+      const hudCache = {
+        maxLives: null,
+        playerHp: null,
+        vitorPresent: null,
+        vitorHp: null,
+        score: null,
+        stageLabel: null,
+        progressText: null,
+        progressPercent: null,
+        questText: null
+      };
+
+      function updateQuestHud() {
+        const status = `${missionCandy}/3`;
+        const puzzleText = crystalPuzzle
+          ? ` · 🔷 Runas: ${crystalPuzzle.completed ? "3/3" : `${crystalPuzzle.progress}/3`}`
+          : auroraPuzzle
+            ? ` · 🌌 Harmonia: ${auroraPuzzle.completed ? "6/6" : `${auroraPuzzle.progress}/6`}`
+            : "";
+        const questText = `🍬 Doces: ${status} · ✨ Segredos: ${stageSecrets} · ❄ Magia: ${player ? player.magic : 0}${puzzleText}`;
+        if (hudCache.questText !== questText) {
+          $("hudQuest").textContent = questText;
+          hudCache.questText = questText;
+        }
+      }
+
+      function damageBoss() {
+        if (!boss || !boss.alive || boss.hitFlash > 0) return;
+        boss.hp--;
+        boss.hitFlash = 0.55;
+        boss.vx *= 1.08;
+        boss.phase = boss.hp > 6 ? 1 : boss.hp > 3 ? 2 : 3;
+        boss.attackTimer = Math.min(boss.attackTimer, boss.phase === 1 ? 1.8 : 1.2);
+        screenShake = 10;
+        sfx.bossHit();
+        spawnParticles(boss.x + boss.w / 2, boss.y + 15, ["#7dd3fc", "#ffd166", "#ffffff"], 26, 230);
+        spawnLabel(boss.x + boss.w / 2, boss.y - 16, boss.hp > 0 ? `${boss.name} · ${boss.hp}/${boss.maxHp}` : "DERROTADO!", "#ffd166");
+        if (boss.hp <= 0) {
+          boss.alive = false;
+          score += 1000;
+          screenShake = 16;
+          sfx.stageClear();
+          spawnParticles(boss.x + boss.w / 2, boss.y + 45, ["#ffd166", "#ff5964", "#34d399", "#ffffff"], 55, 290);
+          const finalStage = currentStageIdx === STAGES.length - 1;
+          if (!finalStage) {
+            giftCrate = { x: STAGES[currentStageIdx].length - 230, y: GROUND_Y - 46, w: 44, h: 46, bob: 0 };
+          }
+          const bossIcon = boss.kind === "ice-wolf" ? "🐺" : "👑";
+          showToast(finalStage
+            ? `${bossIcon} ${boss.name} foi derrotado! A Estrela do Norte está livre. Sigam até a árvore!`
+            : `${bossIcon} ${boss.name} foi derrotado! Pegue o Presente Dourado!`);
+        }
+        updateHudUI();
+      }
+
+      function getCoopRespawnPosition(character) {
+        const st = STAGES[currentStageIdx];
+        const teammate = character === player ? vitor : player;
+        const maxX = Math.max(12, st.length - character.w - 12);
+
+        if (teammate && teammate.hp > 0 && teammate.y < VIRTUAL_H - teammate.h) {
+          const offset = teammate.facing >= 0 ? -character.w - 14 : teammate.w + 14;
+          let x = Math.max(12, Math.min(maxX, teammate.x + offset));
+          if (Math.abs(x - teammate.x) < character.w + 8) {
+            x = Math.max(12, Math.min(maxX, teammate.x - offset));
+          }
+          return {
+            x,
+            y: Math.max(0, Math.min(GROUND_Y - character.h, teammate.y))
+          };
+        }
+
+        return {
+          x: Math.max(12, Math.min(maxX, respawnCoords.x + (character === vitor ? 42 : 0))),
+          y: Math.max(0, Math.min(GROUND_Y - character.h, respawnCoords.y))
+        };
+      }
+
+      function damagePlayer() {
+        if (!player || player.invuln > 0 || gameState !== "PLAYING") return;
+        player.hp--;
+        player.invuln = 1.6;
+        player.vy = -310;
+        screenShake = 11;
+        sfx.hurt();
+        spawnParticles(player.x + player.w / 2, player.y + player.h / 2, ["#ff5964", "#ffd166", "#ffffff"], 16, 200);
+        updateHudUI();
+
+        if (player.hp <= 0) {
+          showToast("❄️ Respire fundo! Voltando perto do parceiro ou ao checkpoint...");
+          const downedPlayer = player;
+          setTimeout(() => {
+            if (gameState === "PLAYING" && player === downedPlayer) {
+              const hpRestore = config.maxLives;
+              const respawn = getCoopRespawnPosition(downedPlayer);
+              player = createPlayer(respawn.x, respawn.y);
+              player.hp = hpRestore;
+              player.invuln = 1.5;
+              updateHudUI();
+            }
+          }, 360);
+        }
+      }
+
+      function damageVitor() {
+        if (!vitor || vitor.invuln > 0 || gameState !== "PLAYING") return;
+        vitor.hp--;
+        vitor.invuln = 1.6;
+        vitor.vy = -310;
+        sfx.hurt();
+        spawnParticles(vitor.x + vitor.w / 2, vitor.y + vitor.h / 2, ["#34d399", "#ffd166", "#ffffff"], 14, 180);
+        updateHudUI();
+
+        if (vitor.hp <= 0) {
+          showToast("🍀 Vitor está voltando perto da Paloma ou ao checkpoint...");
+          const downedVitor = vitor;
+          setTimeout(() => {
+            if (gameState === "PLAYING" && vitor === downedVitor) {
+              const respawn = getCoopRespawnPosition(downedVitor);
+              vitor = createPlayer(respawn.x, respawn.y);
+              vitor.hp = config.maxLives;
+              vitor.magic = 0;
+              vitor.invuln = 1.5;
+              updateHudUI();
+            }
+          }, 360);
+        }
+      }
+
+      function updateGame(dt) {
+        if (!isSupportedViewport) {
+          releaseAllInputs();
+          return;
+        }
+        pollGamepads();
+        animClock += dt;
+
+        // Atualiza flocos de neve suaves em todos os estados
+        for (const f of snowFlakes) {
+          f.phase += dt * 1.4;
+          f.y += f.vy * dt;
+          f.x += (f.vx + Math.sin(f.phase) * 14) * dt;
+          if (f.y > VIRTUAL_H) {
+            f.y = -6;
+            f.x = Math.random() * (virtualW + 250);
+          }
+        }
+
+        // Atualiza partículas e textos
+        for (let i = particles.length - 1; i >= 0; i--) {
+          const p = particles[i];
+          p.x += p.vx * dt;
+          p.y += p.vy * dt;
+          if (p.isProjectile) {
+            p.vy += 45 * dt;
+            if (player && gameState === "PLAYING" && overlap(player, { x: p.x - 8, y: p.y - 8, w: 16, h: 16 })) {
+              p.life = 0;
+              damagePlayer();
+            } else if (vitor && gameState === "PLAYING" && overlap(vitor, { x: p.x - 8, y: p.y - 8, w: 16, h: 16 })) {
+              p.life = 0;
+              damageVitor();
+            }
+          } else {
+            p.vy += 360 * dt;
+          }
+          p.life -= dt;
+          if (p.life <= 0) particles.splice(i, 1);
+        }
+
+        for (let i = floatingLabels.length - 1; i >= 0; i--) {
+          const l = floatingLabels[i];
+          l.y -= 36 * dt;
+          l.life -= dt;
+          if (l.life <= 0) floatingLabels.splice(i, 1);
+        }
+
+        if (screenShake > 0) screenShake = Math.max(0, screenShake - 38 * dt);
+
+        // Sequência mágica final: acendendo a Grande Árvore e soltando fogos antes de abrir a Cartinha
+        if (gameState === "CELEBRATING") {
+          treeLitProgress = Math.min(1, treeLitProgress + dt * 0.65);
+          if (Math.random() < 0.14) {
+            const fx = cameraX + virtualW * (0.25 + Math.random() * 0.55);
+            const fy = 85 + Math.random() * 140;
+            spawnParticles(fx, fy, ["#ff5964", "#ffd166", "#34d399", "#38bdf8", "#f472b6"], 22, 240);
+          }
+          return;
+        }
+
+        if (gameState !== "PLAYING" || !player) return;
+
+        const st = STAGES[currentStageIdx];
+        player.magicCooldown = Math.max(0, player.magicCooldown - dt);
+
+        for (let i = snowballs.length - 1; i >= 0; i--) {
+          const shot = snowballs[i];
+          shot.x += shot.vx * dt;
+          shot.life -= dt;
+          const hitbox = { x: shot.x - 7, y: shot.y - 7, w: 14, h: 14 };
+          let consumed = shot.life <= 0 || shot.x < cameraX - 40 || shot.x > cameraX + virtualW + 80;
+          for (const en of enemies) {
+            if (!consumed && en.alive && overlap(hitbox, en)) {
+              en.alive = false;
+              en.squash = 0.4;
+              score += 120;
+              spawnLabel(en.x + en.w / 2, en.y - 10, "+120 ❄", "#bae6fd");
+              spawnParticles(en.x + en.w / 2, en.y + en.h / 2, ["#ffffff", "#7dd3fc"], 12, 150);
+              consumed = true;
+              updateHudUI();
+            }
+          }
+          if (!consumed && boss && boss.alive && overlap(hitbox, boss) && boss.hitFlash <= 0) {
+            damageBoss();
+            consumed = true;
+          }
+          if (consumed) snowballs.splice(i, 1);
+        }
+
+        // Plataformas móveis
+        for (const p of platforms) {
+          if (p.moving) {
+            const prevX = p.x;
+            p.phase += p.speed * dt;
+            p.x = p.baseX + Math.sin(p.phase) * p.rangeX;
+            p.dx = p.x - prevX;
+          } else {
+            p.dx = 0;
+          }
+        }
+
+        // Movimento horizontal da heroína
+        const moveDir = (input.right ? 1 : 0) - (input.left ? 1 : 0);
+        const maxSpeed = 265;
+        if (moveDir !== 0) {
+          player.vx += moveDir * 1950 * dt;
+          if (Math.abs(player.vx) > maxSpeed) player.vx = moveDir * maxSpeed;
+          player.facing = moveDir;
+          player.runTime += dt;
+        } else {
+          player.vx *= Math.pow(0.0008, dt);
+          if (Math.abs(player.vx) < 4) player.vx = 0;
+        }
+
+        // Timers de Coyote Time e Jump Buffer (deixa o pulo responsivo igual Super Mario!)
+        if (player.onGround) player.coyoteTimer = 0.11;
+        else player.coyoteTimer = Math.max(0, player.coyoteTimer - dt);
+
+        if (player.jumpBuffer > 0) player.jumpBuffer = Math.max(0, player.jumpBuffer - dt);
+
+        if (player.jumpBuffer > 0 && player.coyoteTimer > 0) {
+          player.vy = -595;
+          player.onGround = false;
+          player.coyoteTimer = 0;
+          player.jumpBuffer = 0;
+          sfx.jump();
+          spawnParticles(player.x + player.w / 2, player.y + player.h, ["#ffffff", "#bae6fd"], 6, 80);
+        }
+
+        // Pulo variável (soltar o botão reduz ligeiramente a altura)
+        if (!input.jump && player.vy < -220) {
+          player.vy += 1200 * dt;
+        }
+
+        // Gravidade
+        player.vy = Math.min(820, player.vy + 1520 * dt);
+        player.invuln = Math.max(0, player.invuln - dt);
+
+        // 1) Integração Horizontal + Colisões Laterais
+        player.x += player.vx * dt;
+        player.x = Math.max(12, Math.min(st.length - player.w - 12, player.x));
+
+        for (const pipe of pipes) {
+          const rectPipe = { x: pipe.x, y: GROUND_Y - pipe.h, w: pipe.w, h: pipe.h };
+          if (overlap(player, rectPipe)) {
+            if (player.vx > 0) player.x = rectPipe.x - player.w;
+            else if (player.vx < 0) player.x = rectPipe.x + rectPipe.w;
+            player.vx = 0;
+          }
+        }
+
+        for (const mb of mysteryBlocks) {
+          if (overlap(player, mb)) {
+            if (player.vx > 0) player.x = mb.x - player.w;
+            else if (player.vx < 0) player.x = mb.x + mb.w;
+            player.vx = 0;
+          }
+        }
+        const puzzleGate = getClosedPuzzleGate();
+        if (puzzleGate && overlap(player, puzzleGate)) {
+          if (player.vx > 0) player.x = puzzleGate.x - player.w;
+          else if (player.vx < 0) player.x = puzzleGate.x + puzzleGate.w;
+          player.vx = 0;
+        }
+
+        // 2) Integração Vertical + Colisões de Chão / Plataformas / Blocos "?"
+        const prevBottom = player.y + player.h;
+        player.y += player.vy * dt;
+        player.onGround = false;
+
+        // Chão nevado (com fossos!)
+        if (player.vy >= 0) {
+          for (const seg of groundSegments) {
+            if (
+              player.x + player.w - 4 > seg.x &&
+              player.x + 4 < seg.x + seg.w &&
+              prevBottom <= GROUND_Y + 12 &&
+              player.y + player.h >= GROUND_Y
+            ) {
+              player.y = GROUND_Y - player.h;
+              player.vy = 0;
+              player.onGround = true;
+            }
+          }
+        }
+
+        // Plataformas elevadas
+        if (player.vy >= 0) {
+          for (const plat of platforms) {
+            if (
+              player.x + player.w - 4 > plat.x &&
+              player.x + 4 < plat.x + plat.w &&
+              prevBottom <= plat.y + 12 &&
+              player.y + player.h >= plat.y
+            ) {
+              player.y = plat.y - player.h;
+              player.vy = 0;
+              player.onGround = true;
+              if (plat.dx) player.x += plat.dx;
+            }
+          }
+        }
+
+        // Topo dos Canos Natalinos
+        if (player.vy >= 0) {
+          for (const pipe of pipes) {
+            const topY = GROUND_Y - pipe.h;
+            if (
+              player.x + player.w - 4 > pipe.x &&
+              player.x + 4 < pipe.x + pipe.w &&
+              prevBottom <= topY + 12 &&
+              player.y + player.h >= topY
+            ) {
+              player.y = topY - player.h;
+              player.vy = 0;
+              player.onGround = true;
+            }
+          }
+        }
+
+        // Blocos Surpresa "?" (por cima e cabeçada por baixo!)
+        for (const mb of mysteryBlocks) {
+          if (mb.bumpY < 0) mb.bumpY = Math.min(0, mb.bumpY + 80 * dt);
+
+          if (overlap(player, mb)) {
+            if (player.vy >= 0 && prevBottom <= mb.y + 12) {
+              player.y = mb.y - player.h;
+              player.vy = 0;
+              player.onGround = true;
+            } else if (player.vy < 0 && player.y >= mb.y + mb.h - 16) {
+              player.y = mb.y + mb.h;
+              player.vy = 110;
+              if (!mb.used) {
+                mb.used = true;
+                mb.bumpY = -11;
+                sfx.block();
+                if (mb.reward === "heart") {
+                  player.hp = Math.min(config.maxLives, player.hp + 1);
+                  sfx.heart();
+                  spawnLabel(mb.x + 17, mb.y - 16, "+1 VIDA ❤️", "#ff758f");
+                  spawnParticles(mb.x + 17, mb.y, ["#ff5964", "#ffffff"], 18, 170);
+                } else if (mb.reward === "candy") {
+                  score += 150;
+                  spawnLabel(mb.x + 17, mb.y - 16, "+150 🍬", "#ffd166");
+                  spawnParticles(mb.x + 17, mb.y, ["#ff5964", "#ffffff", "#ffd166"], 16, 170);
+                } else {
+                  score += 100;
+                  spawnLabel(mb.x + 17, mb.y - 16, "+100 ⭐", "#ffd166");
+                  spawnParticles(mb.x + 17, mb.y, ["#ffd166", "#ffffff"], 16, 170);
+                }
+                updateHudUI();
+              }
+            }
+          }
+        }
+
+        // Caiu em um fosso!
+        if (player.y > VIRTUAL_H + 55) {
+          damagePlayer();
+          if (player.hp > 0) {
+            const respawn = getCoopRespawnPosition(player);
+            player.x = respawn.x;
+            player.y = respawn.y;
+            player.vx = 0;
+            player.vy = 0;
+          }
+        }
+
+        // Checkpoint
+        if (checkpointFlag && !checkpointFlag.reached && player.x + player.w >= checkpointFlag.x) {
+          checkpointFlag.reached = true;
+          respawnCoords = { x: checkpointFlag.x - 16, y: GROUND_Y - 52 };
+          sfx.checkpoint();
+          spawnLabel(checkpointFlag.x, GROUND_Y - 82, "CHECKPOINT! 🚩", "#6ee7b7");
+          spawnParticles(checkpointFlag.x, GROUND_Y - 45, ["#34d399", "#ffd166", "#ffffff"], 22, 180);
+          showToast("🚩 Ponto salvo!");
+        }
+
+        // Itens Colecionáveis
+        for (const c of collectibles) {
+          if (c.taken) continue;
+          c.phase += dt * 3.5;
+          if (overlap(player, { x: c.x - 14, y: c.y - 14, w: 28, h: 28 })) {
+            c.taken = true;
+            sfx.star();
+            const pts = c.type === "candy" ? 50 : 25;
+            score += pts;
+            if (c.type === "candy") {
+              missionCandy++;
+              player.magic = Math.min(3, player.magic + 1);
+              if (missionCandy >= 3 && !missionComplete) {
+                missionComplete = true;
+                score += 250;
+                player.hp = Math.min(config.maxLives, player.hp + 1);
+                spawnLabel(c.x, c.y - 38, "DOCES COLETADOS! +250 ⭐", "#fde68a");
+                sfx.stageClear();
+              }
+            } else if (c.type === "secret") {
+              stageSecrets++;
+              adventureSecrets++;
+              score += 300;
+              player.magic = Math.min(3, player.magic + 1);
+              spawnLabel(c.x, c.y - 24, "SEGREDO! +300 ✨", "#c4b5fd");
+              if (adventureSecrets >= 3 && !secretMasteryAwarded) {
+                secretMasteryAwarded = true;
+                score += 1000;
+                spawnLabel(c.x, c.y - 48, "TODOS OS SEGREDOS! +1000", "#f5d0fe");
+                showToast("🌟 Todos os segredos encontrados! Bônus de 1000 pontos!");
+              } else {
+                showToast("✨ Você encontrou uma Estrela Secreta!");
+              }
+            }
+            spawnLabel(c.x, c.y - 12, `+${pts}`, "#ffd166");
+            spawnParticles(c.x, c.y, c.type === "candy" ? ["#ff5964", "#ffffff"] : ["#ffd166", "#fef08a"], 10, 140);
+            updateHudUI();
+          }
+        }
+
+        if (vitor) {
+          for (const c of collectibles) {
+            if (c.taken || !overlap(vitor, { x: c.x - 14, y: c.y - 14, w: 28, h: 28 })) continue;
+            c.taken = true;
+            sfx.star();
+            const pts = c.type === "candy" ? 50 : c.type === "secret" ? 300 : 25;
+            score += pts;
+            if (c.type === "candy") {
+              missionCandy++;
+              if (missionCandy >= 3 && !missionComplete) {
+                missionComplete = true;
+                score += 250;
+                vitor.hp = Math.min(config.maxLives, vitor.hp + 1);
+                spawnLabel(c.x, c.y - 38, "DOCES COLETADOS! +250 ⭐", "#fde68a");
+                sfx.stageClear();
+              }
+            } else if (c.type === "secret") {
+              stageSecrets++;
+              adventureSecrets++;
+              if (adventureSecrets >= 3 && !secretMasteryAwarded) {
+                secretMasteryAwarded = true;
+                score += 1000;
+                spawnLabel(c.x, c.y - 38, "TODOS OS SEGREDOS! +1000", "#f5d0fe");
+              } else {
+                showToast("✨ Vitor encontrou uma Estrela Secreta!");
+              }
+            }
+            spawnLabel(c.x, c.y - 12, `+${pts}`, "#ffd166");
+            spawnParticles(c.x, c.y, c.type === "candy" ? ["#ff5964", "#ffffff"] : ["#ffd166", "#fef08a"], 10, 140);
+            updateHudUI();
+          }
+        }
+
+        updateVitor(dt, st);
+        updateCrystalPuzzle();
+        updateAuroraPuzzle();
+
+        // Inimigos (Bonecos de Neve & Mini-Grinches)
+        for (const en of enemies) {
+          if (!en.alive) {
+            if (en.squash > 0) en.squash = Math.max(0, en.squash - dt);
+            continue;
+          }
+          en.anim += dt * 6;
+          en.x += en.vx * dt;
+          if (en.kind === "bat" || en.kind === "ice-spirit") en.y = en.baseY + Math.sin(en.anim * 0.8) * 28;
+          if (en.x <= en.minX) {
+            en.x = en.minX;
+            en.vx = Math.abs(en.vx);
+          } else if (en.x + en.w >= en.maxX) {
+            en.x = en.maxX - en.w;
+            en.vx = -Math.abs(en.vx);
+          }
+
+          if (overlap(player, en)) {
+            if (player.vy > 40 && prevBottom <= en.y + en.h * 0.55) {
+              en.alive = false;
+              en.squash = 0.4;
+              player.vy = -420;
+              score += 120;
+              sfx.stomp();
+              spawnLabel(en.x + 18, en.y - 10, "+120 ✨", "#bae6fd");
+              spawnParticles(en.x + 18, en.y + 18, ["#ffffff", "#7dd3fc", "#ffd166"], 16, 180);
+              updateHudUI();
+            } else {
+              damagePlayer();
+            }
+          }
+          if (en.alive && vitor && overlap(vitor, en)) {
+            if (vitor.vy > 40 && vitor.previousBottom <= en.y + en.h * 0.55) {
+              en.alive = false;
+              en.squash = 0.4;
+              vitor.vy = -420;
+              score += 120;
+              sfx.stomp();
+              spawnLabel(en.x + 18, en.y - 10, "+120 ✨", "#bae6fd");
+              spawnParticles(en.x + 18, en.y + 18, ["#ffffff", "#7dd3fc", "#ffd166"], 16, 180);
+              updateHudUI();
+            } else if (vitor.invuln <= 0) {
+              damageVitor();
+            }
+          }
+        }
+
+        // Chefes das fases 3 e 6
+        if (boss && boss.alive) {
+          boss.hitFlash = Math.max(0, boss.hitFlash - dt);
+          if (boss.kind === "ice-wolf" && boss.lungeTimer > 0) {
+            boss.lungeTimer = Math.max(0, boss.lungeTimer - dt);
+            if (boss.lungeTimer === 0) boss.vx = Math.sign(boss.vx || 1) * boss.patrolSpeed;
+          }
+          boss.x += boss.vx * dt;
+          if (boss.x <= boss.minX) {
+            boss.x = boss.minX;
+            boss.vx = Math.abs(boss.vx);
+          } else if (boss.x + boss.w >= boss.maxX) {
+            boss.x = boss.maxX - boss.w;
+            boss.vx = -Math.abs(boss.vx);
+          }
+
+          if (boss.kind !== "ice-wolf") {
+            boss.jumpTimer -= dt;
+            if (boss.jumpTimer <= 0 && boss.y >= GROUND_Y - boss.h - 1) {
+              boss.vy = -440;
+              boss.jumpTimer = 3.4;
+            }
+          }
+          boss.vy += 1250 * dt;
+          boss.y += boss.vy * dt;
+          if (boss.y >= GROUND_Y - boss.h) {
+            boss.y = GROUND_Y - boss.h;
+            boss.vy = 0;
+          }
+
+          // Cada etapa acelera e amplia os padrões de ataque.
+          boss.attackTimer -= dt;
+          if (boss.attackTimer <= 0) {
+            const bx = boss.x + boss.w / 2;
+            if (boss.kind === "ice-wolf") {
+              const target = vitor && Math.abs(vitor.x - bx) < Math.abs(player.x - bx) ? vitor : player;
+              const dir = target.x < bx ? -1 : 1;
+              const pounce = boss.phase > 1 && boss.attackIndex % 2 === 1;
+              boss.attackIndex++;
+              boss.attackTimer = boss.phase === 1 ? 2.7 : boss.phase === 2 ? 2.15 : 1.65;
+
+              if (pounce) {
+                boss.vx = dir * (boss.phase === 3 ? 360 : 315);
+                boss.lungeTimer = 0.68;
+                boss.vy = -490;
+                spawnParticles(bx, GROUND_Y - 10, ["#e0f2fe", "#93c5fd"], 12, 100);
+              } else {
+                boss.vx = dir * boss.patrolSpeed;
+                const waveCount = boss.phase === 3 ? 2 : 1;
+                for (let i = 0; i < waveCount && particles.length < MAX_PARTICLES; i++) {
+                  particles.push({
+                    x: bx + dir * (boss.w * 0.4 + i * 24),
+                    y: GROUND_Y - 12,
+                    vx: dir * (boss.phase === 3 ? 330 : 260),
+                    vy: 0,
+                    life: 2.2,
+                    maxLife: 2.2,
+                    size: boss.phase === 3 ? 10 : 9,
+                    color: "#93c5fd",
+                    isProjectile: true
+                  });
+                }
+              }
+            } else {
+              boss.attackTimer = boss.phase === 1 ? 2.15 : boss.phase === 2 ? 1.65 : 1.2;
+              const by = boss.y + 42;
+              const dir = player.x < bx ? -1 : 1;
+              const spread = boss.phase === 3 ? 2 : 1;
+              for (let i = -spread; i <= spread; i++) {
+                if (particles.length >= MAX_PARTICLES) break;
+                particles.push({
+                  x: bx,
+                  y: by,
+                  vx: dir * ((190 + Math.abs(i) * 35) * (1 + (boss.phase - 1) * 0.18)),
+                  vy: i * 85 - 55,
+                  life: 2.3,
+                  maxLife: 2.3,
+                  size: 7,
+                  color: "#7dd3fc",
+                  isProjectile: true
+                });
+              }
+            }
+          }
+
+          // Colisões dos jogadores com o chefe
+          if (overlap(player, boss)) {
+            if (player.vy > 50 && prevBottom <= boss.y + 38 && boss.hitFlash <= 0) {
+              damageBoss();
+              player.vy = -475;
+            } else if (boss.hitFlash <= 0) {
+              damagePlayer();
+            }
+          }
+          if (vitor && overlap(vitor, boss)) {
+            if (vitor.vy > 50 && vitor.previousBottom <= boss.y + 38 && boss.hitFlash <= 0) {
+              damageBoss();
+              vitor.vy = -475;
+            } else if (boss.hitFlash <= 0 && vitor.invuln <= 0) {
+              damageVitor();
+            }
+          }
+        }
+
+        // Câmera suave
+        const followedX = vitor ? (player.x + vitor.x) / 2 : player.x;
+        const targetCam = Math.max(0, Math.min(st.length - virtualW, followedX - virtualW * 0.36));
+        cameraX += (targetCam - cameraX) * Math.min(1, dt * 7.5);
+
+        // Chegada no Fim da Fase
+        const goalX = st.length - 160;
+        const reachedGoal = player.x + player.w >= goalX || (vitor && vitor.x + vitor.w >= goalX);
+        if (!st.hasBoss && reachedGoal) {
+          if (currentStageIdx === 3 && crystalPuzzle && !crystalPuzzle.completed) {
+            showToast("🔷 Ativem a sequência de runas para abrir a passagem.");
+          } else if (currentStageIdx === 4 && auroraPuzzle && !auroraPuzzle.completed) {
+            showToast("🌌 Ativem os cristais para abrir a passagem.");
+          } else {
+            completeStage();
+          }
+        } else if (st.hasBoss && giftCrate) {
+          giftCrate.bob += dt * 4;
+          if (overlap(player, giftCrate) || (vitor && overlap(vitor, giftCrate)) ||
+            player.x + player.w >= st.length - 140 || (vitor && vitor.x + vitor.w >= st.length - 140)) {
+            if (currentStageIdx === STAGES.length - 1 || (currentStageIdx === 2 && !vitorUnlocked)) {
+              triggerFinale();
+            } else {
+              completeStage();
+            }
+          }
+        } else if (st.hasBoss && boss && !boss.alive && reachedGoal) {
+          triggerFinale();
+        }
+
+        updateHudUI();
+      }
+
+      /* --------------------------------------------------------------------
+         J. RENDERIZAÇÃO DE CENÁRIOS, PERSONAGENS E EFEITOS NO CANVAS
+         -------------------------------------------------------------------- */
+      function renderScene() {
+        const st = STAGES[currentStageIdx];
+        ctx.save();
+
+        if (screenShake > 0) {
+          ctx.translate((Math.random() - 0.5) * screenShake, (Math.random() - 0.5) * screenShake);
+        }
+
+        // 1. Céu com Gradiente Noturno Mágico
+        const sky = ctx.createLinearGradient(0, 0, 0, VIRTUAL_H);
+        sky.addColorStop(0, st.skyTop);
+        sky.addColorStop(0.55, st.skyMid);
+        sky.addColorStop(1, st.skyBot);
+        ctx.fillStyle = sky;
+        ctx.fillRect(0, 0, virtualW, VIRTUAL_H);
+
+        // 2. Lua Cheia Natalina + Aurora Boreal Ondulante
+        const moonX = virtualW * 0.82;
+        const moonY = 82;
+        const moonGlow = ctx.createRadialGradient(moonX, moonY, 8, moonX, moonY, 85);
+        moonGlow.addColorStop(0, "rgba(255, 251, 235, 0.9)");
+        moonGlow.addColorStop(0.35, "rgba(254, 240, 138, 0.25)");
+        moonGlow.addColorStop(1, "rgba(254, 240, 138, 0)");
+        ctx.fillStyle = moonGlow;
+        ctx.beginPath();
+        ctx.arc(moonX, moonY, 85, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = "#fef9c3";
+        ctx.beginPath();
+        ctx.arc(moonX, moonY, 26, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Faixas de Aurora Boreal
+        for (let a = 0; a < 2; a++) {
+          ctx.fillStyle = st.aurora[a];
+          ctx.beginPath();
+          ctx.moveTo(0, 110 + a * 35);
+          for (let x = 0; x <= virtualW + 40; x += 40) {
+            const wave = Math.sin(x * 0.008 + animClock * (0.9 + a * 0.3) + a) * 26;
+            ctx.lineTo(x, 95 + a * 35 + wave);
+          }
+          ctx.lineTo(virtualW + 40, 210);
+          ctx.lineTo(0, 210);
+          ctx.closePath();
+          ctx.fill();
+        }
+
+        // Estrelas cintilantes no céu
+        for (let i = 0; i < 42; i++) {
+          const sx = ((i * 197 - cameraX * 0.08) % (virtualW + 20) + virtualW + 20) % (virtualW + 20);
+          const sy = 22 + ((i * 61) % 190);
+          const twinkle = 0.35 + Math.abs(Math.sin(animClock * 2.2 + i)) * 0.65;
+          ctx.fillStyle = `rgba(255, 255, 255, ${twinkle.toFixed(2)})`;
+          ctx.beginPath();
+          ctx.arc(sx, sy, i % 5 === 0 ? 2.1 : 1.2, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        // 3. Montanhas Nevadas em Parallax
+        drawParallaxMountains(0.18, st.hillFar, 175, 290);
+        drawParallaxMountains(0.34, st.hillNear, 125, 225);
+
+        // 4. Elementos Arquitetônicos de Fundo por Mundo (Cabanas, Pinheiros ou Torres de Cristal)
+        drawWorldBackdropDetails(st);
+
+        // 5. Mundo da Fase (Câmera aplicada)
+        ctx.save();
+        ctx.translate(-cameraX, 0);
+
+        // Chão Nevado com Camada de Neve Fofa e Borda Decorativa
+        for (const seg of groundSegments) {
+          ctx.fillStyle = st.groundSoil;
+          ctx.fillRect(seg.x, GROUND_Y, seg.w, VIRTUAL_H - GROUND_Y + 20);
+
+          // Textura sutil de pedras/tijolos de inverno
+          ctx.fillStyle = "rgba(255, 255, 255, 0.07)";
+          for (let tx = seg.x + 10; tx < seg.x + seg.w - 20; tx += 44) {
+            ctx.fillRect(tx, GROUND_Y + 24, 24, 10);
+            ctx.fillRect(tx + 16, GROUND_Y + 46, 24, 10);
+          }
+
+          // Camada superior de neve fofa
+          ctx.fillStyle = st.snowTop;
+          ctx.beginPath();
+          ctx.roundRect(seg.x - 2, GROUND_Y - 2, seg.w + 4, 16, 7);
+          ctx.fill();
+
+          ctx.fillStyle = "#bae6fd";
+          ctx.fillRect(seg.x, GROUND_Y + 12, seg.w, 4);
+        }
+
+        // Plataformas Flutuantes de Gelo e Madeira Festiva
+        for (const p of platforms) {
+          ctx.fillStyle = p.moving ? "#0284c7" : "#7c2d12";
+          ctx.beginPath();
+          ctx.roundRect(p.x, p.y, p.w, p.h, 8);
+          ctx.fill();
+
+          ctx.fillStyle = "#ffffff";
+          ctx.beginPath();
+          ctx.roundRect(p.x - 1, p.y - 2, p.w + 2, 8, 6);
+          ctx.fill();
+        }
+
+        // Canos Listrados estilo Bengala Doce (Super Mario Natalino!)
+        for (const pipe of pipes) {
+          const py = GROUND_Y - pipe.h;
+          ctx.fillStyle = "#dc2626";
+          ctx.beginPath();
+          ctx.roundRect(pipe.x + 4, py + 14, pipe.w - 8, pipe.h - 14, 4);
+          ctx.fill();
+
+          // Listras brancas diagonais
+          ctx.save();
+          ctx.beginPath();
+          ctx.rect(pipe.x + 4, py + 14, pipe.w - 8, pipe.h - 14);
+          ctx.clip();
+          ctx.fillStyle = "#ffffff";
+          for (let sy = py; sy < GROUND_Y + 30; sy += 22) {
+            ctx.beginPath();
+            ctx.moveTo(pipe.x, sy);
+            ctx.lineTo(pipe.x + pipe.w, sy - 14);
+            ctx.lineTo(pipe.x + pipe.w, sy - 5);
+            ctx.lineTo(pipe.x, sy + 9);
+            ctx.closePath();
+            ctx.fill();
+          }
+          ctx.restore();
+
+          // Borda superior do cano
+          ctx.fillStyle = "#b91c1c";
+          ctx.strokeStyle = "#fde68a";
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.roundRect(pipe.x, py, pipe.w, 16, 5);
+          ctx.fill();
+          ctx.stroke();
+        }
+
+        // Blocos Surpresa "?"
+        for (const mb of mysteryBlocks) {
+          const by = mb.y + mb.bumpY;
+          ctx.fillStyle = mb.used ? "#64748b" : "#f59e0b";
+          ctx.strokeStyle = mb.used ? "#cbd5e1" : "#fef3c7";
+          ctx.lineWidth = 2.5;
+          ctx.beginPath();
+          ctx.roundRect(mb.x, by, mb.w, mb.h, 7);
+          ctx.fill();
+          ctx.stroke();
+
+          ctx.fillStyle = mb.used ? "#e2e8f0" : "#451a03";
+          ctx.font = "bold 20px Fredoka, sans-serif";
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.fillText(mb.used ? "✓" : "?", mb.x + mb.w / 2, by + mb.h / 2 + 1);
+        }
+
+        // Checkpoint com Bandeirinha
+        if (checkpointFlag) {
+          const fx = checkpointFlag.x;
+          ctx.fillStyle = "#e2e8f0";
+          ctx.fillRect(fx - 2, GROUND_Y - 68, 4, 68);
+          ctx.fillStyle = checkpointFlag.reached ? "#10b981" : "#f43f5e";
+          ctx.beginPath();
+          ctx.moveTo(fx + 2, GROUND_Y - 66);
+          ctx.lineTo(fx + 30, GROUND_Y - 54 + Math.sin(animClock * 5) * 3);
+          ctx.lineTo(fx + 2, GROUND_Y - 42);
+          ctx.closePath();
+          ctx.fill();
+        }
+
+        // Estrelas & Bengalas Doces Colecionáveis
+        for (const c of collectibles) {
+          if (c.taken) continue;
+          const bob = Math.sin(c.phase) * 4.5;
+          if (c.type === "star") {
+            drawStarShape(ctx, c.x, c.y + bob, 5, 12, 5.5, "#ffd166", "#fffbeb");
+          } else if (c.type === "secret") {
+            drawStarShape(ctx, c.x, c.y + bob, 6, 14, 7, "#a78bfa", "#f5f3ff");
+            ctx.fillStyle = "#ffffff";
+            ctx.beginPath();
+            ctx.arc(c.x, c.y + bob, 2.5, 0, Math.PI * 2);
+            ctx.fill();
+          } else {
+            drawCandyCane(ctx, c.x, c.y + bob);
+          }
+        }
+
+        if (crystalPuzzle) drawCrystalPuzzle(ctx, crystalPuzzle);
+        if (auroraPuzzle) drawAuroraPuzzle(ctx, auroraPuzzle);
+
+        // Inimigos Ilustrados (Bonecos de Neve & Mini-Grinches)
+        for (const en of enemies) {
+          if (!en.alive && en.squash <= 0) continue;
+          drawEnemySprite(ctx, en);
+        }
+
+        // Chefes das fases 3 e 6
+        if (boss && boss.alive) {
+          if (boss.kind === "ice-wolf") drawFrostWolfBoss(ctx, boss);
+          else drawIceKingBoss(ctx, boss);
+        }
+
+        // Grande Árvore de Natal no Fim da Fase
+        drawGreatChristmasTree(ctx, st.length - 115, GROUND_Y, treeLitProgress);
+
+        // Presente Dourado com a Cartinha de Natal (após derrotar o Rei Gelado)
+        if (giftCrate) {
+          drawGoldenGift(ctx, giftCrate);
+        }
+
+        // Nossa Heroína (Morena, Cachos Volumosos & Óculos!)
+        if (player) {
+          const blink = Math.floor(animClock * 0.45) % 5 === 0 && (animClock * 0.45) % 1 < 0.12;
+          const flicker = player.invuln > 0 && Math.floor(animClock * 18) % 2 === 0;
+          if (!flicker) {
+            drawCurlyHeroine(ctx, player.x, player.y, player.w, player.h, {
+              facing: player.facing,
+              runTime: player.runTime,
+              isMoving: Math.abs(player.vx) > 15,
+              onGround: player.onGround,
+              vy: player.vy,
+              blink
+            });
+          }
+        }
+        if (vitor) {
+          const blink = Math.floor(animClock * 0.42 + 2) % 5 === 0 && (animClock * 0.42) % 1 < 0.12;
+          const flicker = vitor.invuln > 0 && Math.floor(animClock * 18) % 2 === 0;
+          if (!flicker) {
+            drawVitor(ctx, vitor.x, vitor.y, vitor.w, vitor.h, {
+              facing: vitor.facing,
+              runTime: vitor.runTime,
+              isMoving: Math.abs(vitor.vx) > 15,
+              onGround: vitor.onGround,
+              blink
+            });
+          }
+        }
+
+        // Partículas & Projéteis de Gelo
+        ctx.save();
+        for (const p of particles) {
+          ctx.globalAlpha = Math.max(0, Math.min(1, p.life / p.maxLife));
+          ctx.fillStyle = p.color;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          ctx.fill();
+          if (p.isProjectile) {
+            ctx.strokeStyle = "#ffffff";
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+          }
+        }
+        ctx.restore();
+
+        // Textos Flutuantes (+100, +1 VIDA, etc.)
+        for (const l of floatingLabels) {
+          ctx.save();
+          ctx.globalAlpha = Math.max(0, Math.min(1, l.life));
+          ctx.font = "bold 15px Fredoka, sans-serif";
+          ctx.textAlign = "center";
+          ctx.fillStyle = "#091124";
+          ctx.fillText(l.text, l.x + 1, l.y + 1);
+          ctx.fillStyle = l.color;
+          ctx.fillText(l.text, l.x, l.y);
+          ctx.restore();
+        }
+
+        for (const shot of snowballs) {
+          ctx.save();
+          ctx.fillStyle = "#bae6fd";
+          ctx.shadowColor = "#7dd3fc";
+          ctx.shadowBlur = 12;
+          ctx.beginPath();
+          ctx.arc(shot.x, shot.y, 7, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        }
+
+        ctx.restore(); // Fim câmera
+
+        // 6. Flocos de Neve em Primeiro Plano
+        ctx.fillStyle = "rgba(255, 255, 255, 0.78)";
+        for (const f of snowFlakes) {
+          const sx = ((f.x - cameraX * 0.45) % (virtualW + 40) + virtualW + 40) % (virtualW + 40);
+          ctx.beginPath();
+          ctx.arc(sx, f.y, f.r, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        ctx.restore();
+      }
+
+      /* --------------------------------------------------------------------
+         K. FUNÇÕES AUXILIARES DE DESENHO ARTESANAL
+         -------------------------------------------------------------------- */
+      function drawParallaxMountains(factor, color, minH, maxH) {
+        const span = 260;
+        const startIdx = Math.floor((cameraX * factor) / span) - 1;
+        const count = Math.ceil(virtualW / span) + 3;
+
+        for (let i = startIdx; i < startIdx + count; i++) {
+          const mx = i * span - cameraX * factor;
+          const peakH = minH + ((Math.abs(i * 73) % 100) / 100) * (maxH - minH);
+          const peakY = GROUND_Y - peakH;
+
+          ctx.fillStyle = color;
+          ctx.beginPath();
+          ctx.moveTo(mx - 40, GROUND_Y);
+          ctx.lineTo(mx + span * 0.5, peakY);
+          ctx.lineTo(mx + span + 40, GROUND_Y);
+          ctx.closePath();
+          ctx.fill();
+
+          // Pico nevado
+          ctx.fillStyle = "rgba(255, 255, 255, 0.28)";
+          ctx.beginPath();
+          ctx.moveTo(mx + span * 0.5, peakY);
+          ctx.lineTo(mx + span * 0.36, peakY + peakH * 0.28);
+          ctx.lineTo(mx + span * 0.5, peakY + peakH * 0.22);
+          ctx.lineTo(mx + span * 0.64, peakY + peakH * 0.28);
+          ctx.closePath();
+          ctx.fill();
+        }
+      }
+
+      function drawWorldBackdropDetails(st) {
+        const spacing = 340;
+        const start = Math.floor((cameraX * 0.55) / spacing) - 1;
+        const count = Math.ceil(virtualW / spacing) + 3;
+
+        for (let i = start; i < start + count; i++) {
+          const bx = i * spacing - cameraX * 0.55 + 60;
+          if (st.index === 0) {
+            // Cabanas aconchegantes com janelas douradas
+            ctx.fillStyle = "#3f2318";
+            ctx.fillRect(bx, GROUND_Y - 54, 68, 54);
+            ctx.fillStyle = "#991b1b";
+            ctx.beginPath();
+            ctx.moveTo(bx - 8, GROUND_Y - 54);
+            ctx.lineTo(bx + 34, GROUND_Y - 86);
+            ctx.lineTo(bx + 76, GROUND_Y - 54);
+            ctx.closePath();
+            ctx.fill();
+            // Janelas iluminadas
+            ctx.fillStyle = "#fde047";
+            ctx.fillRect(bx + 12, GROUND_Y - 38, 16, 16);
+            ctx.fillRect(bx + 40, GROUND_Y - 38, 16, 16);
+          } else if (st.index === 1) {
+            // Pinheiros altos cobertos de neve
+            for (let t = 0; t < 2; t++) {
+              const px = bx + t * 85;
+              ctx.fillStyle = "#064e3b";
+              for (let tier = 0; tier < 3; tier++) {
+                ctx.beginPath();
+                ctx.moveTo(px - 26 + tier * 4, GROUND_Y - 18 - tier * 24);
+                ctx.lineTo(px, GROUND_Y - 58 - tier * 24);
+                ctx.lineTo(px + 26 - tier * 4, GROUND_Y - 18 - tier * 24);
+                ctx.closePath();
+                ctx.fill();
+              }
+            }
+          } else if (st.index === 2) {
+            // Torres e colunas do Castelo de Cristal
+            const towerHeight = 150 + (Math.abs(i) % 3) * 32;
+            ctx.fillStyle = "rgba(129, 140, 248, 0.24)";
+            ctx.fillRect(bx, GROUND_Y - towerHeight, 44, towerHeight);
+            ctx.beginPath();
+            ctx.moveTo(bx - 6, GROUND_Y - towerHeight);
+            ctx.lineTo(bx + 22, GROUND_Y - towerHeight - 45);
+            ctx.lineTo(bx + 50, GROUND_Y - towerHeight);
+            ctx.closePath();
+            ctx.fill();
+          } else if (st.index === 3) {
+            // Cristais luminosos nas paredes das cavernas
+            for (let t = 0; t < 2; t++) {
+              const cx = bx + 24 + t * 76;
+              const crystalHeight = 82 + (Math.abs(i + t) % 3) * 22;
+              ctx.fillStyle = t === 0 ? "rgba(34, 211, 238, 0.34)" : "rgba(45, 212, 191, 0.28)";
+              ctx.beginPath();
+              ctx.moveTo(cx - 16, GROUND_Y);
+              ctx.lineTo(cx - 10, GROUND_Y - crystalHeight * 0.72);
+              ctx.lineTo(cx, GROUND_Y - crystalHeight);
+              ctx.lineTo(cx + 13, GROUND_Y - crystalHeight * 0.65);
+              ctx.lineTo(cx + 18, GROUND_Y);
+              ctx.closePath();
+              ctx.fill();
+            }
+          } else if (st.index === 4) {
+            // Pinheiros altos e estandartes no caminho da montanha
+            for (let t = 0; t < 2; t++) {
+              const px = bx + t * 88;
+              ctx.fillStyle = "#145044";
+              for (let tier = 0; tier < 4; tier++) {
+                ctx.beginPath();
+                ctx.moveTo(px - 30 + tier * 4, GROUND_Y - 15 - tier * 25);
+                ctx.lineTo(px, GROUND_Y - 58 - tier * 25);
+                ctx.lineTo(px + 30 - tier * 4, GROUND_Y - 15 - tier * 25);
+                ctx.closePath();
+                ctx.fill();
+              }
+              ctx.fillStyle = "rgba(236, 254, 255, 0.78)";
+              ctx.fillRect(px - 25, GROUND_Y - 43, 50, 4);
+            }
+          } else {
+            // Pilares estrelados da fortaleza no coração do Norte
+            const towerHeight = 170 + (Math.abs(i) % 3) * 28;
+            ctx.fillStyle = "rgba(167, 139, 250, 0.3)";
+            ctx.fillRect(bx, GROUND_Y - towerHeight, 48, towerHeight);
+            ctx.fillStyle = "rgba(224, 231, 255, 0.65)";
+            ctx.beginPath();
+            ctx.moveTo(bx - 8, GROUND_Y - towerHeight);
+            ctx.lineTo(bx + 24, GROUND_Y - towerHeight - 42);
+            ctx.lineTo(bx + 56, GROUND_Y - towerHeight);
+            ctx.closePath();
+            ctx.fill();
+          }
+        }
+
+        if (st.index === 2) {
+          const throneX = 2360 - cameraX * 0.55;
+          ctx.save();
+          ctx.globalAlpha = 0.42;
+          ctx.fillStyle = "#a5b4fc";
+          ctx.beginPath();
+          ctx.roundRect(throneX - 100, GROUND_Y - 168, 200, 168, 48);
+          ctx.fill();
+          ctx.fillStyle = "#312e81";
+          ctx.beginPath();
+          ctx.roundRect(throneX - 78, GROUND_Y - 145, 156, 145, 36);
+          ctx.fill();
+          ctx.fillStyle = "#c4b5fd";
+          ctx.beginPath();
+          ctx.moveTo(throneX - 74, GROUND_Y - 124);
+          ctx.lineTo(throneX - 112, GROUND_Y - 188);
+          ctx.lineTo(throneX - 42, GROUND_Y - 156);
+          ctx.lineTo(throneX, GROUND_Y - 212);
+          ctx.lineTo(throneX + 42, GROUND_Y - 156);
+          ctx.lineTo(throneX + 112, GROUND_Y - 188);
+          ctx.lineTo(throneX + 74, GROUND_Y - 124);
+          ctx.closePath();
+          ctx.fill();
+          ctx.restore();
+        } else if (st.index === 5) {
+          const starX = 2470 - cameraX * 0.55;
+          ctx.save();
+          ctx.globalAlpha = 0.38 + Math.sin(animClock * 2) * 0.06;
+          const glow = ctx.createRadialGradient(starX, GROUND_Y - 118, 8, starX, GROUND_Y - 118, 150);
+          glow.addColorStop(0, "rgba(253, 230, 138, 0.8)");
+          glow.addColorStop(1, "rgba(167, 139, 250, 0)");
+          ctx.fillStyle = glow;
+          ctx.beginPath();
+          ctx.arc(starX, GROUND_Y - 118, 150, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.fillStyle = "#fef3c7";
+          ctx.beginPath();
+          ctx.arc(starX, GROUND_Y - 118, 26, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        }
+      }
+
+      function drawStarShape(c, cx, cy, spikes, outerR, innerR, fill, stroke) {
+        c.save();
+        c.beginPath();
+        for (let i = 0; i < spikes * 2; i++) {
+          const r = i % 2 === 0 ? outerR : innerR;
+          const a = (i * Math.PI) / spikes - Math.PI / 2;
+          const x = cx + Math.cos(a) * r;
+          const y = cy + Math.sin(a) * r;
+          if (i === 0) c.moveTo(x, y);
+          else c.lineTo(x, y);
+        }
+        c.closePath();
+        c.fillStyle = fill;
+        c.fill();
+        c.strokeStyle = stroke;
+        c.lineWidth = 1.5;
+        c.stroke();
+        c.restore();
+      }
+
+      function drawCandyCane(c, cx, cy) {
+        c.save();
+        c.translate(cx, cy);
+        c.rotate(0.25);
+        c.strokeStyle = "#ffffff";
+        c.lineWidth = 6;
+        c.lineCap = "round";
+        c.beginPath();
+        c.moveTo(0, 10);
+        c.lineTo(0, -5);
+        c.arc(5, -5, 5, Math.PI, 0, false);
+        c.stroke();
+
+        c.strokeStyle = "#e63946";
+        c.lineWidth = 3;
+        c.setLineDash([4, 4]);
+        c.stroke();
+        c.restore();
+      }
+
+      function drawEnemySprite(c, en) {
+        c.save();
+        const cx = en.x + en.w / 2;
+        const bottom = en.y + en.h;
+        c.translate(cx, bottom);
+        if (!en.alive) c.scale(1.25, 0.32);
+
+        const hop = en.alive ? Math.abs(Math.sin(en.anim)) * -3 : 0;
+        c.translate(0, hop);
+
+        if (en.kind === "snowman") {
+          // Boneco de Neve Rabugento
+          c.fillStyle = "#f8fafc";
+          c.beginPath();
+          c.arc(0, -11, 12, 0, Math.PI * 2);
+          c.arc(0, -27, 9, 0, Math.PI * 2);
+          c.fill();
+
+          // Cachecol vermelho
+          c.fillStyle = "#dc2626";
+          c.fillRect(-8, -20, 16, 4);
+
+          // Nariz de cenoura & sobrancelhas bravas
+          c.fillStyle = "#f97316";
+          c.beginPath();
+          c.moveTo(0, -27);
+          c.lineTo(9, -25);
+          c.lineTo(0, -24);
+          c.closePath();
+          c.fill();
+
+          c.fillStyle = "#0f172a";
+          c.beginPath();
+          c.arc(-3, -29, 1.5, 0, Math.PI * 2);
+          c.arc(3, -29, 1.5, 0, Math.PI * 2);
+          c.fill();
+
+          // Cartola preta
+          c.fillStyle = "#1e293b";
+          c.fillRect(-9, -36, 18, 3);
+          c.fillRect(-6, -44, 12, 9);
+        } else if (en.kind === "grinch") {
+          // Mini-Grinch Travesso
+          c.fillStyle = "#4d7c0f";
+          c.beginPath();
+          c.roundRect(-13, -30, 26, 26, 10);
+          c.fill();
+
+          // Gorrinho vermelho
+          c.fillStyle = "#dc2626";
+          c.beginPath();
+          c.moveTo(-11, -28);
+          c.lineTo(0, -42);
+          c.lineTo(11, -28);
+          c.closePath();
+          c.fill();
+
+          // Olhos amarelos travessos
+          c.fillStyle = "#fef08a";
+          c.beginPath();
+          c.arc(-4.5, -20, 2.5, 0, Math.PI * 2);
+          c.arc(4.5, -20, 2.5, 0, Math.PI * 2);
+          c.fill();
+
+          c.fillStyle = "#dc2626";
+          c.beginPath();
+          c.arc(-4.5, -20, 1.1, 0, Math.PI * 2);
+          c.arc(4.5, -20, 1.1, 0, Math.PI * 2);
+          c.fill();
+        } else if (en.kind === "bat") {
+          c.fillStyle = "#312e81";
+          c.beginPath();
+          c.ellipse(0, -17, 9, 8, 0, 0, Math.PI * 2);
+          c.fill();
+          c.fillStyle = "#6366f1";
+          c.beginPath();
+          c.moveTo(-5, -18);
+          c.quadraticCurveTo(-25, -38, -20, -8);
+          c.quadraticCurveTo(-12, -13, -7, -8);
+          c.lineTo(-2, -13);
+          c.moveTo(5, -18);
+          c.quadraticCurveTo(25, -38, 20, -8);
+          c.quadraticCurveTo(12, -13, 7, -8);
+          c.lineTo(2, -13);
+          c.fill();
+          c.fillStyle = "#fef08a";
+          c.beginPath();
+          c.arc(-3, -19, 1.5, 0, Math.PI * 2);
+          c.arc(3, -19, 1.5, 0, Math.PI * 2);
+          c.fill();
+        } else if (en.kind === "ice-spirit") {
+          c.fillStyle = "rgba(125, 211, 252, 0.88)";
+          c.beginPath();
+          c.moveTo(0, -40);
+          c.quadraticCurveTo(22, -25, 16, -7);
+          c.quadraticCurveTo(13, 0, 7, -7);
+          c.quadraticCurveTo(2, 1, -3, -7);
+          c.quadraticCurveTo(-10, 0, -14, -8);
+          c.quadraticCurveTo(-20, -26, 0, -40);
+          c.fill();
+          c.fillStyle = "#0c4a6e";
+          c.beginPath();
+          c.arc(-4, -24, 2, 0, Math.PI * 2);
+          c.arc(4, -24, 2, 0, Math.PI * 2);
+          c.fill();
+        } else {
+          c.fillStyle = "#b45309";
+          c.beginPath();
+          c.roundRect(-14, -32, 28, 29, 8);
+          c.fill();
+          c.fillStyle = "#fef3c7";
+          c.beginPath();
+          c.arc(-5, -22, 2, 0, Math.PI * 2);
+          c.arc(5, -22, 2, 0, Math.PI * 2);
+          c.fill();
+          c.strokeStyle = "#fef3c7";
+          c.lineWidth = 2;
+          c.beginPath();
+          c.arc(0, -13, 5, 0.2 * Math.PI, 0.8 * Math.PI);
+          c.stroke();
+          c.fillStyle = "#dc2626";
+          c.beginPath();
+          c.arc(-7, -31, 3, 0, Math.PI * 2);
+          c.arc(7, -31, 3, 0, Math.PI * 2);
+          c.fill();
+        }
+        c.restore();
+      }
+
+      function drawIceKingBoss(c, b) {
+        c.save();
+        const cx = b.x + b.w / 2;
+        const cy = b.y + b.h / 2;
+        c.translate(cx, cy);
+
+        if (b.hitFlash > 0 && Math.floor(b.hitFlash * 20) % 2 === 0) {
+          c.globalAlpha = 0.55;
+        }
+
+        if (b.attackTimer < 0.8) {
+          c.save();
+          c.globalAlpha = 0.22 + Math.abs(Math.sin(animClock * 14)) * 0.25;
+          c.strokeStyle = b.phase === 3 ? "#fb7185" : "#7dd3fc";
+          c.lineWidth = 4;
+          c.beginPath();
+          c.ellipse(0, 43, 54, 13, 0, 0, Math.PI * 2);
+          c.stroke();
+          c.restore();
+        }
+
+        // Capa real congelada
+        const phaseColors = ["#1d4ed8", "#7c3aed", "#be123c"];
+        c.fillStyle = phaseColors[b.phase - 1];
+        c.beginPath();
+        c.moveTo(-26, -15);
+        c.lineTo(26, -15);
+        c.lineTo(38, 46);
+        c.lineTo(-38, 46);
+        c.closePath();
+        c.fill();
+
+        // Armadura de gelo
+        c.fillStyle = b.phase === 3 ? "#fb7185" : b.phase === 2 ? "#c4b5fd" : "#38bdf8";
+        c.beginPath();
+        c.roundRect(-24, -18, 48, 56, 14);
+        c.fill();
+
+        // Cabeça e barba nevada
+        c.fillStyle = "#bae6fd";
+        c.beginPath();
+        c.arc(0, -28, 20, 0, Math.PI * 2);
+        c.fill();
+
+        c.fillStyle = "#ffffff";
+        c.beginPath();
+        c.moveTo(-18, -22);
+        c.lineTo(0, 14);
+        c.lineTo(18, -22);
+        c.closePath();
+        c.fill();
+
+        // Olhos brilhantes
+        c.fillStyle = "#fef08a";
+        c.beginPath();
+        c.arc(-7, -30, 3.2, 0, Math.PI * 2);
+        c.arc(7, -30, 3.2, 0, Math.PI * 2);
+        c.fill();
+
+        // Coroa de Cristal
+        c.fillStyle = "#e0f2fe";
+        c.strokeStyle = "#0284c7";
+        c.lineWidth = 2;
+        c.beginPath();
+        c.moveTo(-18, -44);
+        c.lineTo(-12, -62);
+        c.lineTo(-4, -48);
+        c.lineTo(0, -66);
+        c.lineTo(4, -48);
+        c.lineTo(12, -62);
+        c.lineTo(18, -44);
+        c.closePath();
+        c.fill();
+        c.stroke();
+
+        // Barra de vida do Rei Gelado acima dele
+        const barW = 94;
+        c.fillStyle = "rgba(9, 17, 36, 0.85)";
+        c.beginPath();
+        c.roundRect(-barW / 2, -82, barW, 10, 5);
+        c.fill();
+
+        c.fillStyle = "#38bdf8";
+        c.beginPath();
+        c.roundRect(-barW / 2 + 2, -80, (barW - 4) * (b.hp / b.maxHp), 6, 4);
+        c.fill();
+
+        c.fillStyle = "#ffffff";
+        c.font = "bold 11px Fredoka, sans-serif";
+        c.textAlign = "center";
+        c.fillText(
+          b.attackTimer < 0.8 ? "⚠ ATAQUE IMINENTE!" : `${b.name} · ${b.phase}/3`,
+          0,
+          b.attackTimer < 0.8 ? -98 : -88
+        );
+
+        c.restore();
+      }
+
+      function drawFrostWolfBoss(c, b) {
+        c.save();
+        const cx = b.x + b.w / 2;
+        const cy = b.y + b.h / 2;
+        const furColors = ["#64748b", "#475569", "#1e293b"];
+        const nextPounce = b.phase > 1 && b.attackIndex % 2 === 1;
+        c.translate(cx, cy);
+
+        if (b.hitFlash > 0 && Math.floor(b.hitFlash * 20) % 2 === 0) c.globalAlpha = 0.55;
+
+        if (b.attackTimer < 0.8 && !nextPounce) {
+          c.save();
+          c.globalAlpha = 0.2 + Math.abs(Math.sin(animClock * 14)) * 0.25;
+          c.strokeStyle = "#bfdbfe";
+          c.lineWidth = 4;
+          c.beginPath();
+          c.ellipse(5, 37, 72, 15, 0, 0, Math.PI * 2);
+          c.stroke();
+          c.restore();
+        }
+
+        c.save();
+        c.scale(b.vx < 0 ? -1 : 1, 1);
+        const fur = furColors[b.phase - 1];
+
+        c.strokeStyle = "#334155";
+        c.lineWidth = 12;
+        c.lineCap = "round";
+        c.beginPath();
+        c.moveTo(-34, 9);
+        c.quadraticCurveTo(-55, -4 + Math.sin(animClock * 7) * 4, -68, 4);
+        c.stroke();
+        c.fillStyle = "#cbd5e1";
+        c.beginPath();
+        c.moveTo(-64, 4);
+        c.lineTo(-78, -7);
+        c.lineTo(-73, 8);
+        c.lineTo(-79, 17);
+        c.closePath();
+        c.fill();
+
+        c.fillStyle = fur;
+        c.beginPath();
+        c.ellipse(-4, 12, 43, 27, -0.08, 0, Math.PI * 2);
+        c.fill();
+        c.fillStyle = "#cbd5e1";
+        c.beginPath();
+        c.ellipse(16, 17, 19, 20, -0.2, 0, Math.PI * 2);
+        c.fill();
+
+        c.fillStyle = fur;
+        for (const legX of [-29, 13]) {
+          c.beginPath();
+          c.moveTo(legX - 7, 23);
+          c.lineTo(legX + 8, 21);
+          c.lineTo(legX + 9, 40);
+          c.lineTo(legX + 14, 44);
+          c.lineTo(legX - 10, 44);
+          c.closePath();
+          c.fill();
+        }
+
+        c.fillStyle = "#e2e8f0";
+        c.beginPath();
+        c.moveTo(-18, -9);
+        c.lineTo(-10, -26);
+        c.lineTo(-2, -10);
+        c.lineTo(5, -31);
+        c.lineTo(13, -9);
+        c.closePath();
+        c.fill();
+
+        c.fillStyle = fur;
+        c.beginPath();
+        c.ellipse(28, -12, 25, 22, 0.12, 0, Math.PI * 2);
+        c.fill();
+        c.beginPath();
+        c.moveTo(12, -25);
+        c.lineTo(10, -48);
+        c.lineTo(29, -33);
+        c.closePath();
+        c.moveTo(34, -31);
+        c.lineTo(51, -48);
+        c.lineTo(49, -22);
+        c.closePath();
+        c.fill();
+        c.fillStyle = "#fda4af";
+        c.beginPath();
+        c.moveTo(16, -29);
+        c.lineTo(15, -42);
+        c.lineTo(25, -33);
+        c.closePath();
+        c.moveTo(39, -32);
+        c.lineTo(47, -42);
+        c.lineTo(45, -28);
+        c.closePath();
+        c.fill();
+
+        c.fillStyle = "#e2e8f0";
+        c.beginPath();
+        c.ellipse(48, -3, 18, 12, 0.12, 0, Math.PI * 2);
+        c.fill();
+        c.fillStyle = "#0f172a";
+        c.beginPath();
+        c.arc(63, -5, 4, 0, Math.PI * 2);
+        c.fill();
+        c.fillStyle = "#fef08a";
+        c.beginPath();
+        c.ellipse(38, -17, 4, 3, 0, 0, Math.PI * 2);
+        c.fill();
+        c.fillStyle = "#0f172a";
+        c.beginPath();
+        c.arc(39, -17, 1.4, 0, Math.PI * 2);
+        c.fill();
+
+        c.strokeStyle = "#0f172a";
+        c.lineWidth = 2;
+        c.beginPath();
+        c.moveTo(39, 3);
+        c.quadraticCurveTo(49, 12, 59, 2);
+        c.stroke();
+        c.fillStyle = "#ffffff";
+        c.beginPath();
+        c.moveTo(47, 5);
+        c.lineTo(51, 5);
+        c.lineTo(50, 12);
+        c.closePath();
+        c.fill();
+
+        if (b.attackTimer < 0.8 && !nextPounce) {
+          c.fillStyle = "#93c5fd";
+          c.beginPath();
+          c.arc(53, 6, 4 + Math.sin(animClock * 18) * 1.5, 0, Math.PI * 2);
+          c.fill();
+        }
+        c.restore();
+
+        if (b.lungeTimer > 0) {
+          c.strokeStyle = "rgba(191, 219, 254, 0.75)";
+          c.lineWidth = 3;
+          for (let i = 0; i < 3; i++) {
+            const y = 16 + i * 10;
+            c.beginPath();
+            c.moveTo(-48, y);
+            c.lineTo(-72 - i * 5, y);
+            c.stroke();
+          }
+        }
+
+        const barW = 104;
+        c.fillStyle = "rgba(9, 17, 36, 0.85)";
+        c.beginPath();
+        c.roundRect(-barW / 2, -74, barW, 10, 5);
+        c.fill();
+        c.fillStyle = "#93c5fd";
+        c.beginPath();
+        c.roundRect(-barW / 2 + 2, -72, (barW - 4) * (b.hp / b.maxHp), 6, 4);
+        c.fill();
+        c.fillStyle = "#ffffff";
+        c.font = "bold 11px Fredoka, sans-serif";
+        c.textAlign = "center";
+        c.fillText(
+          b.attackTimer < 0.8
+            ? `⚠ ${nextPounce ? "BOTE IMINENTE!" : "UÍVO IMINENTE!"}`
+            : `${b.name} · ${b.phase}/3`,
+          0,
+          -88
+        );
+
+        c.restore();
+      }
+
+      function drawGreatChristmasTree(c, tx, groundY, lit) {
+        c.save();
+        c.translate(tx, groundY);
+
+        // Tronco
+        c.fillStyle = "#5c3a21";
+        c.fillRect(-14, -30, 28, 30);
+
+        // Camadas de pinheiro
+        const tiers = [
+          { y: -26, w: 112, h: 64 },
+          { y: -68, w: 88, h: 56 },
+          { y: -106, w: 62, h: 48 }
+        ];
+
+        for (const t of tiers) {
+          c.fillStyle = lit > 0.3 ? "#15803d" : "#1e3a3a";
+          c.beginPath();
+          c.moveTo(-t.w / 2, t.y);
+          c.lineTo(0, t.y - t.h);
+          c.lineTo(t.w / 2, t.y);
+          c.closePath();
+          c.fill();
+        }
+
+        // Bolinhas iluminadas
+        const ornaments = [
+          [-26, -38, "#ff5964"], [24, -42, "#ffd166"], [0, -52, "#38bdf8"],
+          [-18, -78, "#ffd166"], [18, -82, "#f472b6"], [0, -116, "#ff5964"]
+        ];
+        for (const [ox, oy, col] of ornaments) {
+          c.fillStyle = lit > 0.3 ? col : "#475569";
+          c.beginPath();
+          c.arc(ox, oy, 4.5, 0, Math.PI * 2);
+          c.fill();
+        }
+
+        // Estrela no topo
+        drawStarShape(
+          c,
+          0,
+          -162,
+          5,
+          16,
+          7,
+          lit > 0.2 ? "#ffd166" : "#64748b",
+          lit > 0.2 ? "#ffffff" : "#94a3b8"
+        );
+
+        c.restore();
+      }
+
+      function drawCrystalPuzzle(c, puzzle) {
+        c.save();
+
+        const signX = 1940;
+        const signY = GROUND_Y - 170;
+        c.fillStyle = "#164e63";
+        c.fillRect(signX + 5, signY + 48, 5, GROUND_Y - signY - 48);
+        c.fillStyle = "#083344";
+        c.strokeStyle = "#67e8f9";
+        c.lineWidth = 2;
+        c.beginPath();
+        c.roundRect(signX - 70, signY, 150, 52, 8);
+        c.fill();
+        c.stroke();
+        c.fillStyle = "#ecfeff";
+        c.textAlign = "center";
+        c.textBaseline = "middle";
+        c.font = "bold 12px Fredoka, sans-serif";
+        c.fillText("RUNAS MÁGICAS", signX + 5, signY + 18);
+        c.font = "bold 10px Fredoka, sans-serif";
+        c.fillText("Descubra a sequência", signX + 5, signY + 37);
+
+        for (const rune of puzzle.runes) {
+          const cx = rune.x + rune.w / 2;
+          const cy = rune.y + rune.h / 2 + Math.sin(animClock * 3 + rune.x) * 2;
+          c.save();
+          c.globalAlpha = rune.active ? 0.62 : 1;
+          c.shadowColor = rune.active ? "#a7f3d0" : "#67e8f9";
+          c.shadowBlur = rune.active ? 8 : 20;
+          c.fillStyle = rune.active ? "#047857" : "#0e7490";
+          c.strokeStyle = rune.active ? "#a7f3d0" : "#cffafe";
+          c.lineWidth = 2;
+          c.beginPath();
+          c.arc(cx, cy, 23, 0, Math.PI * 2);
+          c.fill();
+          c.stroke();
+          c.shadowBlur = 0;
+          c.font = "24px serif";
+          c.textAlign = "center";
+          c.textBaseline = "middle";
+          c.fillStyle = "#ffffff";
+          c.fillText(rune.active ? "✓" : rune.symbol, cx, cy + 1);
+          c.restore();
+        }
+
+        const gate = puzzle.gate;
+        c.strokeStyle = puzzle.completed ? "rgba(103, 232, 249, 0.85)" : "#67e8f9";
+        c.lineWidth = 7;
+        c.shadowColor = "#22d3ee";
+        c.shadowBlur = puzzle.completed ? 24 : 10;
+        c.beginPath();
+        c.moveTo(gate.x, GROUND_Y);
+        c.lineTo(gate.x, gate.y + 24);
+        c.quadraticCurveTo(gate.x + gate.w / 2, gate.y - 20, gate.x + gate.w, gate.y + 24);
+        c.lineTo(gate.x + gate.w, GROUND_Y);
+        c.stroke();
+        c.shadowBlur = 0;
+
+        if (!puzzle.completed) {
+          c.fillStyle = "rgba(8, 47, 73, 0.78)";
+          c.fillRect(gate.x + 7, gate.y + 26, gate.w - 14, GROUND_Y - gate.y - 26);
+          c.strokeStyle = "rgba(207, 250, 254, 0.8)";
+          c.lineWidth = 3;
+          for (let x = gate.x + 14; x < gate.x + gate.w; x += 12) {
+            c.beginPath();
+            c.moveTo(x, gate.y + 27);
+            c.lineTo(x, GROUND_Y);
+            c.stroke();
+          }
+          c.fillStyle = "#cffafe";
+          c.font = "bold 11px Fredoka, sans-serif";
+          c.textAlign = "center";
+          c.fillText("PORTÃO FECHADO", gate.x + gate.w / 2, gate.y + 10);
+        }
+
+        c.restore();
+      }
+
+      function drawAuroraPuzzle(c, puzzle) {
+        c.save();
+
+        const signX = 2030;
+        const signY = GROUND_Y - 170;
+        c.fillStyle = "#312e81";
+        c.fillRect(signX + 5, signY + 48, 5, GROUND_Y - signY - 48);
+        c.fillStyle = "#1e1b4b";
+        c.strokeStyle = "#c4b5fd";
+        c.lineWidth = 2;
+        c.beginPath();
+        c.roundRect(signX - 82, signY, 180, 52, 8);
+        c.fill();
+        c.stroke();
+        c.fillStyle = "#f5f3ff";
+        c.textAlign = "center";
+        c.textBaseline = "middle";
+        c.font = "bold 11px Fredoka, sans-serif";
+        c.fillText("HARMONIA DA AURORA", signX + 8, signY + 18);
+        c.font = "bold 10px Fredoka, sans-serif";
+        c.fillText("6 passos, padrão oculto", signX + 8, signY + 37);
+
+        const runeColors = {
+          star: "#facc15",
+          moon: "#38bdf8",
+          crystal: "#d8b4fe",
+          sun: "#fb923c"
+        };
+        for (const rune of puzzle.runes) {
+          const cx = rune.x + rune.w / 2;
+          const cy = rune.y + rune.h / 2 + Math.sin(animClock * 3 + rune.x) * 2;
+          c.save();
+          c.shadowColor = runeColors[rune.id];
+          c.shadowBlur = rune.active ? 10 : 24;
+          c.fillStyle = rune.active ? "#0f766e" : "#312e81";
+          c.strokeStyle = runeColors[rune.id];
+          c.lineWidth = 2;
+          c.beginPath();
+          c.arc(cx, cy, 24, 0, Math.PI * 2);
+          c.fill();
+          c.stroke();
+          c.shadowBlur = 0;
+          c.font = "24px serif";
+          c.textAlign = "center";
+          c.textBaseline = "middle";
+          c.fillStyle = "#ffffff";
+          c.fillText(rune.active ? "✓" : rune.symbol, cx, cy + 1);
+          c.restore();
+        }
+
+        const gate = puzzle.gate;
+        c.strokeStyle = puzzle.completed ? "rgba(196, 181, 253, 0.9)" : "#c4b5fd";
+        c.lineWidth = 7;
+        c.shadowColor = "#a78bfa";
+        c.shadowBlur = puzzle.completed ? 24 : 10;
+        c.beginPath();
+        c.moveTo(gate.x, GROUND_Y);
+        c.lineTo(gate.x, gate.y + 24);
+        c.quadraticCurveTo(gate.x + gate.w / 2, gate.y - 20, gate.x + gate.w, gate.y + 24);
+        c.lineTo(gate.x + gate.w, GROUND_Y);
+        c.stroke();
+        c.shadowBlur = 0;
+
+        if (!puzzle.completed) {
+          c.fillStyle = "rgba(30, 27, 75, 0.82)";
+          c.fillRect(gate.x + 7, gate.y + 26, gate.w - 14, GROUND_Y - gate.y - 26);
+          c.strokeStyle = "rgba(224, 231, 255, 0.82)";
+          c.lineWidth = 3;
+          for (let x = gate.x + 14; x < gate.x + gate.w; x += 12) {
+            c.beginPath();
+            c.moveTo(x, gate.y + 27);
+            c.lineTo(x, GROUND_Y);
+            c.stroke();
+          }
+          c.fillStyle = "#ede9fe";
+          c.font = "bold 10px Fredoka, sans-serif";
+          c.textAlign = "center";
+          c.fillText("PASSAGEM SELADA", gate.x + gate.w / 2, gate.y + 10);
+        }
+
+        c.restore();
+      }
+
+      function drawGoldenGift(c, g) {
+        c.save();
+        const bob = Math.sin(g.bob) * 5;
+        const cx = g.x + g.w / 2;
+        const cy = g.y + g.h / 2 + bob;
+
+        // Aura dourada
+        const glow = c.createRadialGradient(cx, cy, 4, cx, cy, 46);
+        glow.addColorStop(0, "rgba(255, 209, 102, 0.75)");
+        glow.addColorStop(1, "rgba(255, 209, 102, 0)");
+        c.fillStyle = glow;
+        c.beginPath();
+        c.arc(cx, cy, 46, 0, Math.PI * 2);
+        c.fill();
+
+        // Caixa vermelha com fita dourada
+        c.fillStyle = "#e63946";
+        c.beginPath();
+        c.roundRect(g.x, g.y + bob, g.w, g.h, 7);
+        c.fill();
+
+        c.fillStyle = "#ffd166";
+        c.fillRect(g.x + g.w / 2 - 4, g.y + bob, 8, g.h);
+        c.fillRect(g.x, g.y + bob + g.h / 2 - 4, g.w, 8);
+
+        c.fillStyle = "#ffffff";
+        c.font = "bold 11px Fredoka, sans-serif";
+        c.textAlign = "center";
+        c.fillText("CARTINHA!", cx, g.y + bob - 10);
+        c.restore();
+      }
+
+      /* --------------------------------------------------------------------
+         L. CONTROLE DE TELAS, HUD E TRANSIÇÕES
+         -------------------------------------------------------------------- */
+      function setScreenOverlay(activeId) {
+        if (activeId) releaseAllInputs();
+        const overlays = [
+          "titleScreen",
+          "storyModal",
+          "cinematicModal",
+          "settingsModal",
+          "letterEditorModal",
+          "pauseModal",
+          "stageClearModal",
+          "finaleLetterModal",
+          "completionModal",
+          "creditsModal"
+        ];
+        for (const id of overlays) {
+          const el = $(id);
+          if (id === activeId) {
+            el.classList.remove("hidden");
+            el.classList.add("flex");
+          } else {
+            el.classList.add("hidden");
+            el.classList.remove("flex");
+          }
+        }
+
+        const showHud = gameState === "PLAYING" || gameState === "PAUSED" || gameState === "CELEBRATING";
+        $("hudLayer").classList.toggle("hidden", !showHud);
+        $("hudQuest").classList.toggle("hidden", !showHud);
+      }
+
+      function updateHudUI() {
+        if (!player) return;
+        const livesChanged = hudCache.maxLives !== config.maxLives;
+        if (livesChanged || hudCache.playerHp !== player.hp) {
+          const heartsBox = $("hudHearts");
+          heartsBox.innerHTML = "";
+          for (let i = 0; i < config.maxLives; i++) {
+            const span = document.createElement("span");
+            span.textContent = i < player.hp ? "❤️" : "🖤";
+            span.className = "text-xs sm:text-sm leading-none";
+            heartsBox.appendChild(span);
+          }
+          hudCache.playerHp = player.hp;
+        }
+        hudCache.maxLives = config.maxLives;
+
+        const hasVitor = Boolean(vitor);
+        if (hudCache.vitorPresent !== hasVitor) {
+          $("hudVitorStatus").classList.toggle("hidden", !hasVitor);
+          hudCache.vitorPresent = hasVitor;
+        }
+        if (vitor && (livesChanged || hudCache.vitorHp !== vitor.hp)) {
+          const vitorHeartsBox = $("hudVitorHearts");
+          vitorHeartsBox.innerHTML = "";
+          for (let i = 0; i < config.maxLives; i++) {
+            const span = document.createElement("span");
+            span.textContent = i < vitor.hp ? "💚" : "🖤";
+            span.className = "leading-none";
+            vitorHeartsBox.appendChild(span);
+          }
+          hudCache.vitorHp = vitor.hp;
+        }
+
+        if (hudCache.score !== score) {
+          $("hudScore").textContent = score;
+          hudCache.score = score;
+        }
+        const st = STAGES[currentStageIdx];
+        let stageLabel;
+        let progressText;
+        let progressPercent;
+        if (st.hasBoss && boss && boss.alive) {
+          stageLabel = boss.kind === "ice-wolf"
+            ? `🐺 LOBO DA GEADA · ${boss.phase}/3`
+            : `👑 REI GELADO · ETAPA ${boss.phase}/3`;
+          progressPercent = Math.round((boss.hp / boss.maxHp) * 100);
+          progressText = `${boss.hp}/${boss.maxHp} HP`;
+        } else {
+          stageLabel = st.code;
+          const progressX = vitor ? Math.max(player.x, vitor.x) : player.x;
+          progressPercent = Math.min(100, Math.max(0, Math.round((progressX / (st.length - 160)) * 100)));
+          progressText = `${progressPercent}%`;
+        }
+        if (hudCache.stageLabel !== stageLabel) {
+          $("hudStageLabel").textContent = stageLabel;
+          hudCache.stageLabel = stageLabel;
+        }
+        if (hudCache.progressText !== progressText) {
+          $("hudProgressLabel").textContent = progressText;
+          hudCache.progressText = progressText;
+        }
+        if (hudCache.progressPercent !== progressPercent) {
+          $("hudProgressFill").style.width = `${progressPercent}%`;
+          hudCache.progressPercent = progressPercent;
+        }
+        updateQuestHud();
+      }
+
+      function startNewAdventure() {
+        releaseAllInputs();
+        sfx.unlock();
+        score = 0;
+        adventureSecrets = 0;
+        secretMasteryAwarded = false;
+        buildStage(0);
+        cinematicIndex = 0;
+        showCinematicScene();
+      }
+
+      function unlockVitorAndContinue() {
+        const wasUnlocked = vitorUnlocked;
+        vitorUnlocked = true;
+        try {
+          window.localStorage.setItem("salveNatal.vitorUnlocked", "true");
+        } catch (err) {
+          console.warn("Não foi possível salvar o desbloqueio do Vitor:", err);
+        }
+        $("vitorUnlockedNotice").classList.remove("hidden");
+        $("finaleBadge").textContent = "A aventura continua!";
+        $("finalJourneyText").textContent = "Vitor já faz parte da equipe. A próxima jornada começa nas Cavernas do Eco!";
+        $("btnUnlockVitor").classList.add("hidden");
+        releaseAllInputs();
+        buildStage(3);
+        gameState = "PLAYING";
+        setScreenOverlay(null);
+        sfx.startBgm();
+        showToast(wasUnlocked
+          ? "✨ A jornada continua na Fase 4!"
+          : "✨ Vitor desbloqueado! A jornada continua na Fase 4.");
+      }
+
+      const cinematicScenes = [
+        {
+          title: "Quando a estrela caiu",
+          text: "Na véspera de Natal, o Rei Gelado roubou a Estrela do Norte. Em um instante, as luzes da Vila Nevada se apagaram."
+        },
+        {
+          title: "Uma heroína se ergue",
+          text: "Guiada pela esperança e pela magia das festas, {hero} partiu para recuperar a estrela e devolver o calor ao reino."
+        },
+        {
+          title: "Uma jornada além do castelo",
+          text: "Atravesse a Vila Nevada, a Floresta dos Pinheiros e o Castelo Congelado para enfrentar o Rei Gelado. Depois da batalha, uma cartinha de Vitor marcará o início de uma jornada a dois."
+        }
+      ];
+      let cinematicIndex = 0;
+
+      function showCinematicScene() {
+        const scene = cinematicScenes[cinematicIndex];
+        $("cinematicTitle").textContent = scene.title;
+        $("cinematicText").textContent = scene.text.replace("{hero}", letterData.para || "nossa heroína");
+        $("btnNextCinematic").textContent = cinematicIndex === cinematicScenes.length - 1 ? "Começar ▶" : "Continuar ▶";
+        gameState = "CINEMATIC";
+        setScreenOverlay("cinematicModal");
+      }
+
+      function startGameplayFromCinematic() {
+        releaseAllInputs();
+        gameState = "PLAYING";
+        setScreenOverlay(null);
+        sfx.startBgm();
+      }
+
+      function advanceCinematic() {
+        if (cinematicIndex < cinematicScenes.length - 1) {
+          cinematicIndex++;
+          showCinematicScene();
+        } else {
+          startGameplayFromCinematic();
+        }
+      }
+
+      function pauseGame() {
+        if (gameState !== "PLAYING") return;
+        gameState = "PAUSED";
+        setScreenOverlay("pauseModal");
+      }
+
+      function resumeGame() {
+        if (gameState !== "PAUSED") return;
+        gameState = "PLAYING";
+        setScreenOverlay(null);
+        sfx.startBgm();
+      }
+
+      function completeStage() {
+        gameState = "STAGE_CLEAR";
+        sfx.stageClear();
+        const st = STAGES[currentStageIdx];
+        $("stageClearTitle").textContent = st.title;
+        $("stageClearDesc").textContent = st.nextText;
+        $("stageClearScore").textContent = score;
+        setScreenOverlay("stageClearModal");
+      }
+
+      function triggerFinale() {
+        if (gameState === "CELEBRATING" || gameState === "FINALE") return;
+        const unlockingVitor = currentStageIdx === 2 && !vitorUnlocked;
+        const finalStage = currentStageIdx === STAGES.length - 1;
+        gameState = "CELEBRATING";
+        previewingCard = false;
+        if (unlockingVitor) {
+          $("finaleBadge").textContent = "O Rei Gelado foi derrotado!";
+          $("finalJourneyText").textContent = "A Estrela do Norte ainda está rachada. A cartinha marca o encontro com Vitor; juntos, Paloma e ele vão descobrir a origem da magia.";
+          $("btnUnlockVitor").classList.remove("hidden");
+        }
+        sfx.victoryFanfare();
+        setScreenOverlay(null);
+
+        setTimeout(() => {
+          gameState = "FINALE";
+          if (finalStage) {
+            $("completionScore").textContent = score;
+            setScreenOverlay("completionModal");
+          } else {
+            syncLetterUI();
+            $("finalScoreBadge").textContent = score;
+            $("btnClosePreview").classList.add("hidden");
+            setScreenOverlay("finaleLetterModal");
+          }
+        }, 2300);
+      }
+
+      /* --------------------------------------------------------------------
+         M. EVENTOS DE INTERFACE (BOTÕES DO MENU, HISTÓRIA E CONFIGURAÇÕES)
+         -------------------------------------------------------------------- */
+      $("btnStartGame").onclick = startNewAdventure;
+      $("btnStoryPlay").onclick = startNewAdventure;
+      $("btnUnlockVitor").onclick = unlockVitorAndContinue;
+      $("btnNextCinematic").onclick = advanceCinematic;
+      $("btnSkipCinematic").onclick = startGameplayFromCinematic;
+
+      $("btnOpenStory").onclick = () => {
+        sfx.unlock();
+        setScreenOverlay("storyModal");
+      };
+      $("btnCloseStory").onclick = () => setScreenOverlay("titleScreen");
+      $("btnStoryBack").onclick = () => setScreenOverlay("titleScreen");
+
+      let settingsReturnTarget = "titleScreen";
+      function openSettings(fromTarget) {
+        settingsReturnTarget = fromTarget;
+        syncSettingsButtons();
+        setScreenOverlay("settingsModal");
+      }
+
+      function syncSettingsButtons() {
+        const isEasy = config.maxLives === 5;
+        $("optDiffEasy").className = `py-2.5 px-3 rounded-xl font-bold text-xs border-2 transition cursor-pointer ${
+          isEasy ? "bg-rose-600 border-amber-300 text-white" : "bg-slate-900 border-slate-700 text-slate-300"
+        }`;
+        $("optDiffClassic").className = `py-2.5 px-3 rounded-xl font-bold text-xs border-2 transition cursor-pointer ${
+          !isEasy ? "bg-rose-600 border-amber-300 text-white" : "bg-slate-900 border-slate-700 text-slate-300"
+        }`;
+
+        $("optSfxToggle").textContent = config.sfx ? "Ligado" : "Desligado";
+        $("optSfxToggle").className = `px-4 py-1.5 rounded-xl font-bold text-xs cursor-pointer ${
+          config.sfx ? "bg-emerald-600 text-white" : "bg-slate-700 text-slate-300"
+        }`;
+
+        $("optBgmToggle").textContent = config.bgm ? "Ligado" : "Desligado";
+        $("optBgmToggle").className = `px-4 py-1.5 rounded-xl font-bold text-xs cursor-pointer ${
+          config.bgm ? "bg-emerald-600 text-white" : "bg-slate-700 text-slate-300"
+        }`;
+
+        $("btnHudAudio").textContent = config.sfx || config.bgm ? "🔊" : "🔇";
+      }
+
+      $("btnOpenSettings").onclick = () => openSettings("titleScreen");
+      $("btnPauseSettings").onclick = () => openSettings("pauseModal");
+      $("btnCloseSettings").onclick = () => setScreenOverlay(settingsReturnTarget);
+      $("btnSettingsDone").onclick = () => setScreenOverlay(settingsReturnTarget);
+
+      $("optDiffEasy").onclick = () => {
+        config.maxLives = 5;
+        if (player) player.hp = Math.min(5, player.hp);
+        syncSettingsButtons();
+        updateHudUI();
+        showToast("💖 Modo Carinhoso (5 vidas)");
+      };
+      $("optDiffClassic").onclick = () => {
+        config.maxLives = 3;
+        if (player) player.hp = Math.min(3, player.hp);
+        syncSettingsButtons();
+        updateHudUI();
+        showToast("⭐ Modo Clássico (3 vidas)");
+      };
+      $("optSfxToggle").onclick = () => {
+        config.sfx = !config.sfx;
+        syncSettingsButtons();
+      };
+      $("optBgmToggle").onclick = () => {
+        config.bgm = !config.bgm;
+        if (!config.bgm) sfx.stopBgm();
+        else if (gameState === "PLAYING") sfx.startBgm();
+        syncSettingsButtons();
+      };
+      // Editor da Cartinha Final
+      let letterEditorReturnTarget = "settingsModal";
+      function openLetterEditor(returnTarget) {
+        letterEditorReturnTarget = returnTarget;
+        $("fieldTo").value = letterData.para;
+        $("fieldTitle").value = letterData.titulo;
+        $("fieldBody").value = letterData.mensagem;
+        $("fieldFrom").value = letterData.de;
+        setScreenOverlay("letterEditorModal");
+      }
+      $("btnSettingsLetter").onclick = () => openLetterEditor("settingsModal");
+      $("btnCloseLetterEditor").onclick = () => setScreenOverlay(letterEditorReturnTarget);
+
+      function captureEditorFields() {
+        letterData = {
+          para: $("fieldTo").value.trim() || DEFAULT_LETTER.para,
+          titulo: $("fieldTitle").value.trim() || DEFAULT_LETTER.titulo,
+          mensagem: $("fieldBody").value.trim() || DEFAULT_LETTER.mensagem,
+          de: $("fieldFrom").value.trim() || DEFAULT_LETTER.de
+        };
+        syncLetterUI();
+      }
+
+      $("btnApplyLetter").onclick = () => {
+        captureEditorFields();
+        setScreenOverlay(letterEditorReturnTarget);
+        showToast("💌 Cartinha salva na aventura!");
+      };
+
+      $("btnPreviewCard").onclick = () => {
+        captureEditorFields();
+        previewingCard = true;
+        $("finalScoreBadge").textContent = score;
+        $("btnClosePreview").classList.remove("hidden");
+        setScreenOverlay("finaleLetterModal");
+      };
+
+      $("btnClosePreview").onclick = () => {
+        if (previewingCard) {
+          previewingCard = false;
+          setScreenOverlay("letterEditorModal");
+        }
+      };
+
+      let creditsReturnTarget = "completionModal";
+      function openCredits(returnTarget) {
+        creditsReturnTarget = returnTarget;
+        setScreenOverlay("creditsModal");
+      }
+
+      $("btnCompletionCredits").onclick = () => {
+        if (gameState === "FINALE") openCredits("completionModal");
+      };
+      $("btnCreditsReplay").onclick = startNewAdventure;
+      $("btnCreditsLetter").onclick = () => setScreenOverlay(creditsReturnTarget);
+
+      $("btnCopyShareUrl").onclick = () => {
+        captureEditorFields();
+        copyCustomShareLink();
+      };
+
+      // HUD & Pausa & Transições
+      $("btnHudAudio").onclick = () => {
+        const on = config.sfx || config.bgm;
+        config.sfx = !on;
+        config.bgm = !on;
+        if (!config.bgm) sfx.stopBgm();
+        else if (gameState === "PLAYING") sfx.startBgm();
+        syncSettingsButtons();
+      };
+      $("btnHudRestart").onclick = () => {
+        buildStage(currentStageIdx);
+        gameState = "PLAYING";
+        setScreenOverlay(null);
+      };
+      $("btnHudPause").onclick = pauseGame;
+      $("btnResumePlay").onclick = resumeGame;
+      $("btnPauseRestart").onclick = () => {
+        buildStage(currentStageIdx);
+        gameState = "PLAYING";
+        setScreenOverlay(null);
+      };
+      $("btnBackToMenu").onclick = () => {
+        sfx.stopBgm();
+        gameState = "TITLE";
+        buildStage(0);
+        setScreenOverlay("titleScreen");
+      };
+
+      $("btnNextStage").onclick = () => {
+        if (currentStageIdx < STAGES.length - 1) {
+          buildStage(currentStageIdx + 1);
+          gameState = "PLAYING";
+          setScreenOverlay(null);
+        }
+      };
+
+      $("btnReplayAll").onclick = startNewAdventure;
+
+      document.addEventListener("visibilitychange", () => {
+        if (document.hidden && gameState === "PLAYING") {
+          pauseGame();
+        }
+      });
+
+      /* --------------------------------------------------------------------
+         N. LOOP PRINCIPAL DE ANIMAÇÃO (WINDOW.ONLOAD)
+         -------------------------------------------------------------------- */
+      let lastFrameTime = 0;
+      let lastPortraitRender = -Infinity;
+      function mainLoop(timestamp) {
+        const dt = Math.min(0.035, (timestamp - lastFrameTime) / 1000 || 0.016);
+        lastFrameTime = timestamp;
+
+        updateGame(dt);
+        renderScene();
+        if (animClock - lastPortraitRender >= 1 / 12) {
+          renderPortraitCanvases(animClock);
+          lastPortraitRender = animClock;
+        }
+
+        requestAnimationFrame(mainLoop);
+      }
+
+      window.onload = function () {
+        resizeCanvas();
+        loadUrlParams();
+        syncSettingsButtons();
+        $("vitorUnlockedNotice").classList.toggle("hidden", !vitorUnlocked);
+        buildStage(0);
+        gameState = "TITLE";
+        setScreenOverlay("titleScreen");
+        lastFrameTime = performance.now();
+        requestAnimationFrame(mainLoop);
+      };
+    })();
+  </script>
+</body>
+</html>
