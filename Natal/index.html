@@ -9,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Fredoka:wght@500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://pixijs.download/v7.4.2/pixi.min.js" onerror="console.error('PixiJS não carregou; o jogo seguirá com o renderizador Canvas 2D.')"></script>
 
   <style>
     /* ========================================================================
@@ -55,6 +56,16 @@
       width: 100vw;
       height: 100vh;
       display: block;
+    }
+
+    #pixiAtmosphere {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 1;
+      pointer-events: none;
+      mix-blend-mode: screen;
     }
 
     #titleScreen {
@@ -974,18 +985,27 @@
          C. CONFIGURAÇÃO DO CANVAS E COORDENADAS VIRTUAIS RESPONSIVAS
          -------------------------------------------------------------------- */
       const canvas = $("gameCanvas");
-      const ctx = canvas.getContext("2d");
+      const ctx = canvas.getContext("2d", { alpha: false, desynchronized: true });
 
       const VIRTUAL_H = 540;
       const GROUND_Y = 456;
       const MIN_GAME_WIDTH = 900;
       const MIN_GAME_HEIGHT = 600;
+      const MAX_RENDER_DPR = 1.5;
       let virtualW = 960;
       let scaleRatio = 1;
       let isSupportedViewport = true;
+      let lastPixiRenderTime = -Infinity;
+      const PIXI_RENDER_INTERVAL = 1 / 30;
+      let pixiApp = null;
+      let pixiAtmosphere = null;
+      let pixiMoonGlow = null;
+      let pixiBossGlow = null;
+      let pixiMotes = [];
+      let pixiWorldGlows = [];
 
       function resizeCanvas() {
-        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        const dpr = Math.min(window.devicePixelRatio || 1, MAX_RENDER_DPR);
         const w = window.innerWidth;
         const h = window.innerHeight;
         isSupportedViewport = w >= MIN_GAME_WIDTH && h >= MIN_GAME_HEIGHT;
@@ -995,10 +1015,159 @@
         scaleRatio = h / VIRTUAL_H;
         virtualW = w / scaleRatio;
         ctx.setTransform(dpr * scaleRatio, 0, 0, dpr * scaleRatio, 0, 0);
+        if (pixiApp) pixiApp.renderer.resize(w, h);
       }
 
       window.addEventListener("resize", resizeCanvas);
       resizeCanvas();
+
+      function initializePixiAtmosphere() {
+        if (!window.PIXI) {
+          console.error("PixiJS está indisponível; o jogo seguirá com o renderizador Canvas 2D.");
+          return;
+        }
+
+        try {
+          pixiApp = new PIXI.Application({
+            width: window.innerWidth,
+            height: window.innerHeight,
+            backgroundAlpha: 0,
+            antialias: true,
+            autoDensity: true,
+            resolution: Math.min(window.devicePixelRatio || 1, MAX_RENDER_DPR),
+            autoStart: false,
+            sharedTicker: false
+          });
+          pixiApp.view.id = "pixiAtmosphere";
+          pixiApp.view.setAttribute("aria-hidden", "true");
+          pixiApp.view.tabIndex = -1;
+          pixiApp.view.style.pointerEvents = "none";
+          canvas.insertAdjacentElement("afterend", pixiApp.view);
+
+          pixiAtmosphere = new PIXI.Container();
+          pixiApp.stage.addChild(pixiAtmosphere);
+
+          const glowCanvas = document.createElement("canvas");
+          glowCanvas.width = 128;
+          glowCanvas.height = 128;
+          const glowContext = glowCanvas.getContext("2d");
+          if (!glowContext) throw new Error("Não foi possível criar a textura de brilho do PixiJS.");
+          const gradient = glowContext.createRadialGradient(64, 64, 0, 64, 64, 64);
+          gradient.addColorStop(0, "rgba(255,255,255,0.82)");
+          gradient.addColorStop(0.18, "rgba(255,255,255,0.36)");
+          gradient.addColorStop(1, "rgba(255,255,255,0)");
+          glowContext.fillStyle = gradient;
+          glowContext.fillRect(0, 0, 128, 128);
+          const glowTexture = PIXI.Texture.from(glowCanvas);
+
+          const createGlow = () => {
+            const sprite = new PIXI.Sprite(glowTexture);
+            sprite.anchor.set(0.5);
+            sprite.blendMode = PIXI.BLEND_MODES.ADD;
+            pixiAtmosphere.addChild(sprite);
+            return sprite;
+          };
+
+          pixiMoonGlow = createGlow();
+          pixiBossGlow = createGlow();
+          pixiWorldGlows = Array.from({ length: 8 }, createGlow);
+          pixiMotes = Array.from({ length: 28 }, (_, index) => ({
+            sprite: createGlow(),
+            x: (index * 173.7) % (virtualW + 160),
+            y: 44 + (index * 67) % (VIRTUAL_H - 90),
+            phase: index * 1.71,
+            drift: 5 + (index % 5) * 2.4,
+            size: 9 + (index % 4) * 4
+          }));
+        } catch (error) {
+          console.error("PixiJS não pôde iniciar os efeitos atmosféricos; o Canvas 2D continuará ativo.", error);
+          if (pixiApp) pixiApp.destroy(true);
+          pixiApp = null;
+          pixiAtmosphere = null;
+          pixiMoonGlow = null;
+          pixiBossGlow = null;
+          pixiMotes = [];
+          pixiWorldGlows = [];
+          const overlay = document.getElementById("pixiAtmosphere");
+          if (overlay) overlay.remove();
+        }
+      }
+
+      initializePixiAtmosphere();
+
+      function renderPixiAtmosphere() {
+        if (!pixiApp || !pixiAtmosphere) return;
+        const visible = isSupportedViewport &&
+          (gameState === "PLAYING" || gameState === "PAUSED" || gameState === "CELEBRATING");
+        pixiAtmosphere.visible = visible;
+        if (!visible) return;
+        if (animClock - lastPixiRenderTime < PIXI_RENDER_INTERVAL) return;
+        lastPixiRenderTime = animClock;
+
+        const st = STAGES[currentStageIdx];
+        const scale = scaleRatio;
+        const palette = st.index === 6 ? [0xffd166, 0xfda4af, 0xfff1c2]
+          : st.index === 7 ? [0x86efac, 0xfde68a, 0xc4b5fd]
+            : st.index === 8 ? [0xc4b5fd, 0xfde68a, 0xe9d5ff]
+              : [0x93c5fd, 0xfef3c7, 0xc4b5fd];
+
+        pixiMoonGlow.position.set(window.innerWidth * 0.82, 82 * scale);
+        pixiMoonGlow.width = 210 * scale;
+        pixiMoonGlow.height = 210 * scale;
+        pixiMoonGlow.tint = palette[0];
+        pixiMoonGlow.alpha = 0.2 + Math.sin(animClock * 1.4) * 0.035;
+
+        const worldSpan = virtualW + 160;
+        for (let index = 0; index < pixiMotes.length; index++) {
+          const mote = pixiMotes[index];
+          const sprite = mote.sprite;
+          const worldX = (mote.x + animClock * mote.drift - cameraX * 0.22 + worldSpan * 2) % worldSpan;
+          sprite.position.set(worldX * scale, (mote.y + Math.sin(animClock * 0.8 + mote.phase) * 10) * scale);
+          sprite.width = mote.size * scale;
+          sprite.height = mote.size * scale;
+          sprite.tint = palette[index % palette.length];
+          sprite.alpha = 0.08 + (Math.sin(animClock * 1.7 + mote.phase) + 1) * 0.075;
+        }
+
+        const sceneryOffset = cameraX * 0.55;
+        const firstDetail = Math.floor(sceneryOffset / 340) - 1;
+        for (let index = 0; index < pixiWorldGlows.length; index++) {
+          const sprite = pixiWorldGlows[index];
+          const detail = firstDetail + index;
+          const bx = detail * 340 - sceneryOffset + 60;
+          if (st.index === 6) {
+            const lamp = index % 3;
+            const lanternY = GROUND_Y - 112 - (Math.abs(detail) % 3) * 18;
+            sprite.position.set((bx + 26 + lamp * 46) * scale, (lanternY + 13) * scale);
+            sprite.tint = 0xffc857;
+            sprite.width = 78 * scale;
+            sprite.height = 78 * scale;
+            sprite.alpha = 0.2 + Math.sin(animClock * 2.5 + detail) * 0.04;
+          } else if (st.index === 8) {
+            sprite.position.set((bx + 54) * scale, (GROUND_Y - 112) * scale);
+            sprite.tint = 0xffd985;
+            sprite.width = 100 * scale;
+            sprite.height = 180 * scale;
+            sprite.alpha = 0.12 + Math.sin(animClock * 1.8 + detail) * 0.025;
+          } else {
+            sprite.alpha = 0;
+          }
+        }
+
+        pixiBossGlow.alpha = 0;
+        if (boss && boss.alive) {
+          const bossX = (boss.x + boss.w / 2 - cameraX) * scale;
+          if (bossX > -120 && bossX < window.innerWidth + 120) {
+            pixiBossGlow.position.set(bossX, (boss.y + boss.h / 2) * scale);
+            pixiBossGlow.width = (boss.kind === "eclipse" ? 280 : 220) * scale;
+            pixiBossGlow.height = 240 * scale;
+            pixiBossGlow.tint = boss.kind === "eclipse" ? 0xc084fc : 0x93c5fd;
+            pixiBossGlow.alpha = 0.12 + Math.sin(animClock * 3) * 0.035;
+          }
+        }
+
+        pixiApp.renderer.render(pixiApp.stage);
+      }
 
       /* --------------------------------------------------------------------
          D. ILUSTRAÇÃO DA PROTAGONISTA (MORENA, CACHEADINHA E DE ÓCULOS)
@@ -3441,12 +3610,17 @@
 
         // Chão Nevado com Camada de Neve Fofa e Borda Decorativa
         for (const seg of groundSegments) {
+          if (seg.x + seg.w < cameraX - 44 || seg.x > cameraX + virtualW + 44) continue;
           ctx.fillStyle = st.groundSoil;
           ctx.fillRect(seg.x, GROUND_Y, seg.w, VIRTUAL_H - GROUND_Y + 20);
 
           // Textura sutil de pedras/tijolos de inverno
           ctx.fillStyle = "rgba(255, 255, 255, 0.07)";
-          for (let tx = seg.x + 10; tx < seg.x + seg.w - 20; tx += 44) {
+          const textureOrigin = seg.x + 10;
+          const visibleTextureStart = Math.max(textureOrigin, cameraX - 44);
+          const firstTextureX = textureOrigin + Math.max(0, Math.floor((visibleTextureStart - textureOrigin) / 44)) * 44;
+          const visibleTextureEnd = Math.min(seg.x + seg.w - 20, cameraX + virtualW + 44);
+          for (let tx = firstTextureX; tx < visibleTextureEnd; tx += 44) {
             ctx.fillRect(tx, GROUND_Y + 24, 24, 10);
             ctx.fillRect(tx + 16, GROUND_Y + 46, 24, 10);
             if (st.index === 6) {
@@ -3714,12 +3888,13 @@
 
         // 6. Flocos de Neve em Primeiro Plano
         ctx.fillStyle = "rgba(255, 255, 255, 0.78)";
+        ctx.beginPath();
         for (const f of snowFlakes) {
           const sx = ((f.x - cameraX * 0.45) % (virtualW + 40) + virtualW + 40) % (virtualW + 40);
-          ctx.beginPath();
+          ctx.moveTo(sx + f.r, f.y);
           ctx.arc(sx, f.y, f.r, 0, Math.PI * 2);
-          ctx.fill();
         }
+        ctx.fill();
 
         ctx.restore();
       }
@@ -5155,11 +5330,33 @@
       let lastFrameTime = 0;
       let lastPortraitRender = -Infinity;
       function mainLoop(timestamp) {
-        const dt = Math.min(0.035, (timestamp - lastFrameTime) / 1000 || 0.016);
-        lastFrameTime = timestamp;
+        if (document.hidden || !isSupportedViewport) {
+          lastFrameTime = timestamp;
+          if (!isSupportedViewport) releaseAllInputs();
+          requestAnimationFrame(mainLoop);
+          return;
+        }
 
+        const animatedState = gameState === "TITLE" || gameState === "PLAYING" ||
+          gameState === "POWERING_UP" || gameState === "CELEBRATING";
+        if (!animatedState) {
+          lastFrameTime = timestamp;
+          requestAnimationFrame(mainLoop);
+          return;
+        }
+
+        const targetFrameMs = gameState === "PLAYING" || gameState === "CELEBRATING" ? 1000 / 60 : 1000 / 30;
+        const elapsedMs = timestamp - lastFrameTime;
+        if (elapsedMs < targetFrameMs - 0.5) {
+          requestAnimationFrame(mainLoop);
+          return;
+        }
+
+        const dt = Math.min(0.035, elapsedMs / 1000 || 0.016);
+        lastFrameTime = timestamp;
         updateGame(dt);
         renderScene();
+        renderPixiAtmosphere();
         if (animClock - lastPortraitRender >= 1 / 12) {
           renderPortraitCanvases(animClock);
           lastPortraitRender = animClock;
